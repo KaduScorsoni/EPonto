@@ -1,0 +1,6 @@
+@EPonto_HostAddress = http://localhost:5195
+
+GET {{EPonto_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
