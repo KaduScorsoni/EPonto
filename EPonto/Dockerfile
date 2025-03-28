@@ -15,10 +15,9 @@ RUN dotnet build "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:PublishTrimmed=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN ls -al /app/publish  # Verifique os arquivos copiados para garantir que o EPonto.dll está presente
 ENTRYPOINT ["dotnet", "EPonto.dll"]
