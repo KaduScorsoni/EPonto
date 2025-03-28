@@ -14,7 +14,7 @@ RUN dotnet restore EPonto/EPonto.csproj
 # Copia o restante do código
 COPY . .
 
-# Publica (gera o EPonto.dll em /app/out)
+# Publica no modo Release
 RUN dotnet publish EPonto/EPonto.csproj -c Release -o /app/out
 
 # Etapa de runtime
@@ -23,6 +23,9 @@ WORKDIR /app
 
 # Copia o resultado da build
 COPY --from=build /app/out .
+
+# Verifica o conteúdo da pasta /app/out para garantir que o EPonto.dll está lá
+RUN ls -l /app/out
 
 # Define o comando de início
 ENTRYPOINT ["dotnet", "EPonto.dll"]
