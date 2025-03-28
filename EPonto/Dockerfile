@@ -1,4 +1,3 @@
-
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
@@ -21,4 +20,5 @@ RUN dotnet publish "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN ls -al /app/publish  # Verifique os arquivos copiados para garantir que o EPonto.dll está presente
 ENTRYPOINT ["dotnet", "EPonto.dll"]
