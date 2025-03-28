@@ -1,31 +1,24 @@
-# Etapa de build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
 
-# Copia os arquivos do projeto
-COPY *.sln ./
-COPY EPonto/*.csproj ./EPonto/
-COPY Application/*.csproj ./Application/
-COPY Domain/*.csproj ./Domain/
-
-# Restaura os pacotes
-RUN dotnet restore EPonto/EPonto.csproj
-
-# Copia o restante do código
-COPY . .
-
-# Publica no modo Release
-RUN dotnet publish EPonto/EPonto.csproj -c Release -o /app/out
-
-# Etapa de runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
 
-# Copia o resultado da build
-COPY --from=build /app/out .
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["EPonto/EPonto.csproj", "EPonto/"]
+RUN dotnet restore "./EPonto/EPonto.csproj"
+COPY . .
+WORKDIR "/src/EPonto"
+RUN dotnet build "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Verifica o conteúdo da pasta /app/out para garantir que o EPonto.dll está lá
-RUN ls -l /app/out
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./EPonto.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Define o comando de início
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EPonto.dll"]
