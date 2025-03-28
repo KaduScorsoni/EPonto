@@ -1,8 +1,7 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./EPonto/Dockerfile"
+
 [deploy]
-# Sempre redeploy quando esses arquivos mudarem
-watch_files = [
-    "EPonto/EPonto.csproj",  # Se mudar o projeto principal
-    "EPonto/**/*.cs",         # Se qualquer classe mudar
-    "Dockerfile",             # Se o Dockerfile mudar
-    "railway.toml"            # Se a configuração do Railway mudar
-]
+startCommand = "dotnet EPonto.dll"
+restartPolicyType = "never"
