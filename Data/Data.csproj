@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Connections\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
   </ItemGroup>
 
