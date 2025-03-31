@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using Domain.Entities.Login;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,12 @@ namespace EPonto.Controllers
 
         [HttpGet]
         [Route("RealizarLogin")]
-        public ActionResult<ResultadoLoginModel> RealizarLogin(LoginModel paramLogin)
+        public ActionResult<LoginDTO> RealizarLogin(LoginModel paramLogin)
         {
 
-            return new ResultadoLoginModel();
+
+
+            return new LoginDTO();
         }
     }
 }

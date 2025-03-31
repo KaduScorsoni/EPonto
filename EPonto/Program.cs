@@ -12,10 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 //Login
-//builder.Services.AddScoped<ILoginService, LoginService>();
-//builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 
 

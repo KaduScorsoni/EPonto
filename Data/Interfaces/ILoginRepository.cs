@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Interfaces
 {
-    public class ILoginRepository
+    public interface ILoginRepository
     {
     }
 }
