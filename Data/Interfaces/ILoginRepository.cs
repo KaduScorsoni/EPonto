@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Login;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Data.Interfaces
 {
     public interface ILoginRepository
     {
+        public bool BuscaUsuarioNoSistema(LoginModel dadosInformados);
     }
 }

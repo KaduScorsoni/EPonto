@@ -19,10 +19,18 @@ namespace EPonto.Controllers
         [Route("RealizarLogin")]
         public ActionResult<LoginDTO> RealizarLogin(LoginModel paramLogin)
         {
+            try
+            {
+                LoginDTO auxResult = _loginService.RealizarLogin(paramLogin);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
 
-
-
-            return new LoginDTO();
+                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
+            }
         }
     }
 }
