@@ -9,6 +9,6 @@ namespace Data.Interfaces
 {
     public interface ILoginRepository
     {
-        public bool BuscaUsuarioNoSistema(LoginModel dadosInformados);
+        public LoginAuxiliarModel BuscaUsuarioNoSistema(string email);
     }
 }

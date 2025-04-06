@@ -25,7 +25,7 @@ namespace EPonto.Controllers
                 if (auxResult.Sucesso)
                     return Ok(auxResult);
 
-                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
+                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = auxResult.Mensagem});
             }
             catch (Exception ex)
             {
