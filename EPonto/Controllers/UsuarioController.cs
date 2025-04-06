@@ -13,21 +13,52 @@ namespace EPonto.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        //private readonly IUsuarioService _usuarioService;
+        private readonly IUsuarioService _usuarioService;
 
-        //public UsuarioController(IUsuarioService usuarioService)
-        //{
-        //    _usuarioService = usuarioService;
-        //}
+        public UsuarioController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
-        //{
-        //    var resultado = await _usuarioService.CriarUsuarioAsync(usuario);
-        //    if (resultado != null)
-        //        return resultado;
+        [HttpPost]
+        [Route("inserir")]
+        public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
+        {
+            await _usuarioService.CriarUsuarioAsync(usuario);
+            return Ok();
+        }
 
-        //    return BadRequest("Erro ao criar usuario.");
-        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObterUsuarioPorId(int id)
+        {
+            var usuario = await _usuarioService.ObterUsuarioPorIdAsync(id);
+            if (usuario == null)
+                return NotFound();
+
+            return Ok(usuario);
+        }
+
+        [HttpGet]
+        [Route("listar")]
+        public async Task<IActionResult> ListarTodosUsuarios()
+        {
+            var usuarios = await _usuarioService.ListarTodosUsuariosAsync();
+            return Ok(usuarios);
+        }
+
+        [HttpPut]
+        [Route("atualizar")]
+        public async Task<IActionResult> AtualizarUsuario([FromBody] UsuarioModel usuario)
+        {
+            var sucesso = await _usuarioService.AtualizarUsuarioAsync(usuario);
+            return sucesso ? Ok() : BadRequest("Erro ao atualizar.");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ExcluirUsuario(int id)
+        {
+            var sucesso = await _usuarioService.ExcluirUsuarioAsync(id);
+            return sucesso ? Ok() : NotFound();
+        }
     }
 }

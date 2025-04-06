@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,23 @@ namespace Domain.Entities
 {
     public class UsuarioModel
     {
-        public int ID_USUARIO { get; set; }
-        public string NOME { get; set; }
-        public DateTime DATA_NASCIMENTO { get; set; }
-        public string SENHA { get; set; }
-        public int BATIDA_ATUAL { get; set; }
-        public string EMAIL { get; set; }
-        public int ID_CARGO { get; set; }
-        public int ID_JORNADA { get; set; }
-        public int TELEFONE { get; set; }
+        [Column("ID_USUARIO")]
+        public int IdUsuario { get; set; }
+        [Column("NOME")]
+        public string Nome { get; set; }
+        [Column("DATA_NASCIMENTO")]
+        public DateTime DataNascimento { get; set; }
+        [Column("SENHA")]
+        public string Senha { get; set; }
+        [Column("BATIDA_ATUAL")]
+        public string BatidaAtual { get; set; }
+        [Column("EMAIL")]
+        public string Email { get; set; }
+        [Column("TELEFONE")]
+        public int Telefone { get; set; }
+        [Column("ID_CARGO")]
+        public int IdCargo { get; set; }
+        [Column("ID_JORNADA")]
+        public int IdJornada { get; set; }
     }
 }
