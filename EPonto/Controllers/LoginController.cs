@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using Domain.Entities.Login;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,20 @@ namespace EPonto.Controllers
 
         [HttpGet]
         [Route("RealizarLogin")]
-        public ActionResult<ResultadoLoginModel> RealizarLogin(LoginModel paramLogin)
+        public ActionResult<LoginDTO> RealizarLogin(LoginModel paramLogin)
         {
+            try
+            {
+                LoginDTO auxResult = _loginService.RealizarLogin(paramLogin);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
 
-            return new ResultadoLoginModel();
+                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = auxResult.Mensagem});
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
+            }
         }
     }
 }

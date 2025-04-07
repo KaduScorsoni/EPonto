@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Login
 {
-    public class ResultadoLoginModel
+    public class LoginAuxiliarModel
     {
+        public long IdUsuario { get; set; }
+        public string Senha { get; set; }
     }
 }
