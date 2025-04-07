@@ -9,7 +9,10 @@ namespace Data.Interfaces
 {
     public interface IUsuarioRepository
     {
-        //public async Task<int> InserirAsync(UsuarioModel usuario);
-
+        Task<int> InserirAsync(UsuarioModel usuario);
+        Task<UsuarioModel> ObterPorIdAsync(int id);
+        Task<IEnumerable<UsuarioModel>> ListarTodosAsync();
+        Task<bool> AtualizarAsync(UsuarioModel usuario);
+        Task<bool> ExcluirAsync(int id);
     }
 }

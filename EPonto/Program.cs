@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Services;
+using Data.Connections;
 using Data.Interfaces;
 using Data.Repositories;
 
@@ -17,6 +18,9 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<DbSession>();
 
 var app = builder.Build();
 
