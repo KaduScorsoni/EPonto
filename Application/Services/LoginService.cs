@@ -29,7 +29,7 @@ namespace Application.Services
             if(string.IsNullOrEmpty(dadosInformados.Senha) || string.IsNullOrEmpty(dadosInformados.Email))
                 return new LoginDTO { Sucesso = false, Mensagem = "Para efetuar o login, deve ser informado um email e senha." };
 
-            string senhaHash = HashPassword(dadosInformados.Senha);
+            //string senhaHash = HashPassword(dadosInformados.Senha);
 
             LoginAuxiliarModel usuario = _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
 
@@ -42,7 +42,7 @@ namespace Application.Services
                         Sucesso = true,
                         Mensagem = "Login realizado com sucesso.",
                         IdUsuario = usuario.IdUsuario,
-                        Token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, senhaHash)
+                        Token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha)
                     };
                 }
                 else
