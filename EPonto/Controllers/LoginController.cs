@@ -16,7 +16,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
-        [Route("ealizarLogin")]
+        [Route("realizarlogin")]
         public async Task<ActionResult<LoginDTO>> RealizarLogin(LoginModel paramLogin)
         {
             try
