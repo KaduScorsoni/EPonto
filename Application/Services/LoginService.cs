@@ -24,14 +24,12 @@ namespace Application.Services
             _loginRepository = loginRepository;
         }
 
-        public LoginDTO RealizarLogin(LoginModel dadosInformados)
+        public async Task<LoginDTO> RealizarLogin(LoginModel dadosInformados)
         {
             if(string.IsNullOrEmpty(dadosInformados.Senha) || string.IsNullOrEmpty(dadosInformados.Email))
                 return new LoginDTO { Sucesso = false, Mensagem = "Para efetuar o login, deve ser informado um email e senha." };
 
-            string senhaHash = HashPassword(dadosInformados.Senha);
-
-            LoginAuxiliarModel usuario = _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
+            LoginAuxiliarModel usuario = await _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
 
             if(usuario.IdUsuario > 0)
             {
@@ -42,7 +40,7 @@ namespace Application.Services
                         Sucesso = true,
                         Mensagem = "Login realizado com sucesso.",
                         IdUsuario = usuario.IdUsuario,
-                        Token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, senhaHash)
+                        Token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha)
                     };
                 }
                 else
@@ -62,16 +60,16 @@ namespace Application.Services
                 };
         }
       
-        public static string HashPassword(string senha)
+        public string HashPassword(string senha)
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
         }
 
-        public static bool VerifyPassword(string senha, string senhaHash)
+        public bool VerifyPassword(string senha, string senhaHash)
         {
             return BCrypt.Net.BCrypt.Verify(senha, senhaHash);
         }
-        public static string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60)
+        public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(senhaHash));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
