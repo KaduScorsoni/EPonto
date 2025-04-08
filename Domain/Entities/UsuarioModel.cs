@@ -17,8 +17,6 @@ namespace Domain.Entities
         public DateTime DataNascimento { get; set; }
         [Column("SENHA")]
         public string Senha { get; set; }
-        [Column("BATIDA_ATUAL")]
-        public string BatidaAtual { get; set; }
         [Column("EMAIL")]
         public string Email { get; set; }
         [Column("TELEFONE")]

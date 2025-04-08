@@ -14,12 +14,14 @@ namespace Application.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ILoginService _loginService;
         private readonly DbSession _dbSession;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository, DbSession dbSession)
+        public UsuarioService(IUsuarioRepository usuarioRepository, DbSession dbSession, ILoginService loginService)
         {
             _usuarioRepository = usuarioRepository;
             _dbSession = dbSession;
+            _loginService = loginService;
         }
 
         public async Task CriarUsuarioAsync(UsuarioModel usuario)
@@ -27,6 +29,8 @@ namespace Application.Services
             try
             {
                 _dbSession.BeginTransaction();
+
+                usuario.Senha = _loginService.HashPassword(usuario.Senha);
 
                 var usuarioCriado = await _usuarioRepository.InserirAsync(usuario);
                 _dbSession.Commit();

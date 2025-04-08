@@ -24,14 +24,14 @@ namespace Data.Repositories
         public async Task<int> InserirAsync(UsuarioModel usuario)
         {
             string sql = @"INSERT INTO USUARIO 
-               (NOME, DATA_NASCIMENTO, SENHA, BATIDA_ATUAL, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE) 
-               VALUES (@Nome, @DataNascimento, @Senha, @BatidaAtual, @Email, @IdCargo, @IdJornada, @Telefone);";
+               (NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE) 
+               VALUES (@Nome, @DataNascimento, @Senha, @Email, @IdCargo, @IdJornada, @Telefone);";
             return await _dbSession.Connection.ExecuteAsync(sql, usuario, _dbSession.Transaction);
         }
 
         public async Task<UsuarioModel> ObterPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, BATIDA_ATUAL, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
+            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
                    FROM USUARIO
                    WHERE ID_USUARIO = @IdUsuario;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<UsuarioModel>(sql, new { IdUsuario = id });
@@ -39,7 +39,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<UsuarioModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, BATIDA_ATUAL, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
+            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
                    FROM USUARIO;";
             return await _dbSession.Connection.QueryAsync<UsuarioModel>(sql);
         }
@@ -50,7 +50,6 @@ namespace Data.Repositories
                    SET NOME = @Nome,
                        DATA_NASCIMENTO = @DataNascimento,
                        SENHA = @Senha,
-                       BATIDA_ATUAL = @BatidaAtual,
                        EMAIL = @Email,
                        ID_CARGO = @IdCargo,
                        ID_JORNADA = @IdJornada,
