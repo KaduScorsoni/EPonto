@@ -57,5 +57,28 @@ namespace Data.Repositories
                 IdUsuario = 0
             };
         }
+        public async Task<bool> InsereRegistroLogin(long IdUsuario, string token)
+        {
+            string sql = @"
+                INSERT INTO LOGIN (
+                    ID_USUARIO,
+                    TOKEN,
+                    DAT_LOGIN
+                )
+                VALUES (
+                    PID_USUARIO,
+                    PTOKEN,
+                    NOW()
+                )
+                ";
+
+            object auxParametros = new
+            {
+                PID_USUARIO = IdUsuario,
+                PTOKEN = token
+            };
+
+            return _dbSession.Connection.ExecuteReader(sql, auxParametros).ToBool();
+        }
     }
 }

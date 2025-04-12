@@ -10,5 +10,6 @@ namespace Data.Interfaces
     public interface ILoginRepository
     {
         Task<LoginAuxiliarModel> BuscaUsuarioNoSistema(string email);
+        Task<bool> InsereRegistroLogin(long IdUsuario, string token);
     }
 }
