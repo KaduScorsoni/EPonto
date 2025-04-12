@@ -26,38 +26,53 @@ namespace Application.Services
 
         public async Task<LoginDTO> RealizarLogin(LoginModel dadosInformados)
         {
+            string Error = string.Empty;
+
             if(string.IsNullOrEmpty(dadosInformados.Senha) || string.IsNullOrEmpty(dadosInformados.Email))
                 return new LoginDTO { Sucesso = false, Mensagem = "Para efetuar o login, deve ser informado um email e senha." };
 
-            LoginAuxiliarModel usuario = await _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
-
-            if(usuario.IdUsuario > 0)
+            try
             {
-                if (VerifyPassword(dadosInformados.Senha, usuario.Senha))
+                LoginAuxiliarModel usuario = await _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
+
+                if (usuario.IdUsuario > 0)
                 {
-                    return new LoginDTO
+                    if (VerifyPassword(dadosInformados.Senha, usuario.Senha))
                     {
-                        Sucesso = true,
-                        Mensagem = "Login realizado com sucesso.",
-                        IdUsuario = usuario.IdUsuario,
-                        Token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha)
-                    };
+                        string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
+
+                        if (await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token))
+                        {
+                            return new LoginDTO
+                            {
+                                Sucesso = true,
+                                Mensagem = "Login realizado com sucesso.",
+                                IdUsuario = usuario.IdUsuario,
+                                Token = token
+                            };
+                        }
+                        else
+                            Error = "Erro ao realizar login. Entre em contato com o administrador do sistema.";
+                    }
+                    else
+                        Error = "Senha incorreta.";
                 }
                 else
-                {
-                    return new LoginDTO
-                    {
-                        Sucesso = false,
-                        Mensagem = "Senha incorreta."
-                    };
-                } 
+                    Error = "Email não localizado no sistema.";
+
+                if (!string.IsNullOrEmpty(Error))
+                    return new LoginDTO { Sucesso = false, Mensagem = Error };
+                else
+                    return new LoginDTO();
             }
-            else
+            catch (Exception ex)
+            {
                 return new LoginDTO
-                { 
+                {
                     Sucesso = false,
-                    Mensagem = "Email não localizado no sistema."
+                    Mensagem = ex.Message
                 };
+            }
         }
       
         public string HashPassword(string senha)
