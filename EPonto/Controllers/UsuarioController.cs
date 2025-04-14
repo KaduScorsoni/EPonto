@@ -9,7 +9,7 @@ using Application.Services;
 
 namespace EPonto.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Usuario")]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
-        [Route("inserir")]
+        [Route("Inserir")]
         public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
         {
             await _usuarioService.CriarUsuarioAsync(usuario);
@@ -39,7 +39,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
-        [Route("listar")]
+        [Route("Listar")]
         public async Task<IActionResult> ListarTodosUsuarios()
         {
             var usuarios = await _usuarioService.ListarTodosUsuariosAsync();
@@ -47,7 +47,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPut]
-        [Route("atualizar")]
+        [Route("Atualizar")]
         public async Task<IActionResult> AtualizarUsuario([FromBody] UsuarioModel usuario)
         {
             var sucesso = await _usuarioService.AtualizarUsuarioAsync(usuario);

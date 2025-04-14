@@ -58,12 +58,22 @@ namespace Data.Repositories
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, usuario, _dbSession.Transaction);
             return linhasAfetadas > 0;
         }
-        //TO DO ESQUECI DE N VAMOS EXLUIR SO INATIVAR O INDICE
+
         public async Task<bool> ExcluirAsync(int id)
         {
             string sql = @"DELETE FROM USUARIO WHERE ID_USUARIO = @IdUsuario;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, new { IdUsuario = id }, _dbSession.Transaction);
             return linhasAfetadas > 0;
+        }
+
+        public async Task<UsuarioModel?> ValidarEmail(string email)
+        {
+            string sql = "SELECT * FROM USUARIO WHERE EMAIL = @Email";
+            return await _dbSession.Connection.QueryFirstOrDefaultAsync<UsuarioModel>(
+                sql,
+                new { Email = email },
+                _dbSession.Transaction 
+            );
         }
 
         #endregion
