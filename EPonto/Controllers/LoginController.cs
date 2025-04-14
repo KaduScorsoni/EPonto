@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EPonto.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/login")]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService _loginService;
@@ -16,12 +16,12 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
-        [Route("RealizarLogin")]
-        public ActionResult<LoginDTO> RealizarLogin(LoginModel paramLogin)
+        [Route("realizarlogin")]
+        public async Task<ActionResult<LoginDTO>> RealizarLogin(LoginModel paramLogin)
         {
             try
             {
-                LoginDTO auxResult = _loginService.RealizarLogin(paramLogin);
+                LoginDTO auxResult = await _loginService.RealizarLogin(paramLogin);
                 if (auxResult.Sucesso)
                     return Ok(auxResult);
 

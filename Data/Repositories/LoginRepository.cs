@@ -24,7 +24,7 @@ namespace Data.Repositories
             _dbSession = dbSession;
         }
         #endregion
-        public LoginAuxiliarModel BuscaUsuarioNoSistema(string email)
+        public async Task<LoginAuxiliarModel> BuscaUsuarioNoSistema(string email)
         {
             string sql = @"
                     SELECT U.ID_USUARIO,

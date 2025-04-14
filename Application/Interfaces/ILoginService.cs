@@ -10,6 +10,9 @@ namespace Application.Interfaces
 {
     public interface ILoginService
     {
-        public LoginDTO RealizarLogin(LoginModel dadosInformados);
+        Task<LoginDTO> RealizarLogin(LoginModel dadosInformados);
+        public string HashPassword(string senha);
+        public bool VerifyPassword(string senha, string senhaHash);
+        public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60);
     }
 }

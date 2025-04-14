@@ -15,12 +15,14 @@ namespace Application.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ILoginService _loginService;
         private readonly DbSession _dbSession;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository, DbSession dbSession)
+        public UsuarioService(IUsuarioRepository usuarioRepository, DbSession dbSession, ILoginService loginService)
         {
             _usuarioRepository = usuarioRepository;
             _dbSession = dbSession;
+            _loginService = loginService;
         }
 
         public async Task<UsuarioDTO> CriarUsuarioAsync(UsuarioModel usuario)
