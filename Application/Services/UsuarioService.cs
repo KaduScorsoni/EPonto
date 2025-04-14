@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.DTOs;
 using Application.Interfaces;
 using Data.Connections;
 using Data.Interfaces;
@@ -22,15 +23,30 @@ namespace Application.Services
             _dbSession = dbSession;
         }
 
-        public async Task CriarUsuarioAsync(UsuarioModel usuario)
+        public async Task<UsuarioDTO> CriarUsuarioAsync(UsuarioModel usuario)
         {
             try
             {
                 _dbSession.BeginTransaction();
 
+                var usuarioExistente = await _usuarioRepository.ValidarEmail(usuario.Email);
+                if (usuarioExistente != null)
+                {
+                    return new UsuarioDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Já existe um usuário com esse e-mail cadastrado."
+                    };
+                }
+                usuario.Senha = _loginService.HashPassword(usuario.Senha);
                 var usuarioCriado = await _usuarioRepository.InserirAsync(usuario);
-                _dbSession.Commit();
 
+                _dbSession.Commit();
+                return new UsuarioDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Usuário cadastrado com sucesso."
+                };
             }
             catch
             {
@@ -38,6 +54,8 @@ namespace Application.Services
                 throw;
             }
         }
+
+
         public async Task<UsuarioModel> ObterUsuarioPorIdAsync(int id)
         {
             return await _usuarioRepository.ObterPorIdAsync(id);

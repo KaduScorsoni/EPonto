@@ -14,5 +14,6 @@ namespace Data.Interfaces
         Task<IEnumerable<UsuarioModel>> ListarTodosAsync();
         Task<bool> AtualizarAsync(UsuarioModel usuario);
         Task<bool> ExcluirAsync(int id);
+        Task<UsuarioModel> ValidarEmail(string email);
     }
 }
