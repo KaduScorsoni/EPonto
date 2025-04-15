@@ -15,8 +15,8 @@ namespace EPonto.Controllers
             _loginService = loginService;
         }
 
-        [HttpGet]
-        [Route("realizarLogin")]
+        [HttpPost]
+        [Route("RealizarLogin")]
         public async Task<ActionResult<LoginDTO>> RealizarLogin(LoginModel paramLogin)
         {
             try
@@ -32,5 +32,27 @@ namespace EPonto.Controllers
                 return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+        [HttpPost ]
+        [Route("RecuperarSenha")]
+        public async Task<ActionResult<int>> RecuperarSenha(string email)
+        {
+            try
+            {
+                int codigo = await _loginService.RecuperarSenha(email);
+                if (codigo > 0)
+                    return Ok(codigo);
+
+                return BadRequest(0);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(0);
+            }
+        }
+
+        //Falta fazer o método para salvar a troca da senha.
+        // Deve considerar os parametros de entrada, id usuario, email, senhas e codigo
+
+        
     }
 }

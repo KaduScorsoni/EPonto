@@ -30,13 +30,13 @@ namespace Data.Repositories
                     SELECT U.ID_USUARIO,
                            U.SENHA
                       FROM USUARIO U
-                     WHERE U.EMAIL = PEMAIL
+                     WHERE U.EMAIL = @EMAIL
                        AND U.IND_ATIVO = 1
                 ";
 
             object auxParametros = new
             {
-                PEMAIL = email
+                EMAIL = email
             };
 
             using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
@@ -45,7 +45,7 @@ namespace Data.Repositories
                 {
                     return new LoginAuxiliarModel 
                     { 
-                        Senha = reader["ID_USUARIO"].ToString(),
+                        Senha = reader["SENHA"].ToString(),
                         IdUsuario = reader["ID_USUARIO"].ToLong() 
                     };
                 }
@@ -66,16 +66,37 @@ namespace Data.Repositories
                     DAT_LOGIN
                 )
                 VALUES (
-                    PID_USUARIO,
-                    PTOKEN,
+                    @ID_USUARIO,
+                    @TOKEN,
                     NOW()
                 )
                 ";
 
             object auxParametros = new
             {
-                PID_USUARIO = IdUsuario,
-                PTOKEN = token
+                ID_USUARIO = IdUsuario,
+                TOKEN = token
+            };
+
+            return _dbSession.Connection.ExecuteReader(sql, auxParametros).ToBool();
+        }
+        public async Task<bool> SalvaCodigoRecuperacao(int codigo, string email)
+        {
+            string sql = @"
+                INSERT INTO LOGIN (
+                    ID_USUARIO,
+                    COD_RECUPERACAO
+                )
+                VALUES (
+                    (SELECT U.ID_USUARIO FROM USUARIO U WHERE U.EMAIL = @EMAIL AND U.IND_ATIVO = 1),
+                    @CODIGO
+                )
+                ";
+
+            object auxParametros = new
+            {
+                CODIGO = codigo,
+                EMAIL = email
             };
 
             return _dbSession.Connection.ExecuteReader(sql, auxParametros).ToBool();

@@ -11,5 +11,6 @@ namespace Data.Interfaces
     {
         Task<LoginAuxiliarModel> BuscaUsuarioNoSistema(string email);
         Task<bool> InsereRegistroLogin(long IdUsuario, string token);
+        Task<bool> SalvaCodigoRecuperacao(int codigo, string email);
     }
 }

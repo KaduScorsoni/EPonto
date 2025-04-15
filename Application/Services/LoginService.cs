@@ -41,18 +41,15 @@ namespace Application.Services
                     {
                         string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
 
-                        if (await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token))
+                        await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
+                        
+                        return new LoginDTO
                         {
-                            return new LoginDTO
-                            {
-                                Sucesso = true,
-                                Mensagem = "Login realizado com sucesso.",
-                                IdUsuario = usuario.IdUsuario,
-                                Token = token
-                            };
-                        }
-                        else
-                            Error = "Erro ao realizar login. Entre em contato com o administrador do sistema.";
+                            Sucesso = true,
+                            Mensagem = "Login realizado com sucesso.",
+                            IdUsuario = usuario.IdUsuario,
+                            Token = token
+                        };
                     }
                     else
                         Error = "Senha incorreta.";
@@ -74,7 +71,30 @@ namespace Application.Services
                 };
             }
         }
-      
+        
+        public async Task<int>RecuperarSenha(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return 0;
+
+            //Gera número aleatório 
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] bytes = new byte[4]; // 4 bytes = 32 bits
+                int numero;
+
+                do
+                {
+                    rng.GetBytes(bytes);
+                    numero = BitConverter.ToInt32(bytes, 0) & int.MaxValue; // Garante número positivo
+                } while (numero < 100000 || numero > 999999);
+
+                await _loginRepository.SalvaCodigoRecuperacao(numero, email);
+
+                return numero;
+            }
+        }
+
         public string HashPassword(string senha)
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
