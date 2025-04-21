@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Domain.Entities;
-//using Application.DTOs;
 using Application.Interfaces;
-using Application.Services;
+using Application.DTOs;
 
 namespace EPonto.Controllers
 {
@@ -24,41 +21,53 @@ namespace EPonto.Controllers
         [Route("Inserir")]
         public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
         {
-            await _usuarioService.CriarUsuarioAsync(usuario);
-            return Ok();
+            var resultado = await _usuarioService.CriarUsuarioAsync(usuario);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterUsuarioPorId(int id)
         {
-            var usuario = await _usuarioService.ObterUsuarioPorIdAsync(id);
-            if (usuario == null)
-                return NotFound();
+            var resultado = await _usuarioService.ObterUsuarioPorIdAsync(id);
+            if (resultado.Sucesso && resultado.Usuario != null)
+                return Ok(resultado);
 
-            return Ok(usuario);
+            return NotFound(resultado);
         }
 
         [HttpGet]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosUsuarios()
         {
-            var usuarios = await _usuarioService.ListarTodosUsuariosAsync();
-            return Ok(usuarios);
+            var resultado = await _usuarioService.ListarTodosUsuariosAsync();
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
 
         [HttpPut]
         [Route("Atualizar")]
         public async Task<IActionResult> AtualizarUsuario([FromBody] UsuarioModel usuario)
         {
-            var sucesso = await _usuarioService.AtualizarUsuarioAsync(usuario);
-            return sucesso ? Ok() : BadRequest("Erro ao atualizar.");
+            var resultado = await _usuarioService.AtualizarUsuarioAsync(usuario);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
-            var sucesso = await _usuarioService.ExcluirUsuarioAsync(id);
-            return sucesso ? Ok() : NotFound();
+            var resultado = await _usuarioService.ExcluirUsuarioAsync(id);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return NotFound(resultado);
         }
     }
 }
