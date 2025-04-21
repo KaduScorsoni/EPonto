@@ -50,53 +50,117 @@ namespace Application.Services
                     Mensagem = "Usuário cadastrado com sucesso."
                 };
             }
-            catch
+            catch (Exception ex)
             {
                 _dbSession.Rollback();
-                throw;
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao criar usuário: {ex.Message}"
+                };
             }
         }
 
 
-        public async Task<UsuarioModel> ObterUsuarioPorIdAsync(int id)
+        public async Task<UsuarioDTO> ObterUsuarioPorIdAsync(int id)
         {
-            return await _usuarioRepository.ObterPorIdAsync(id);
+            try
+            {
+                var usuario = await _usuarioRepository.ObterPorIdAsync(id);
+                if (usuario == null)
+                {
+                    return new UsuarioDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Usuário não encontrado."
+                    };
+                }
+
+                return new UsuarioDTO
+                {
+                    Sucesso = true,
+                    Usuario = usuario
+                };
+            }
+            catch (Exception ex)
+            {
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar usuário: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<IEnumerable<UsuarioModel>> ListarTodosUsuariosAsync()
+        public async Task<UsuarioDTO> ListarTodosUsuariosAsync()
         {
-            return await _usuarioRepository.ListarTodosAsync();
+            try
+            {
+                var usuarios = await _usuarioRepository.ListarTodosAsync();
+                return new UsuarioDTO
+                {
+                    Sucesso = true,
+                    Usuarios = usuarios
+                };
+            }
+            catch (Exception ex)
+            {
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar usuários: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<bool> AtualizarUsuarioAsync(UsuarioModel usuario)
+        public async Task<UsuarioDTO> AtualizarUsuarioAsync(UsuarioModel usuario)
         {
             try
             {
                 _dbSession.BeginTransaction();
+
                 var sucesso = await _usuarioRepository.AtualizarAsync(usuario);
                 _dbSession.Commit();
-                return sucesso;
+
+                return new UsuarioDTO
+                {
+                    Sucesso = sucesso,
+                    Mensagem = sucesso ? "Usuário atualizado com sucesso." : "Falha ao atualizar usuário."
+                };
             }
-            catch
+            catch (Exception ex)
             {
                 _dbSession.Rollback();
-                throw;
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao atualizar usuário: {ex.Message}"
+                };
             }
         }
-
-        public async Task<bool> ExcluirUsuarioAsync(int id)
+        public async Task<UsuarioDTO> ExcluirUsuarioAsync(int id)
         {
             try
             {
                 _dbSession.BeginTransaction();
+
                 var sucesso = await _usuarioRepository.ExcluirAsync(id);
                 _dbSession.Commit();
-                return sucesso;
+
+                return new UsuarioDTO
+                {
+                    Sucesso = sucesso,
+                    Mensagem = sucesso ? "Usuário excluído com sucesso." : "Falha ao excluir usuário."
+                };
             }
-            catch
+            catch (Exception ex)
             {
                 _dbSession.Rollback();
-                throw;
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao excluir usuário: {ex.Message}"
+                };
             }
         }
     }

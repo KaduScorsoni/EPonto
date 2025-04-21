@@ -3,41 +3,36 @@ using Application.Services;
 using Data.Connections;
 using Data.Interfaces;
 using Data.Repositories;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração dos serviços
+// Add services to the container.
+
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// Adiciona o Swagger ao projeto
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-});
-
-// Adiciona os serviços necessários da aplicação
+//Login
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+
+
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<DbSession>();
 
 var app = builder.Build();
 
-// Configura o middleware do Swagger
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.RoutePrefix = string.Empty; // Exibe o Swagger na raiz (opcional)
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// Configuração do pipeline de requisições
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
 
 app.MapControllers();
