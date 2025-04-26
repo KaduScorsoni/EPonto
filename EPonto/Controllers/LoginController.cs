@@ -15,8 +15,8 @@ namespace EPonto.Controllers
             _loginService = loginService;
         }
 
-        [HttpGet]
-        [Route("realizarLogin")]
+        [HttpPost]
+        [Route("RealizarLogin")]
         public async Task<ActionResult<LoginDTO>> RealizarLogin(LoginModel paramLogin)
         {
             try
@@ -30,6 +30,57 @@ namespace EPonto.Controllers
             catch (Exception ex)
             {
                 return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
+        [HttpPost ]
+        [Route("RecuperarSenha")]
+        public async Task<ActionResult<int>> RecuperarSenha(string email)
+        {
+            try
+            {
+                int codigo = await _loginService.RecuperarSenha(email);
+                if (codigo > 0)
+                    return Ok(codigo);
+
+                return BadRequest(0);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(0);
+            }
+        }
+        [HttpPost]
+        [Route("ValidaCodigoRecuperacao")]
+        public async Task<ActionResult<bool>> ValidaCodigoRecuperacao(int codigo, string email)
+        {
+            try
+            {
+                bool auxResult = await _loginService.ValidaCodigoRecuperacao(codigo, email);
+                if (auxResult)
+                    return Ok(true);
+
+                return BadRequest(false);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(false);
+            }
+        }
+        [HttpPost]
+        [Route("AlteraSenhaLogin")]
+        public async Task<ActionResult<bool>> AlteraSenhaLogin(string senha, string email)
+        {
+            try
+            {
+                bool auxResult = await _loginService.AlteraSenhaLogin(senha, email);
+                if (auxResult)
+                    return Ok(true);
+
+                return BadRequest(false);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(false);
             }
         }
     }
