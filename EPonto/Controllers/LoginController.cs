@@ -49,10 +49,41 @@ namespace EPonto.Controllers
                 return BadRequest(0);
             }
         }
+        [HttpPost]
+        [Route("ValidaCodigoRecuperacao")]
+        public async Task<ActionResult<bool>> ValidaCodigoRecuperacao(int codigo, string email)
+        {
+            try
+            {
+                bool auxResult = await _loginService.ValidaCodigoRecuperacao(codigo, email);
+                if (auxResult)
+                    return Ok(true);
 
+                return BadRequest(false);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(false);
+            }
+        }
+        [HttpPost]
+        [Route("AlteraSenhaLogin")]
+        public async Task<ActionResult<bool>> AlteraSenhaLogin(string senha, string email)
+        {
+            try
+            {
+                bool auxResult = await _loginService.AlteraSenhaLogin(senha, email);
+                if (auxResult)
+                    return Ok(true);
+
+                return BadRequest(false);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(false);
+            }
+        }
         //Falta fazer o método para salvar a troca da senha.
         // Deve considerar os parametros de entrada, id usuario, email, senhas e codigo
-
-        
     }
 }

@@ -78,18 +78,20 @@ namespace Data.Repositories
                 TOKEN = token
             };
 
-            return _dbSession.Connection.ExecuteReader(sql, auxParametros).ToBool();
+            return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
         }
         public async Task<bool> SalvaCodigoRecuperacao(int codigo, string email)
         {
             string sql = @"
                 INSERT INTO LOGIN (
                     ID_USUARIO,
-                    COD_RECUPERACAO
+                    COD_RECUPERACAO,
+                    DAT_LOGIN
                 )
                 VALUES (
                     (SELECT U.ID_USUARIO FROM USUARIO U WHERE U.EMAIL = @EMAIL AND U.IND_ATIVO = 1),
-                    @CODIGO
+                    @CODIGO,
+                    NOW()
                 )
                 ";
 
@@ -99,7 +101,55 @@ namespace Data.Repositories
                 EMAIL = email
             };
 
-            return _dbSession.Connection.ExecuteReader(sql, auxParametros).ToBool();
+            return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
+        }
+        public async Task<int> BuscaCodigoEmail(string email)
+        {
+            string sql = @"
+                    SELECT L.COD_RECUPERACAO
+                      FROM LOGIN L
+                     WHERE L.DAT_LOGIN = (SELECT MAX(LO.DAT_LOGIN)
+                                            FROM LOGIN LO
+                                           WHERE LO.ID_USUARIO = (SELECT U1.ID_USUARIO 
+                                                                    FROM USUARIO U1
+                                                                   WHERE U1.EMAIL = @EMAIL 
+                                                                     AND U1.IND_ATIVO = 1))
+                       AND L.ID_USUARIO = (SELECT U2.ID_USUARIO 
+                                             FROM USUARIO U2 
+                                            WHERE U2.EMAIL = @EMAIL 
+                                              AND U2.IND_ATIVO = 1)
+                ";
+
+            object auxParametros = new
+            {
+                EMAIL = email
+            };
+
+            int result = 0;
+
+            using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
+            {
+                if (reader.Read())
+                    result = reader["COD_RECUPERACAO"].ToInt();
+            }
+
+            return result;
+        }
+        public async Task<bool> SalvaAlteracaoSenha(string senha, string email)
+        {
+            string sql = @"
+                    UPDATE USUARIO U
+                       SET U.SENHA = @SENHA
+                     WHERE U.EMAIL = @EMAIL
+                ";
+
+            object auxParametros = new
+            {
+                EMAIL = email,
+                SENHA = senha
+            };
+
+            return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
         }
     }
 }

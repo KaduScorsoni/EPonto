@@ -12,6 +12,8 @@ namespace Application.Interfaces
     {
         Task<LoginDTO> RealizarLogin(LoginModel dadosInformados);
         Task<int> RecuperarSenha(string email);
+        Task<bool> ValidaCodigoRecuperacao(int codigo, string email);
+        Task<bool> AlteraSenhaLogin(string senha, string email);
         public string HashPassword(string senha);
         public bool VerifyPassword(string senha, string senhaHash);
         public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60);

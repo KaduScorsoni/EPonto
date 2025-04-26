@@ -94,7 +94,29 @@ namespace Application.Services
                 return numero;
             }
         }
+        public async Task<bool> ValidaCodigoRecuperacao(int codigo, string email)
+        {
+            if (codigo <= 0 || string.IsNullOrEmpty(email))
+                return false;
 
+            int resultCodigo = await _loginRepository.BuscaCodigoEmail(email);
+
+            if (resultCodigo == codigo)
+                return true;
+            
+            return false;
+        }
+        public async Task<bool> AlteraSenhaLogin(string senha, string email)
+        {
+            if (string.IsNullOrEmpty(senha) || string.IsNullOrEmpty(email))
+                return false;
+
+            string senhaHash = HashPassword(senha);
+
+            await _loginRepository.SalvaAlteracaoSenha(senhaHash, email);
+            
+            return true;
+        }
         public string HashPassword(string senha)
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
