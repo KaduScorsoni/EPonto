@@ -119,6 +119,8 @@ namespace Application.Services
             {
                 _dbSession.BeginTransaction();
 
+                usuario.Senha = _loginService.HashPassword(usuario.Senha);
+
                 var sucesso = await _usuarioRepository.AtualizarAsync(usuario);
                 _dbSession.Commit();
 
