@@ -83,7 +83,5 @@ namespace EPonto.Controllers
                 return BadRequest(false);
             }
         }
-        //Falta fazer o método para salvar a troca da senha.
-        // Deve considerar os parametros de entrada, id usuario, email, senhas e codigo
     }
 }
