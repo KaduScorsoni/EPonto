@@ -1,0 +1,153 @@
+﻿using Application.DTOs;
+using Application.Interfaces;
+using Data.Connections;
+using Data.Interfaces;
+using Data.Repositories;
+using Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Application.Services
+{
+    public class RegistroPontoService : IRegistroPontoService
+    {
+        private readonly IRegistroPontoRepository _registroPontoRepository;
+        private readonly DbSession _dbSession;
+
+        public RegistroPontoService(IRegistroPontoRepository registroPontoRepository, DbSession dbSession)
+        {
+            _registroPontoRepository = registroPontoRepository;
+            _dbSession = dbSession;
+        }
+
+        public async Task<RegistroPontoDTO> CriarRegistroPontoAsync(RegistroPontoModel ponto)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+                var usuarioCriado = await _registroPontoRepository.InserirAsync(ponto);
+                _dbSession.Commit();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Registro cadastrado com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao criar registro: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> ObterRegistroPontoIdAsync(int id)
+        {
+            try
+            {
+                var ponto = await _registroPontoRepository.ObterPorIdAsync(id);
+                if (ponto == null)
+                {
+                    return new RegistroPontoDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Registro não encontrado."
+                    };
+                }
+
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true,
+                    RegistroPonto = ponto
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar registro: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> ListarTodosRegistrosPontoAsync()
+        {
+            try
+            {
+                var registros = await _registroPontoRepository.ListarTodosAsync();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true,
+                    Registros = registros
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar registros: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> AtualizarRegistroPontoAsync(RegistroPontoModel ponto)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+
+                var sucesso = await _registroPontoRepository.AtualizarAsync(ponto);
+                _dbSession.Commit();
+
+                return new RegistroPontoDTO
+                {
+                    Sucesso = sucesso,
+                    Mensagem = sucesso ? "Registro atualizado com sucesso." : "Falha ao atualizar registro."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao atualizar registro: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> ExcluirRegistroPontoAsync(int id)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+
+                var sucesso = await _registroPontoRepository.ExcluirAsync(id);
+                _dbSession.Commit();
+
+                return new RegistroPontoDTO
+                {
+                    Sucesso = sucesso,
+                    Mensagem = sucesso ? "Registro excluído com sucesso." : "Falha ao excluir registro."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao excluir registro: {ex.Message}"
+                };
+            }
+        }
+    }
+}

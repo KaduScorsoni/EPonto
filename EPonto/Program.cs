@@ -20,6 +20,10 @@ builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+builder.Services.AddScoped<IRegistroPontoService, RegistroPontoService>();
+builder.Services.AddScoped<IRegistroPontoRepository, RegistroPontoRepository>();
+
 builder.Services.AddScoped<DbSession>();
 
 var app = builder.Build();
