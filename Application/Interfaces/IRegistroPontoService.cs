@@ -16,5 +16,8 @@ namespace Application.Interfaces
         Task<RegistroPontoDTO> AtualizarRegistroPontoAsync(RegistroPontoModel ponto);
         Task<RegistroPontoDTO> ExcluirRegistroPontoAsync(int id);
         Task<RegistroPontoDTO> ObterRegistrosUsuarioAsync(int idUsuario);
+        Task <RegistroPontoDTO> VerificarValidacaoMesAsync(int idUsuario);
+        Task<RegistroPontoDTO> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao);
+
     }
 }

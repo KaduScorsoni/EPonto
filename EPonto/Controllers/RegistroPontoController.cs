@@ -70,14 +70,13 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
-        [HttpGet]
-        [Route("ObterRegistrosUsuario")]
-        public async Task<IActionResult> ObterRegistrosUsuario(int idUsuario)
+        [HttpPost]
+        [Route("Validar")]
+        public async Task<IActionResult> ValidarMes(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao)
         {
-            var resultado = await _registroPontoService.ObterRegistrosUsuarioAsync(idUsuario);
+            var resultado = await _registroPontoService.ValidarMesAsync(idUsuario, anoReferencia, mesReferencia, statusValidacao);
             if (resultado.Sucesso)
                 return Ok(resultado);
-
             return BadRequest(resultado);
         }
     }

@@ -42,7 +42,7 @@ namespace Application.Services
                         string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
 
                         await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
-                        
+                        //chaamar aqui o VerificarValidacaoMesAsync
                         return new LoginDTO
                         {
                             Sucesso = true,

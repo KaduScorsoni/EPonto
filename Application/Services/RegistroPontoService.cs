@@ -4,6 +4,7 @@ using Data.Connections;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Entities;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -167,6 +168,68 @@ namespace Application.Services
                 {
                     Sucesso = false,
                     Mensagem = $"Erro ao listar registros: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> VerificarValidacaoMesAsync(int idUsuario)
+        {
+            try
+            {
+                // Lógica de validação do mês anterior
+                int mesReferencia = DateTime.Now.Month - 1;
+                int anoReferencia = DateTime.Now.Year;
+
+                if (mesReferencia == 0) // Se for janeiro, ajusta para dezembro do ano anterior
+                {
+                    mesReferencia = 12;
+                    anoReferencia = DateTime.Now.Year - 1;
+                }
+
+                var validacao = await _registroPontoRepository.VerificarValidacaoMesAsync(idUsuario, anoReferencia, mesReferencia);
+                if (validacao == false)
+                {
+                    return new RegistroPontoDTO
+                    {
+                        Sucesso = true,
+                        Mensagem = "Existem validações mensais pendentes no sistema"
+                    };
+                }
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao verificar validação mensal: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RegistroPontoDTO> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+                var validar = await _registroPontoRepository.ValidarMesAsync(idUsuario, anoReferencia, mesReferencia, statusValidacao);
+                _dbSession.Commit();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Mes validado com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao validar mes: {ex.Message}"
                 };
             }
         }

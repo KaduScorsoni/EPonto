@@ -15,6 +15,7 @@ namespace Data.Interfaces
         Task<bool> AtualizarAsync(RegistroPontoModel ponto);
         Task<bool> ExcluirAsync(int id);
         Task<IEnumerable<RegistroPontoModel>> ObterRegistrosUsuarioAsync(int idUsuario);
-
+        Task<bool> VerificarValidacaoMesAsync(int idUsuario, int anoReferencia, int mesReferencia);
+        Task<int> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao);
     }
 }
