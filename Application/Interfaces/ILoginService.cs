@@ -11,7 +11,7 @@ namespace Application.Interfaces
     public interface ILoginService
     {
         Task<LoginDTO> RealizarLogin(LoginModel dadosInformados);
-        Task<int> RecuperarSenha(string email);
+        Task<bool> RecuperarSenha(string email);
         Task<bool> ValidaCodigoRecuperacao(int codigo, string email);
         Task<bool> AlteraSenhaLogin(string senha, string email);
         public string HashPassword(string senha);
