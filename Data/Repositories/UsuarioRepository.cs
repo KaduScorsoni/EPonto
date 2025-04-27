@@ -31,7 +31,7 @@ namespace Data.Repositories
 
         public async Task<UsuarioModel> ObterPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
+            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE , IND_ATIVO
                    FROM USUARIO
                    WHERE ID_USUARIO = @IdUsuario;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<UsuarioModel>(sql, new { IdUsuario = id });
@@ -39,7 +39,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<UsuarioModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE
+            string sql = @"SELECT ID_USUARIO, NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE, IND_ATIVO
                    FROM USUARIO;";
             return await _dbSession.Connection.QueryAsync<UsuarioModel>(sql);
         }

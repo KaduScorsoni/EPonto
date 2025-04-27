@@ -18,5 +18,6 @@ namespace Domain.Entities
         public int Telefone { get; set; }
         public int IdCargo { get; set; }
         public int IdJornada { get; set; }
+        public int IndAtivo { get; set; }
     }
 }

@@ -71,6 +71,31 @@ namespace Data.Repositories
             return await _dbSession.Connection.QueryAsync<RegistroPontoModel>(sql, new { IdUsuario = idUsuario });
         }
 
+        public async Task<bool> VerificarValidacaoMesAsync(int idUsuario, int anoReferencia, int mesReferencia)
+        {
+            string sql = @"SELECT COUNT(1) FROM VALIDACOES_MENSAIS
+                   WHERE ID_USUARIO = @IdUsuario
+                     AND ANO_REFERENCIA = @AnoReferencia
+                     AND MES_REFERENCIA = @MesReferencia;";
+
+            int validado = await _dbSession.Connection.ExecuteScalarAsync<int>(sql, new { IdUsuario = idUsuario, AnoReferencia = anoReferencia, MesReferencia = mesReferencia });
+
+            return validado > 0;
+        }
+
+        public async Task<int> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia,int statusValidacao)
+        {
+            string sql = @"INSERT INTO VALIDACOES_MENSAIS (ID_USUARIO, MES_REFERENCIA, ANO_REFERENCIA, STATUS_VALIDACAO)
+                   VALUES (@IdUsuario, @AnoReferencia, @MesReferencia, @StatusValidacao);";
+
+            return await _dbSession.Connection.ExecuteAsync(sql, new
+            {
+                IdUsuario = idUsuario,
+                AnoReferencia = anoReferencia,
+                MesReferencia = mesReferencia,
+                StatusValidacao = statusValidacao
+            }, _dbSession.Transaction);
+        }
         #endregion
 
     }
