@@ -20,7 +20,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+
+//Propiedade para fazer mapemaneto de entidades com nome no banco diferente
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

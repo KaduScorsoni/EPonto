@@ -149,5 +149,26 @@ namespace Application.Services
                 };
             }
         }
+
+        public async Task<RegistroPontoDTO> ObterRegistrosUsuarioAsync(int idUsuario)
+        {
+            try
+            {
+                var registros = await _registroPontoRepository.ObterRegistrosUsuarioAsync(idUsuario);
+                return new RegistroPontoDTO
+                {
+                    Sucesso = true,
+                    Registros = registros
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RegistroPontoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar registros: {ex.Message}"
+                };
+            }
+        }
     }
 }

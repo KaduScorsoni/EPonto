@@ -63,7 +63,16 @@ namespace Data.Repositories
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, new { IdRegistro = id }, _dbSession.Transaction);
             return linhasAfetadas > 0;
         }
+
+        public async Task<IEnumerable<RegistroPontoModel>> ObterRegistrosUsuarioAsync(int idUsuario)
+        {
+            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO
+                   FROM REGISTRO_PONTO WHERE ID_USUARIO =  @IdUsuario;";
+            return await _dbSession.Connection.QueryAsync<RegistroPontoModel>(sql, new { IdUsuario = idUsuario });
+        }
+
         #endregion
 
     }
 }
+

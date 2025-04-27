@@ -14,5 +14,7 @@ namespace Data.Interfaces
         Task<IEnumerable<RegistroPontoModel>> ListarTodosAsync();
         Task<bool> AtualizarAsync(RegistroPontoModel ponto);
         Task<bool> ExcluirAsync(int id);
+        Task<IEnumerable<RegistroPontoModel>> ObterRegistrosUsuarioAsync(int idUsuario);
+
     }
 }

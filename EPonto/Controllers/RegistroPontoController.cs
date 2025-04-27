@@ -69,5 +69,16 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+
+        [HttpGet]
+        [Route("ObterRegistrosUsuario")]
+        public async Task<IActionResult> ObterRegistrosUsuario(int idUsuario)
+        {
+            var resultado = await _registroPontoService.ObterRegistrosUsuarioAsync(idUsuario);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
     }
 }
