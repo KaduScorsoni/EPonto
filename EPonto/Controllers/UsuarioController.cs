@@ -60,7 +60,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
             var resultado = await _usuarioService.ExcluirUsuarioAsync(id);

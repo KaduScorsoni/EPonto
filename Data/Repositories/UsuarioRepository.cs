@@ -61,7 +61,7 @@ namespace Data.Repositories
 
         public async Task<bool> ExcluirAsync(int id)
         {
-            string sql = @"DELETE FROM USUARIO WHERE ID_USUARIO = @IdUsuario;";
+            string sql = @"UPDATE USUARIO SET IND_ATIVO = 0 WHERE ID_USUARIO = @IdUsuario;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, new { IdUsuario = id }, _dbSession.Transaction);
             return linhasAfetadas > 0;
         }
