@@ -26,7 +26,7 @@ namespace Data.Repositories
         {
             string sql = @"INSERT INTO REGISTRO_PONTO 
                (ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO,ID_TIPO_REGISTRO_PONTO) 
-               VALUES (@Id_Usuario, @Hora_Registro, @Data_Registro, @Id_Tipo_Registro_Ponto);";
+               VALUES (@IdUsuario, @HoraRegistro, @DataRegistro, @IdTipoRegistroPonto);";
             return await _dbSession.Connection.ExecuteAsync(sql, ponto, _dbSession.Transaction);
         }
 
@@ -49,10 +49,10 @@ namespace Data.Repositories
         public async Task<bool> AtualizarAsync(RegistroPontoModel ponto)
         {
             string sql = @"UPDATE REGISTRO_PONTO 
-                   SET HORA_REGISTRO = @Hora_Registro,
-                       DATA_REGISTRO = @Data_Registro,
-                       ID_TIPO_REGISTRO_PONTO = @Id_Tipo_Registro_Ponto
-                   WHERE ID_REGISTRO = @Id_Registro;";
+                   SET HORA_REGISTRO = @HoraRegistro,
+                       DATA_REGISTRO = @DataRegistro,
+                       ID_TIPO_REGISTRO_PONTO = @IdTipoRegistroPonto
+                   WHERE ID_REGISTRO = @IdRegistro;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, ponto, _dbSession.Transaction);
             return linhasAfetadas > 0;
         }

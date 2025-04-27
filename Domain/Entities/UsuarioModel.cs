@@ -10,14 +10,13 @@ namespace Domain.Entities
 {
     public class UsuarioModel
     {
-        [JsonIgnore]
-        public int Id_Usuario { get; set; }
+        public int IdUsuario { get; set; }
         public string Nome { get; set; }
         public DateTime Data_Nascimento { get; set; }
         public string Senha { get; set; }
         public string Email { get; set; }
         public int Telefone { get; set; }
-        public int Id_Cargo { get; set; }
-        public int Id_Jornada { get; set; }
+        public int IdCargo { get; set; }
+        public int IdJornada { get; set; }
     }
 }

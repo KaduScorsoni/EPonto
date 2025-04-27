@@ -25,7 +25,7 @@ namespace Data.Repositories
         {
             string sql = @"INSERT INTO USUARIO 
                (NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE) 
-               VALUES (@Nome, @Data_Nascimento, @Senha, @Email, @Id_Cargo, @Id_Jornada, @Telefone);";
+               VALUES (@Nome, @DataNascimento, @Senha, @Email, @IdCargo, @IdJornada, @Telefone);";
             return await _dbSession.Connection.ExecuteAsync(sql, usuario, _dbSession.Transaction);
         }
 
@@ -48,13 +48,13 @@ namespace Data.Repositories
         {
             string sql = @"UPDATE USUARIO 
                    SET NOME = @Nome,
-                       DATA_NASCIMENTO = @Data_Nascimento,
+                       DATA_NASCIMENTO = @DataNascimento,
                        SENHA = @Senha,
                        EMAIL = @Email,
-                       ID_CARGO = @Id_Cargo,
-                       ID_JORNADA = @Id_Jornada,
+                       ID_CARGO = @IdCargo,
+                       ID_JORNADA = @IdJornada,
                        TELEFONE = @Telefone
-                   WHERE ID_USUARIO = @Id_Usuario;";
+                   WHERE ID_USUARIO = @IdUsuario;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, usuario, _dbSession.Transaction);
             return linhasAfetadas > 0;
         }

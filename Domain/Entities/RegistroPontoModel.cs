@@ -9,11 +9,10 @@ namespace Domain.Entities
 {
     public class RegistroPontoModel
     {
-        [JsonIgnore]
-        public int Id_Registro { get; set; }
-        public int Id_Usuario { get; set; }
-        public DateTime Hora_Registro { get; set; }
-        public DateTime Data_Registro { get; set; }
-        public int Id_Tipo_Registro_Ponto { get; set; }
+        public int IdRegistro { get; set; }
+        public int IdUsuario { get; set; }
+        public DateTime HoraRegistro { get; set; }
+        public DateTime DataRegistro { get; set; }
+        public int IdTipoRegistroPonto { get; set; }
     }
 }
