@@ -34,19 +34,19 @@ namespace EPonto.Controllers
         }
         [HttpPost ]
         [Route("RecuperarSenha")]
-        public async Task<ActionResult<int>> RecuperarSenha(string email)
+        public async Task<ActionResult<bool>> RecuperarSenha(string email)
         {
             try
             {
-                int codigo = await _loginService.RecuperarSenha(email);
-                if (codigo > 0)
-                    return Ok(codigo);
+                bool auxBool = await _loginService.RecuperarSenha(email);
+                if (auxBool)
+                    return Ok(true);
 
-                return BadRequest(0);
+                return BadRequest(false);
             }
             catch (Exception ex)
             {
-                return BadRequest(0);
+                return BadRequest(false);
             }
         }
         [HttpPost]
