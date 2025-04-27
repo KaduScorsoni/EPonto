@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using BCrypt.Net;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Net;
+using System.Net.Mail;
 
 namespace Application.Services
 {
@@ -72,27 +74,38 @@ namespace Application.Services
             }
         }
         
-        public async Task<int>RecuperarSenha(string email)
+        public async Task<bool>RecuperarSenha(string email)
         {
-            if (string.IsNullOrEmpty(email))
-                return 0;
-
-            //Gera número aleatório 
-            using (var rng = RandomNumberGenerator.Create())
+            try
             {
-                byte[] bytes = new byte[4]; // 4 bytes = 32 bits
+                if (string.IsNullOrEmpty(email))
+                    return false;
+
                 int numero;
 
-                do
+                //Gera número aleatório 
+                using (var rng = RandomNumberGenerator.Create())
                 {
-                    rng.GetBytes(bytes);
-                    numero = BitConverter.ToInt32(bytes, 0) & int.MaxValue; // Garante número positivo
-                } while (numero < 100000 || numero > 999999);
+                    byte[] bytes = new byte[4]; // 4 bytes = 32 bits
 
-                await _loginRepository.SalvaCodigoRecuperacao(numero, email);
+                    do
+                    {
+                        rng.GetBytes(bytes);
+                        numero = BitConverter.ToInt32(bytes, 0) & int.MaxValue; // Garante número positivo
+                    } while (numero < 100000 || numero > 999999);
 
-                return numero;
+                    await _loginRepository.SalvaCodigoRecuperacao(numero, email);
+                }
+
+                await EnviarEmailAsync(email, "Recuperação de Senha EPonto", $"O código de recuperação é {numero}.");
+
             }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
+            return true;
         }
         public async Task<bool> ValidaCodigoRecuperacao(int codigo, string email)
         {
@@ -147,6 +160,30 @@ namespace Application.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public async Task EnviarEmailAsync(string destinatario, string assunto, string mensagem)
+        {
+            var remetente = "mkss.contato@gmail.com";
+            var senha = "ujcz beja fkia hycw";
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587, // Pode ser 465 ou 587 (google)
+                Credentials = new NetworkCredential(remetente, senha),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(remetente),
+                Subject = assunto,
+                Body = mensagem,
+                IsBodyHtml = true, 
+            };
+
+            mailMessage.To.Add(destinatario);
+
+            await smtpClient.SendMailAsync(mailMessage);
         }
     }
 
