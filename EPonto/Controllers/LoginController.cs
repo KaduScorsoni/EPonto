@@ -34,11 +34,11 @@ namespace EPonto.Controllers
         }
         [HttpPost ]
         [Route("RecuperarSenha")]
-        public async Task<ActionResult<bool>> RecuperarSenha(string email)
+        public async Task<ActionResult<bool>> RecuperarSenha(RecuperacaoSenhaModel param)
         {
             try
             {
-                bool auxBool = await _loginService.RecuperarSenha(email);
+                bool auxBool = await _loginService.RecuperarSenha(param.email);
                 if (auxBool)
                     return Ok(true);
 
@@ -51,11 +51,11 @@ namespace EPonto.Controllers
         }
         [HttpPost]
         [Route("ValidaCodigoRecuperacao")]
-        public async Task<ActionResult<bool>> ValidaCodigoRecuperacao(int codigo, string email)
+        public async Task<ActionResult<bool>> ValidaCodigoRecuperacao(ValidaCodigoRecuperacaoModel param)
         {
             try
             {
-                bool auxResult = await _loginService.ValidaCodigoRecuperacao(codigo, email);
+                bool auxResult = await _loginService.ValidaCodigoRecuperacao(param.codigo, param.email);
                 if (auxResult)
                     return Ok(true);
 
@@ -68,11 +68,11 @@ namespace EPonto.Controllers
         }
         [HttpPost]
         [Route("AlteraSenhaLogin")]
-        public async Task<ActionResult<bool>> AlteraSenhaLogin(string senha, string email)
+        public async Task<ActionResult<bool>> AlteraSenhaLogin(AlteraSenhaLoginModel param)
         {
             try
             {
-                bool auxResult = await _loginService.AlteraSenhaLogin(senha, email);
+                bool auxResult = await _loginService.AlteraSenhaLogin(param.senha, param.email);
                 if (auxResult)
                     return Ok(true);
 
