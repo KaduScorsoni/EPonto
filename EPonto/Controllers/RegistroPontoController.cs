@@ -39,6 +39,17 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Route("ObterRegistrosUsuario")]
+        public async Task<IActionResult> ObterRegistrosUsuario(int idUsuario)
+        {
+            var resultado = await _registroPontoService.ObterRegistrosUsuarioAsync(idUsuario);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpGet]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosRegistrosPonto()
         {
