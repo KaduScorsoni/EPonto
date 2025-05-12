@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Domain.Entities;
+using Domain.Entities.Ponto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,17 +61,6 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [HttpPut]
-        [Route("Atualizar")]
-        public async Task<IActionResult> AtualizarUsuario([FromBody] RegistroPontoModel ponto)
-        {
-            var resultado = await _registroPontoService.AtualizarRegistroPontoAsync(ponto);
-            if (resultado.Sucesso)
-                return Ok(resultado);
-
-            return BadRequest(resultado);
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirRegistroPonto(int id)
         {
@@ -88,6 +78,53 @@ namespace EPonto.Controllers
             var resultado = await _registroPontoService.ValidarMesAsync(idUsuario, anoReferencia, mesReferencia, statusValidacao);
             if (resultado.Sucesso)
                 return Ok(resultado);
+            return BadRequest(resultado);
+        }
+
+        [HttpPost]
+        [Route("CriarSolicitacaoAlteracao")]
+        public async Task<IActionResult> CriarSolicitacao([FromBody] SolicitacaoAjustePontoModel solicitacao)
+        {
+            var resultado = await _registroPontoService.CriarSolicitacaoAsync(solicitacao);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpGet]
+        [Route("ListarSolicitacoesAlteracao")]
+        public async Task<IActionResult> ListarSolicitacoes()
+        {
+            var resultado = await _registroPontoService.ListarSolicitacoesAsync();
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpGet]
+        [Route("ObterSolicitacaoAlteracao/{id}")]
+        public async Task<IActionResult> ObterSolicitacaoAlteracao(int id)
+        {
+            var resultado = await _registroPontoService.ObterSolicitacaoAltercaoPorIdAsync(id);
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+
+        [HttpPost]
+        [Route("ValidarSolicitacao/{idSolicitacao}")]
+        public async Task<IActionResult> ValidarSolicitacao(int idSolicitacao, [FromBody] bool aprovado)
+        {
+            var resultado = await _registroPontoService.AprovarReprovarSolicitacaoAsync(idSolicitacao, aprovado);
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
             return BadRequest(resultado);
         }
     }

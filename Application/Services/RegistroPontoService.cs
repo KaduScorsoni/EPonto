@@ -4,6 +4,8 @@ using Data.Connections;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Entities;
+using Domain.Entities.Ponto;
+using Domain.Enum;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -95,32 +97,6 @@ namespace Application.Services
                 {
                     Sucesso = false,
                     Mensagem = $"Erro ao listar registros: {ex.Message}"
-                };
-            }
-        }
-
-        public async Task<RegistroPontoDTO> AtualizarRegistroPontoAsync(RegistroPontoModel ponto)
-        {
-            try
-            {
-                _dbSession.BeginTransaction();
-
-                var sucesso = await _registroPontoRepository.AtualizarAsync(ponto);
-                _dbSession.Commit();
-
-                return new RegistroPontoDTO
-                {
-                    Sucesso = sucesso,
-                    Mensagem = sucesso ? "Registro atualizado com sucesso." : "Falha ao atualizar registro."
-                };
-            }
-            catch (Exception ex)
-            {
-                _dbSession.Rollback();
-                return new RegistroPontoDTO
-                {
-                    Sucesso = false,
-                    Mensagem = $"Erro ao atualizar registro: {ex.Message}"
                 };
             }
         }
@@ -233,5 +209,167 @@ namespace Application.Services
                 };
             }
         }
+
+      
+
+        public async Task<SolicitacaoAjusteDTO> CriarSolicitacaoAsync(SolicitacaoAjustePontoModel solicitacao)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+                var idSolicitacao = await _registroPontoRepository.CriarSolicitacaoAsync(solicitacao);
+                _dbSession.Commit();
+
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Solicitação criada com sucesso.",
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao criar solicitação: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<SolicitacaoAjusteDTO> ListarSolicitacoesAsync()
+        {
+            try
+            {
+                var solicitacoes = await _registroPontoRepository.ListarSolicitacoesAsync();
+
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = true,
+                    Solicitacoes = solicitacoes
+                };
+            }
+            catch (Exception ex)
+            {
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar solicitações: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<SolicitacaoAjusteDTO> ObterSolicitacaoAltercaoPorIdAsync(int idSolicitacao)
+        {
+            try
+            {
+                var solicitacao = await _registroPontoRepository.ObterSolicitacaoAltercaoPorIdAsync(idSolicitacao);
+
+                if (solicitacao == null)
+                {
+                    return new SolicitacaoAjusteDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Solicitação não encontrada."
+                    };
+                }
+
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = true,
+                    Solicitacoes = new List<SolicitacaoAjustePontoModel> { solicitacao }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar solicitação: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<SolicitacaoAjusteDTO> AprovarReprovarSolicitacaoAsync(int idSolicitacao, bool aprovado)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+
+                // Obter a solicitação de ajuste por ID
+                var solicitacao = await _registroPontoRepository.ObterSolicitacaoAltercaoPorIdAsync(idSolicitacao);
+                if (solicitacao == null)
+                {
+                    return new SolicitacaoAjusteDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Solicitação não encontrada."
+                    };
+                }
+
+                // Se for aprovado, atualiza os registros de ponto
+                if (aprovado)
+                {
+                    // Preparar a lista de itens a serem atualizados
+                    var itensAlterados = solicitacao.Itens.Select(item => new ItemAjustePontoModel
+                    {
+                        IdRegistro = item.IdRegistro,
+                        HoraRegistro = item.HoraRegistro,
+                        DataRegistro = item.DataRegistro,
+                        IdTipoRegistroPonto = item.IdTipoRegistroPonto
+                    }).ToList();
+
+                    // Chama o método AtualizarAsync passando a solicitação, o status aprovado e a lista de itens alterados
+                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(idSolicitacao, aprovado, itensAlterados, _dbSession.Transaction);
+
+                    if (!sucessoAtualizacao)
+                    {
+                        _dbSession.Rollback();
+                        return new SolicitacaoAjusteDTO
+                        {
+                            Sucesso = false,
+                            Mensagem = "Erro ao aprovar a solicitação."
+                        };
+                    }
+
+                    solicitacao.StatusSolicitacao = StatusAlteracaoPonto.Aprovada;
+                    solicitacao.DataResposta = DateTime.Now;
+                }
+                else
+                {
+                    solicitacao.StatusSolicitacao = StatusAlteracaoPonto.Reprovada;
+                    solicitacao.DataResposta = DateTime.Now;
+                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(idSolicitacao, aprovado, new List<ItemAjustePontoModel>(), _dbSession.Transaction);
+
+                    if (!sucessoAtualizacao)
+                    {
+                        _dbSession.Rollback();
+                        return new SolicitacaoAjusteDTO
+                        {
+                            Sucesso = false,
+                            Mensagem = "Erro ao reprovar a solicitação."
+                        };
+                    }
+                }
+
+                _dbSession.Commit();
+
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = true,
+                    Mensagem = aprovado ? "Solicitação aprovada com sucesso." : "Solicitação reprovada com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new SolicitacaoAjusteDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao processar solicitação: {ex.Message}"
+                };
+            }
+        }
+
     }
 }
