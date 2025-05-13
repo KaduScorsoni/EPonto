@@ -83,7 +83,7 @@ namespace EPonto.Controllers
 
         [HttpPost]
         [Route("CriarSolicitacaoAlteracao")]
-        public async Task<IActionResult> CriarSolicitacao([FromBody] SolicitacaoAjustePontoModel solicitacao)
+        public async Task<IActionResult> CriarSolicitacaoAlteracao([FromBody] SolicitacaoAjustePontoModel solicitacao)
         {
             var resultado = await _registroPontoService.CriarSolicitacaoAsync(solicitacao);
             if (resultado.Sucesso)

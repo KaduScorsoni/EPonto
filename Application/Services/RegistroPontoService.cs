@@ -313,14 +313,18 @@ namespace Application.Services
                     // Preparar a lista de itens a serem atualizados
                     var itensAlterados = solicitacao.Itens.Select(item => new ItemAjustePontoModel
                     {
-                        IdRegistro = item.IdRegistro,
                         HoraRegistro = item.HoraRegistro,
-                        DataRegistro = item.DataRegistro,
                         IdTipoRegistroPonto = item.IdTipoRegistroPonto
                     }).ToList();
 
-                    // Chama o método AtualizarAsync passando a solicitação, o status aprovado e a lista de itens alterados
-                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(idSolicitacao, aprovado, itensAlterados, _dbSession.Transaction);
+                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(
+                        idSolicitacao,
+                        aprovado,
+                        itensAlterados,
+                        solicitacao.DataRegistroAlteracao,
+                        solicitacao.IdSolicitante,
+                        _dbSession.Transaction
+                    );
 
                     if (!sucessoAtualizacao)
                     {
@@ -339,7 +343,14 @@ namespace Application.Services
                 {
                     solicitacao.StatusSolicitacao = StatusAlteracaoPonto.Reprovada;
                     solicitacao.DataResposta = DateTime.Now;
-                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(idSolicitacao, aprovado, new List<ItemAjustePontoModel>(), _dbSession.Transaction);
+                    bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(
+                        idSolicitacao,
+                        aprovado,
+                        new List<ItemAjustePontoModel>(),
+                        solicitacao.DataRegistroAlteracao,
+                        solicitacao.IdSolicitante,
+                        _dbSession.Transaction
+                    );
 
                     if (!sucessoAtualizacao)
                     {
