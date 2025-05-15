@@ -10,12 +10,13 @@ namespace Domain.Entities.Ponto
     public class SolicitacaoAjustePontoModel
     {
         public int IdSolicitacao { get; set; }
+        public int IdSolicitante { get; set; }
         public string Justificativa { get; set; }
         public StatusAlteracaoPonto StatusSolicitacao { get; set; }
         public DateTime DataSolicitacao { get; set; }
+        public DateTime DataRegistroAlteracao { get; set; }
         public DateTime? DataResposta { get; set; }
         public DateTime? HoraRegistro { get; set; }
-        public int? IdGestorResponsavel { get; set; }
         public List<ItemAjustePontoModel> Itens { get; set; }
     }
 }

@@ -10,9 +10,7 @@ namespace Domain.Entities.Ponto
     {
         public int IdItem { get; set; }
         public int IdSolicitacao { get; set; }
-        public DateTime DataRegistro { get; set; }
         public DateTime? HoraRegistro { get; set; }
         public int IdTipoRegistroPonto { get; set; }
-        public int IdRegistro { get; set; }
     }
 }
