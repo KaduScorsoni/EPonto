@@ -117,19 +117,23 @@ namespace Data.Repositories
         {
             try
             {
-                // Atualiza o status da solicitação
                 string sqlSolicitacao = @"
-                    UPDATE SOLICITACAO_AJUSTE_PONTO
-                    SET STATUS_SOLICITACAO = @StatusSolicitacao
-                    SET DATA_RESPOSTA = @DataResposta
-                    WHERE ID_SOLICITACAO = @IdSolicitacao;";
+                UPDATE SOLICITACAO_AJUSTE_PONTO
+                SET 
+                    STATUS_SOLICITACAO = @StatusSolicitacao,
+                    DATA_RESPOSTA = @DataResposta
+                WHERE ID_SOLICITACAO = @IdSolicitacao;";
+
 
                 var statusSolicitacao = aprovar ? 1 : 2;
+                var dataResposta = DateTime.Now;
                 await _dbSession.Connection.ExecuteAsync(sqlSolicitacao, new
                 {
                     StatusSolicitacao = statusSolicitacao,
+                    DataResposta = dataResposta,
                     IdSolicitacao = idSolicitacao
                 }, transaction);
+
 
                 if (aprovar)
                 {
@@ -201,52 +205,55 @@ namespace Data.Repositories
         }
 
 
-        public async Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync()
+        public async Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync(int? status = null)
         {
             string sql = @"
-            SELECT 
-                s.ID_SOLICITACAO,
-                s.JUSTIFICATIVA,
-                s.STATUS_SOLICITACAO,
-                s.DATA_SOLICITACAO,
-                s.DATA_RESPOSTA,
-                s.ID_SOLICITANTE,
-                s.DATA_REGISTRO_ALTERACAO,
-    
-                i.ID_ITEM,
-                i.HORA_REGISTRO,
-                i.ID_TIPO_REGISTRO_PONTO,
-                i.ID_SOLICITACAO AS ITEM_ID_SOLICITACAO
-            FROM 
-                SOLICITACAO_AJUSTE_PONTO s
-            LEFT JOIN 
-            ITEM_AJUSTE_PONTO i 
-            ON s.ID_SOLICITACAO = i.ID_SOLICITACAO;";
+                        SELECT 
+                            s.ID_SOLICITACAO,
+                            s.JUSTIFICATIVA,
+                            s.STATUS_SOLICITACAO,
+                            s.DATA_SOLICITACAO,
+                            s.DATA_RESPOSTA,
+                            s.ID_SOLICITANTE,
+                            s.DATA_REGISTRO_ALTERACAO,
+
+                            i.ID_ITEM,
+                            i.HORA_REGISTRO,
+                            i.ID_TIPO_REGISTRO_PONTO,
+                            i.ID_SOLICITACAO AS ITEM_ID_SOLICITACAO
+                        FROM 
+                            SOLICITACAO_AJUSTE_PONTO s
+                        LEFT JOIN 
+                            ITEM_AJUSTE_PONTO i ON s.ID_SOLICITACAO = i.ID_SOLICITACAO
+                        WHERE 
+                            (@Status IS NULL OR s.STATUS_SOLICITACAO = @Status);";
 
             var solicitacoes = new Dictionary<int, SolicitacaoAjustePontoModel>();
 
             await _dbSession.Connection.QueryAsync<SolicitacaoAjustePontoModel, ItemAjustePontoModel, SolicitacaoAjustePontoModel>(
-            sql,
-            (sol, item) =>
-            {
-                if (!solicitacoes.TryGetValue(sol.IdSolicitacao, out var solicitacao))
+                sql,
+                (sol, item) =>
                 {
-                    solicitacao = sol;
-                    solicitacao.Itens = new List<ItemAjustePontoModel>();
-                    solicitacoes.Add(solicitacao.IdSolicitacao, solicitacao);
-                }
+                    if (!solicitacoes.TryGetValue(sol.IdSolicitacao, out var solicitacao))
+                    {
+                        solicitacao = sol;
+                        solicitacao.Itens = new List<ItemAjustePontoModel>();
+                        solicitacoes.Add(solicitacao.IdSolicitacao, solicitacao);
+                    }
 
-                if (item != null)
-                    solicitacao.Itens.Add(item);
+                    if (item != null)
+                        solicitacao.Itens.Add(item);
 
-                return solicitacao;
-            },
-            //Diz ao Dapper onde começa o segundo objeto
-            splitOn: "ID_ITEM"
+                    return solicitacao;
+                },
+                new { Status = status },
+                //Diz ao Dapper onde começa o segundo objeto
+                splitOn: "ID_ITEM"
             );
 
             return solicitacoes.Values;
         }
+
 
         public async Task<SolicitacaoAjustePontoModel> ObterSolicitacaoAltercaoPorIdAsync(int idSolicitacao)
         {

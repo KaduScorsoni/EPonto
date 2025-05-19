@@ -38,6 +38,10 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IRegistroPontoService, RegistroPontoService>();
 builder.Services.AddScoped<IRegistroPontoRepository, RegistroPontoRepository>();
 
+
+builder.Services.AddScoped<ICargoService, CargoService>();
+builder.Services.AddScoped<ICargoRepository, CargoRepository>();
+
 builder.Services.AddScoped<DbSession>();
 
 var app = builder.Build();
