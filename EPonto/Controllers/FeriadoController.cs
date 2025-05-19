@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace EPonto.Controllers
 {
     [ApiController]
-    [Route("api/login")]
-    public class FeriadoController : Controller
+    [Route("api/feriado")]
+    public class FeriadoController : ControllerBase
     {
         private readonly IFeriadoService _feriadoService;
         public FeriadoController(IFeriadoService feriadoService)

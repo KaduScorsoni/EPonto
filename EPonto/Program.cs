@@ -32,6 +32,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
+//Perfil
+builder.Services.AddScoped<IFeriadoService, FeriadoService>();
+builder.Services.AddScoped<IFeriadoRepository, FeriadoRepository>();
+
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
