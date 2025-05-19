@@ -237,11 +237,11 @@ namespace Application.Services
             }
         }
 
-        public async Task<SolicitacaoAjusteDTO> ListarSolicitacoesAsync()
+        public async Task<SolicitacaoAjusteDTO> ListarSolicitacoesAsync(int? status = null)
         {
             try
             {
-                var solicitacoes = await _registroPontoRepository.ListarSolicitacoesAsync();
+                var solicitacoes = await _registroPontoRepository.ListarSolicitacoesAsync(status);
 
                 return new SolicitacaoAjusteDTO
                 {

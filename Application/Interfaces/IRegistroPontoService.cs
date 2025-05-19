@@ -18,7 +18,7 @@ namespace Application.Interfaces
         Task<RegistroPontoDTO> ObterRegistrosUsuarioAsync(int idUsuario);
         Task <RegistroPontoDTO> VerificarValidacaoMesAsync(int idUsuario);
         Task<RegistroPontoDTO> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao);
-        Task<SolicitacaoAjusteDTO> ListarSolicitacoesAsync();
+        Task<SolicitacaoAjusteDTO> ListarSolicitacoesAsync(int? status = null);
         Task<SolicitacaoAjusteDTO> CriarSolicitacaoAsync(SolicitacaoAjustePontoModel solicitacao);
         Task<SolicitacaoAjusteDTO> ObterSolicitacaoAltercaoPorIdAsync(int idSolicitacao);
         Task<SolicitacaoAjusteDTO> AprovarReprovarSolicitacaoAsync(int idSolicitacao, bool aprovado);

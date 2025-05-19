@@ -19,7 +19,7 @@ namespace Data.Interfaces
         Task<bool> VerificarValidacaoMesAsync(int idUsuario, int anoReferencia, int mesReferencia);
         Task<int> ValidarMesAsync(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao);
         Task<int> CriarSolicitacaoAsync(SolicitacaoAjustePontoModel solicitacao);
-        Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync();
+        Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync(int? status = null);
         Task<SolicitacaoAjustePontoModel> ObterSolicitacaoAltercaoPorIdAsync(int idSolicitacao);
         Task<bool> AtualizarRegistroAsync(int idSolicitacao, bool aprovar, List<ItemAjustePontoModel> itensAlterados, DateTime dataRegistro, int idUsuario, IDbTransaction transaction);
 

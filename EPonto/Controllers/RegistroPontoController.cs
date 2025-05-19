@@ -71,15 +71,15 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
-        [HttpPost]
-        [Route("Validar")]
-        public async Task<IActionResult> ValidarMes(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao)
-        {
-            var resultado = await _registroPontoService.ValidarMesAsync(idUsuario, anoReferencia, mesReferencia, statusValidacao);
-            if (resultado.Sucesso)
-                return Ok(resultado);
-            return BadRequest(resultado);
-        }
+        //[HttpPost]
+        //[Route("Validar")]
+        //public async Task<IActionResult> ValidarMes(int idUsuario, int anoReferencia, int mesReferencia, int statusValidacao)
+        //{
+        //    var resultado = await _registroPontoService.ValidarMesAsync(idUsuario, anoReferencia, mesReferencia, statusValidacao);
+        //    if (resultado.Sucesso)
+        //        return Ok(resultado);
+        //    return BadRequest(resultado);
+        //}
 
         [HttpPost]
         [Route("CriarSolicitacaoAlteracao")]
@@ -94,9 +94,9 @@ namespace EPonto.Controllers
 
         [HttpGet]
         [Route("ListarSolicitacoesAlteracao")]
-        public async Task<IActionResult> ListarSolicitacoes()
+        public async Task<IActionResult> ListarSolicitacoes([FromQuery] int? status = null)
         {
-            var resultado = await _registroPontoService.ListarSolicitacoesAsync();
+            var resultado = await _registroPontoService.ListarSolicitacoesAsync(status);
             if (resultado.Sucesso)
                 return Ok(resultado);
 

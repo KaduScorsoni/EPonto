@@ -37,7 +37,7 @@ namespace Application.Services
                     return new UsuarioDTO
                     {
                         Sucesso = false,
-                        Mensagem = "Já existe um usuário com esse e-mail cadastrado."
+                        Mensagem = "Já existe um usuário com este e-mail cadastrado."
                     };
                 }
                 usuario.Senha = _loginService.HashPassword(usuario.Senha);
