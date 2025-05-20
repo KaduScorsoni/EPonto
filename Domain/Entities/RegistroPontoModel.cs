@@ -9,6 +9,7 @@ namespace Domain.Entities
 {
     public class RegistroPontoModel
     {
+        [JsonIgnore]
         public int IdRegistro { get; set; }
         public int IdUsuario { get; set; }
         public DateTime HoraRegistro { get; set; }

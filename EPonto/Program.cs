@@ -42,9 +42,11 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IRegistroPontoService, RegistroPontoService>();
 builder.Services.AddScoped<IRegistroPontoRepository, RegistroPontoRepository>();
 
-
 builder.Services.AddScoped<ICargoService, CargoService>();
 builder.Services.AddScoped<ICargoRepository, CargoRepository>();
+
+builder.Services.AddScoped<IJornadaTrabalhoService, JornadaTrabalhoService>();
+builder.Services.AddScoped<IJornadaTrabalhoRepository, JornadaTrabalhoRepository>();
 
 builder.Services.AddScoped<DbSession>();
 
