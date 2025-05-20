@@ -48,16 +48,23 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [HttpPut]
-        [Route("Atualizar")]
-        public async Task<IActionResult> AtualizarCargo([FromBody] CargoModel cargo)
+        [HttpPut("Atualizar/{id}")]
+        public async Task<IActionResult> AtualizarCargo(int id, [FromBody] CargoModel cargo)
         {
+            if (cargo == null)
+            {
+                return BadRequest("Dados do cargo são obrigatórios.");
+            }
+
+            cargo.IdCargo = id;
+
             var resultado = await _cargoService.AtualizarCargoAsync(cargo);
             if (resultado.Sucesso)
                 return Ok(resultado);
 
             return BadRequest(resultado);
         }
+
 
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirCargo(int id)

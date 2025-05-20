@@ -49,10 +49,16 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [HttpPut]
-        [Route("Atualizar")]
-        public async Task<IActionResult> AtualizarUsuario([FromBody] UsuarioModel usuario)
+        [HttpPut("Atualizar/{id}")]
+        public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] UsuarioModel usuario)
         {
+            if (usuario == null)
+            {
+                return BadRequest("Dados do usuário são obrigatórios.");
+            }
+
+            usuario.IdUsuario = id;
+
             var resultado = await _usuarioService.AtualizarUsuarioAsync(usuario);
             if (resultado.Sucesso)
                 return Ok(resultado);

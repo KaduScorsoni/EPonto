@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class CargoModel
+    public class JornadaTrabalhoModel
     {
         [JsonIgnore]
-        public int IdCargo { get; set; }
-        public string NomeCargo { get; set; }
-        public string Salario { get; set; }
+        public int IdJornada { get; set; }
+        public string NomeJornada { get; set; }
+        public int QtdHorasMensais { get; set; }
         [JsonIgnore]
         public int IndAtivo { get; set; }
     }
