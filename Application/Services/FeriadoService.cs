@@ -29,6 +29,7 @@ namespace Application.Services
 
                 await _feriadoRepository.CadastrarFeriado(param);
 
+                _dbSession.Commit();
                 return new ResultadoDTO
                 {
                     Sucesso = true,
@@ -54,6 +55,8 @@ namespace Application.Services
 
                 await _feriadoRepository.DeletarFeriado(idFeriado);
 
+                _dbSession.Commit();
+
                 return new ResultadoDTO
                 {
                     Sucesso = true,
@@ -75,8 +78,6 @@ namespace Application.Services
         {
             try
             {
-                _dbSession.BeginTransaction();
-
                 List<FeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
 
                 if (ListaFeriados.Count > 0)
@@ -95,7 +96,6 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                _dbSession.Rollback();
                 return new FeriadoDTO
                 {
                     Sucesso = false,

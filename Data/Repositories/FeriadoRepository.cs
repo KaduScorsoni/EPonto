@@ -23,7 +23,7 @@ namespace Data.Repositories
             _dbSession = dbSession;
         }
         #endregion
-        public async Task<bool> CadastrarFeriado(FeriadoModel param)
+        public async Task<int> CadastrarFeriado(FeriadoModel param)
         {
             string sql = @"
                 INSERT INTO FERIADO (
@@ -44,21 +44,18 @@ namespace Data.Repositories
                 TIPO_FERIADO = param.IndTipoFeriado
             };
 
-            return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
+            return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
         }
 
-        public async Task<bool> DeletarFeriado(int idFeriado)
+        public async Task<int> DeletarFeriado(int idFeriado)
         {
             string sql = @"
                 DELETE FROM FERIADO F
                       WHERE F.ID_FERIADO = @ID_FERIADO";
 
-            object auxParametros = new
-            {
-                ID_FERIADO = idFeriado
-            };
+            object auxParametros = new { ID_FERIADO = idFeriado };
 
-            return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
+            return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
         }
 
         public async Task<List<FeriadoModel>> ListarFeriados()

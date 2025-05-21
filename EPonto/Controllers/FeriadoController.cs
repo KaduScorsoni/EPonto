@@ -26,11 +26,11 @@ namespace EPonto.Controllers
                 if (auxResult.Sucesso)
                     return Ok(auxResult);
 
-                return Unauthorized(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
             }
             catch (Exception ex)
             {
-                return Unauthorized(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
         [HttpPost]
@@ -43,11 +43,11 @@ namespace EPonto.Controllers
                 if (auxResult.Sucesso)
                     return Ok(auxResult);
 
-                return Unauthorized(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
             }
             catch (Exception ex)
             {
-                return Unauthorized(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
         [HttpPost]
@@ -60,11 +60,11 @@ namespace EPonto.Controllers
                 if (auxResult.Sucesso)
                     return Ok(auxResult);
 
-                return Unauthorized(new FeriadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+                return BadRequest(new FeriadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
             }
             catch (Exception ex)
             {
-                return Unauthorized(new FeriadoDTO { Sucesso = false, Mensagem = ex.Message });
+                return BadRequest(new FeriadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
     }
