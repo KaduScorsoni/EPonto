@@ -9,7 +9,6 @@ namespace Domain.Entities
 {
     public class CargoModel
     {
-        [JsonIgnore]
         public int IdCargo { get; set; }
         public string NomeCargo { get; set; }
         public string Salario { get; set; }

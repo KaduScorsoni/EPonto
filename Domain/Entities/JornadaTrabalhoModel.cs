@@ -9,7 +9,6 @@ namespace Domain.Entities
 {
     public class JornadaTrabalhoModel
     {
-        [JsonIgnore]
         public int IdJornada { get; set; }
         public string NomeJornada { get; set; }
         public int QtdHorasMensais { get; set; }
