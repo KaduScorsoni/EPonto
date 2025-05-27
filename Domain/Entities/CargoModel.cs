@@ -12,7 +12,6 @@ namespace Domain.Entities
         public int IdCargo { get; set; }
         public string NomeCargo { get; set; }
         public string Salario { get; set; }
-        [JsonIgnore]
         public int IndAtivo { get; set; }
     }
 }

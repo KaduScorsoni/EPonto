@@ -12,7 +12,6 @@ namespace Domain.Entities
         public int IdJornada { get; set; }
         public string NomeJornada { get; set; }
         public int QtdHorasMensais { get; set; }
-        [JsonIgnore]
         public int IndAtivo { get; set; }
     }
 }
