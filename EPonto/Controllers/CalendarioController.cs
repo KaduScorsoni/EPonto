@@ -10,28 +10,30 @@ namespace EPonto.Controllers
     [ApiController]
     public class CalendarioController : ControllerBase
     {
-        //private readonly ICalendarioService _calendarioService;
-        //public CalendarioController(ICalendarioService calendarioService)
-        //{
-        //    _calendarioService = calendarioService;
-        //}
+        private readonly ICalendarioService _calendarioService;
+        public CalendarioController(ICalendarioService calendarioService)
+        {
+            _calendarioService = calendarioService;
+        }
 
-        //[HttpPost]
-        //[Route("BuscaCalendario")]
-        //public async Task<ActionResult<CalendarioDTO>> BuscaCalendario()
-        //{
-        //    try
-        //    {
-        //        LoginDTO auxResult = await _loginService.RealizarLogin(paramLogin);
-        //        if (auxResult.Sucesso)
-        //            return Ok(auxResult);
+        [HttpPost]
+        [Route("BuscaCalendario")]
+        public async Task<ActionResult<CalendarioDTO>> BuscaCalendario(int ano, int? idUsuario = null)
+        {
+            try
+            {
+                CalendarioDTO auxResult = await _calendarioService.MontaCalendario(ano, idUsuario);
 
-        //        return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
-        //    }
-        //}
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
+
+                return BadRequest(new CalendarioDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new CalendarioDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
+        
     }
 }

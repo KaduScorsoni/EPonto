@@ -1,4 +1,4 @@
-﻿using Domain.Entities.Calendario;
+﻿using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class CalendarioDTO
+    public class FeriasDTO
     {
-        public bool Sucesso { get; set; }
         public string Mensagem { get; set; }
-        public List<CalendarioModel> Dias { get; set; }
+        public bool Sucesso { get; set; }
+        public List<FeriasModel> ListaFerias { get; set; }
     }
 }
