@@ -43,7 +43,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<RegistroPontoModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO
+            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO,
                    FROM REGISTRO_PONTO";
             return await _dbSession.Connection.QueryAsync<RegistroPontoModel>(sql);
         }
@@ -216,6 +216,7 @@ namespace Data.Repositories
                             s.DATA_RESPOSTA,
                             s.ID_SOLICITANTE,
                             s.DATA_REGISTRO_ALTERACAO,
+                            s.STATUS_SOLICITACAO,
 
                             i.ID_ITEM,
                             i.HORA_REGISTRO,
