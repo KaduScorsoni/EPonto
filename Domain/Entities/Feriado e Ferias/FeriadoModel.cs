@@ -13,8 +13,6 @@ namespace Domain.Entities
         public string DscFeriado { get; set; }
         public DateTime DatFeriado { get; set; }
         public SituacaoFeriado IndTipoFeriado { get; set; }
-        [JsonIgnore]
-        public long IndVigente { get; set; }
         [JsonIgnore] 
         public long IdFeriado { get; set; }
         

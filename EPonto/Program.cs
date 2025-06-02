@@ -32,19 +32,26 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
-//Perfil
+//Feriado
 builder.Services.AddScoped<IFeriadoService, FeriadoService>();
 builder.Services.AddScoped<IFeriadoRepository, FeriadoRepository>();
 
+//Calendario 
+builder.Services.AddScoped<ICalendarioService, CalendarioService>();
+
+//Usuario
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
+//Ponto
 builder.Services.AddScoped<IRegistroPontoService, RegistroPontoService>();
 builder.Services.AddScoped<IRegistroPontoRepository, RegistroPontoRepository>();
 
+//Cargo
 builder.Services.AddScoped<ICargoService, CargoService>();
 builder.Services.AddScoped<ICargoRepository, CargoRepository>();
 
+//Jornada de trabalho
 builder.Services.AddScoped<IJornadaTrabalhoService, JornadaTrabalhoService>();
 builder.Services.AddScoped<IJornadaTrabalhoRepository, JornadaTrabalhoRepository>();
 
