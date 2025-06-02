@@ -15,5 +15,6 @@ namespace Data.Interfaces
         Task<bool> AtualizarAsync(JornadaTrabalhoModel jornada);
         Task<bool> ExcluirAsync(int id);
         Task<JornadaTrabalhoModel> ValidarJornadaExistente(string nomeJornada);
+        Task<TimeSpan> ObterJornadaDiariaUsuario(int idUsuario);
     }
 }

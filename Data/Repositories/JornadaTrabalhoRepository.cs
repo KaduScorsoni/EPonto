@@ -37,6 +37,24 @@ namespace Data.Repositories
                    WHERE ID_JORNADA = @IdJornada;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<JornadaTrabalhoModel>(sql, new { IdJornada = id });
         }
+        public async Task<TimeSpan> ObterJornadaDiariaUsuario(int idUsuario)
+        {
+            string sql = @"
+                        SELECT j.QTD_HORAS_MENSAIS
+                        FROM USUARIO u
+                        INNER JOIN JORNADA_TRABALHO j ON u.ID_JORNADA = j.ID_JORNADA
+                        WHERE u.ID_USUARIO = @IdUsuario";
+
+            var horasMensais = await _dbSession.Connection.QueryFirstOrDefaultAsync<decimal?>(sql, new { IdUsuario = idUsuario });
+
+            if (horasMensais == null || horasMensais == 0)
+                throw new Exception("Jornada de trabalho mensal não definida para o usuário.");
+
+            // Considerando uma média de 22 dias úteis por mês
+            var horasDiarias = (double)horasMensais / 22;
+
+            return TimeSpan.FromHours(horasDiarias);
+        }
 
         public async Task<IEnumerable<JornadaTrabalhoModel>> ListarTodosAsync()
         {

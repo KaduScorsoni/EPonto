@@ -14,7 +14,6 @@ namespace Domain.Entities.Ponto
         public int IdSolicitacao { get; set; }
         public int IdSolicitante { get; set; }
         public string Justificativa { get; set; }
-        [JsonIgnore]
         public StatusAlteracaoPonto StatusSolicitacao { get; set; }
         [JsonIgnore]
         public DateTime DataSolicitacao { get; set; }
