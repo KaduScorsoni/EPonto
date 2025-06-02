@@ -33,7 +33,7 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpDelete]
         [Route("DeletarFeriado")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFeriado(int idFeriado)
         {
@@ -50,7 +50,7 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("ListarFeriados")]
         public async Task<ActionResult<FeriadoDTO>> ListarFeriados()
         {
@@ -84,7 +84,7 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpDelete]
         [Route("DeletarFerias")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFerias(int idFerias)
         {
@@ -101,7 +101,7 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("ListarFerias")]
         public async Task<ActionResult<FeriasDTO>> ListarFerias(int? idUsuario = null)
         {

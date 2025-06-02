@@ -16,7 +16,7 @@ namespace EPonto.Controllers
             _calendarioService = calendarioService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("BuscaCalendario")]
         public async Task<ActionResult<CalendarioDTO>> BuscaCalendario(int ano, int? idUsuario = null)
         {
