@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Data.Connections;
 using Data.Interfaces;
+using Domain.Entities;
 
 public class BancoHorasService : IBancoHorasService
 {
@@ -24,13 +25,25 @@ public class BancoHorasService : IBancoHorasService
         {
             _dbSession.BeginTransaction();
 
-            // 1. Calcular saldo do dia
+            // 1. Processar o saldo do dia atual
             var (saldo, inconsistente) = await _bancoHorasRepository.CalcularSaldoDiarioAsync(idUsuario, data);
-
-            // 2. Inserir saldo diário
             await _bancoHorasRepository.InserirSaldoDiarioAsync(idUsuario, data, saldo, inconsistente);
 
-            // 3. Calcular banco de horas total
+            // 2. Verificar se há dias inconsistentes que podem ter sido corrigidos
+            var diasInconsistentes = await _bancoHorasRepository.ObterDiasInconsistentesAsync(idUsuario);
+
+            foreach (var dia in diasInconsistentes)
+            {
+                var (saldoDia, aindaInconsistente) = await _bancoHorasRepository.CalcularSaldoDiarioAsync(idUsuario, dia);
+
+                if (!aindaInconsistente)
+                {
+                    // Atualiza o dia que foi corrigido
+                    await _bancoHorasRepository.AtualizarSaldoDiarioInconsistenteAsync(idUsuario, dia, saldoDia.Value, false);
+                }
+            }
+
+            // 3. Recalcular banco de horas total
             var (horasTrabalhadas, saldoTotal) = await _bancoHorasRepository.CalcularBancoHorasAsync(idUsuario);
 
             // 4. Inserir/atualizar banco de horas
@@ -55,6 +68,7 @@ public class BancoHorasService : IBancoHorasService
         }
     }
 
+
     public async Task<BancoHorasDTO> ObterSaldosUsuarioAsync(int idUsuario)
     {
         try
@@ -76,4 +90,34 @@ public class BancoHorasService : IBancoHorasService
             };
         }
     }
+    public async Task<BancoHorasDTO> ObterBancoHorasAtualAsync(int idUsuario)
+    {
+        try
+        {
+            var (horasTrabalhadas, saldo) = await _bancoHorasRepository.ObterBancoHorasAtualAsync(idUsuario);
+
+            return new BancoHorasDTO
+            {
+                Sucesso = true,
+                BancoHoras = new List<BancoHorasModel>
+            {
+                new BancoHorasModel
+                {
+                    IdUsuario = idUsuario,
+                    HorasTrabalhadas = horasTrabalhadas,
+                    Saldo = saldo
+                }
+            }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BancoHorasDTO
+            {
+                Sucesso = false,
+                Mensagem = $"Erro ao obter banco de horas atual: {ex.Message}"
+            };
+        }
+    }
+
 }
