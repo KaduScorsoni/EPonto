@@ -11,5 +11,6 @@ namespace Application.Interfaces
     {
         Task<BancoHorasDTO> ProcessarBancoHorasDiarioAsync(int idUsuario, DateTime data);
         Task<BancoHorasDTO> ObterSaldosUsuarioAsync(int idUsuario);
+        Task<BancoHorasDTO> ObterBancoHorasAtualAsync(int idUsuario);
     }
 }

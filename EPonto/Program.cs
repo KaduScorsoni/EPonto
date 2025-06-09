@@ -1,8 +1,12 @@
 using Application.Interfaces;
+using Application.Jobs;
 using Application.Services;
 using Data.Connections;
 using Data.Interfaces;
 using Data.Repositories;
+using Hangfire;
+using Hangfire.MySql;
+using Hangfire.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +59,30 @@ builder.Services.AddScoped<ICargoRepository, CargoRepository>();
 builder.Services.AddScoped<IJornadaTrabalhoService, JornadaTrabalhoService>();
 builder.Services.AddScoped<IJornadaTrabalhoRepository, JornadaTrabalhoRepository>();
 
+//Banco Horas
+builder.Services.AddScoped<IBancoHorasService, BancoHorasService>();
+builder.Services.AddScoped<IBancoHorasRepository, BancoHorasRepository>();
+
 builder.Services.AddScoped<DbSession>();
+
+// Hangfire - Configuração com MySQL
+builder.Services.AddHangfire(configuration =>
+{
+    configuration.UseSimpleAssemblyNameTypeSerializer()
+                 .UseRecommendedSerializerSettings()
+                 .UseStorage(new MySqlStorage(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    new MySqlStorageOptions
+                    {
+                        TablesPrefix = "Hangfire"
+                    }));
+});
+
+builder.Services.AddHangfireServer();
+
+// Adicione o serviço do job
+builder.Services.AddScoped<BancoHorasJob>();
+
 
 var app = builder.Build();
 
@@ -74,5 +101,13 @@ app.UseCors("PermitirTudo");
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard(); // Opcional: expõe a dashboard no /hangfire
+
+RecurringJob.AddOrUpdate<BancoHorasJob>(
+    "processar-banco-horas-diario",
+    job => job.ExecutarProcessamentoDiario(),
+    "30 20 * * *" // Cron: todo dia às 
+);
 
 app.Run();
