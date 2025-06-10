@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Data.Connections;
 using Data.Interfaces;
 using Domain.Entities;
+using Domain.Entities.Feriado_e_Ferias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +79,7 @@ namespace Application.Services
         {
             try
             {
-                List<FeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
+                List<ResultadoFeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
 
                 if (ListaFeriados.Count > 0)
                     return new FeriadoDTO
@@ -137,7 +138,7 @@ namespace Application.Services
         {
             try
             {
-                List<FeriasModel> ListaFerias = await _feriadoRepository.ListarFerias(idUsuario);
+                List<ResultadoFeriasModel> ListaFerias = await _feriadoRepository.ListarFerias(idUsuario);
 
                 if (ListaFerias.Count > 0)
                     return new FeriasDTO

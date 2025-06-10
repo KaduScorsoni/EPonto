@@ -4,6 +4,7 @@ using Data.Connections;
 using Data.Interfaces;
 using Domain.Entities;
 using Domain.Entities.Calendario;
+using Domain.Entities.Feriado_e_Ferias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,11 @@ namespace Application.Services
             {
                 List<CalendarioModel> calendario = new List<CalendarioModel>();
 
-                List<FeriasModel> ListaFerias = await _feriadoRepository.ListarFerias(idUsuario);
-                List<FeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
+                List<ResultadoFeriasModel> ListaFerias = await _feriadoRepository.ListarFerias(idUsuario);
+                List<ResultadoFeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
                 
                 //Inserindo os feriados
-                foreach (FeriadoModel item in ListaFeriados)
+                foreach (ResultadoFeriadoModel item in ListaFeriados)
                 {
                     calendario.Add(new CalendarioModel
                     {
@@ -41,7 +42,7 @@ namespace Application.Services
                 }
 
                 //Inserindo as ferias
-                foreach (FeriasModel item in ListaFerias)
+                foreach (ResultadoFeriasModel item in ListaFerias)
                 {
                     for (var data = item.DatIncioFerias; data <= item.DatFimFerias; data = data.AddDays(1))
                     {

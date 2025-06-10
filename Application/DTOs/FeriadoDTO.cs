@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Feriado_e_Ferias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace Application.DTOs
     {
         public string Mensagem { get; set; }
         public bool Sucesso { get; set; }
-        public List<FeriadoModel> ListaFeriados { get; set; }
+        public List<ResultadoFeriadoModel> ListaFeriados { get; set; }
     }
 }
