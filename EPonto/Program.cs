@@ -75,11 +75,12 @@ builder.Services.AddHangfire(configuration =>
     configuration.UseSimpleAssemblyNameTypeSerializer()
                  .UseRecommendedSerializerSettings()
                  .UseStorage(new MySqlStorage(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
-                    new MySqlStorageOptions
-                    {
-                        TablesPrefix = "Hangfire"
-                    }));
+                     builder.Configuration.GetConnectionString("HangfireConnection"),
+                     new MySqlStorageOptions
+                     {
+                         // Prefixo das tabelas se quiser separar visualmente
+                         TablesPrefix = "Hangfire"
+                     }));
 });
 
 builder.Services.AddHangfireServer();
