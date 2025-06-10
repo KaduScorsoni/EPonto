@@ -3,13 +3,8 @@ using Data.Connections;
 using Data.Interfaces;
 using Data.Util;
 using Domain.Entities;
-using Domain.Entities.Login;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Entities.Feriado_e_Ferias;
+using static Domain.Entities.Enum.EnumGerais;
 
 namespace Data.Repositories
 {
@@ -58,7 +53,7 @@ namespace Data.Repositories
             return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
         }
 
-        public async Task<List<FeriadoModel>> ListarFeriados()
+        public async Task<List<ResultadoFeriadoModel>> ListarFeriados()
         {
             string sql = @"
                     	SELECT F.DSC_FERIADO,
@@ -68,17 +63,18 @@ namespace Data.Repositories
 	                      FROM FERIADO F
                       ORDER BY F.DAT_FERIADO ASC ";
 
-            List<FeriadoModel> lista = new List<FeriadoModel>();
+            List<ResultadoFeriadoModel> lista = new List<ResultadoFeriadoModel>();
 
             using (var reader = _dbSession.Connection.ExecuteReader(sql))
             {
                 while (reader.Read())
                 {
-                    lista.Add(new FeriadoModel
+                    lista.Add(new ResultadoFeriadoModel
                     {
                         DscFeriado = reader["DSC_FERIADO"].ToString(),
                         IdFeriado = reader["ID_FERIADO"].ToLong(),
-                        DatFeriado = reader["DAT_FERIADO"].ToDateTime()
+                        DatFeriado = reader["DAT_FERIADO"].ToDateTime(),
+                        IndTipoFeriado = (SituacaoFeriado)reader["TIPO_FERIADO"].ToInt()
                     });
                 }
                 return lista;
@@ -123,7 +119,7 @@ namespace Data.Repositories
             return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
         }
 
-        public async Task<List<FeriasModel>> ListarFerias(int? idUsuario)
+        public async Task<List<ResultadoFeriasModel>> ListarFerias(int? idUsuario)
         {
             string sql = @"
                         SELECT *
@@ -148,13 +144,13 @@ namespace Data.Repositories
 
             object auxParametros = new { ID_USUARIO = idUsuario };
 
-            List<FeriasModel> lista = new List<FeriasModel>();
+            List<ResultadoFeriasModel> lista = new List<ResultadoFeriasModel>();
 
             using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
             {
                 while (reader.Read())
                 {
-                    lista.Add(new FeriasModel
+                    lista.Add(new ResultadoFeriasModel
                     {
                         DscFerias = reader["DSC_FERIAS"].ToString(),
                         IdFerias = reader["ID_FERIAS"].ToLong(),
