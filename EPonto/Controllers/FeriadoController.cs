@@ -34,7 +34,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeletarFeriado")]
+        [Route("DeletarFeriado/{idFeriado}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFeriado(int idFeriado)
         {
             try
@@ -85,7 +85,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeletarFerias")]
+        [Route("DeletarFerias/{idFerias}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFerias(int idFerias)
         {
             try
