@@ -25,14 +25,14 @@ namespace Data.Repositories
         public async Task<int> InserirAsync(JornadaTrabalhoModel jornada)
         {
             string sql = @"INSERT INTO JORNADA_TRABALHO 
-               (NOME_JORNADA, QTD_HORAS_MENSAIS, IND_ATIVO) 
-               VALUES (@NomeJornada, @QtdHorasMensais, 1);";
+               (NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO) 
+               VALUES (@NomeJornada, @QtdHorasDiarias, 1);";
             return await _dbSession.Connection.ExecuteAsync(sql, jornada, _dbSession.Transaction);
         }
 
         public async Task<JornadaTrabalhoModel> ObterPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_MENSAIS, IND_ATIVO
+            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO
                    FROM JORNADA_TRABALHO
                    WHERE ID_JORNADA = @IdJornada;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<JornadaTrabalhoModel>(sql, new { IdJornada = id });
@@ -40,25 +40,26 @@ namespace Data.Repositories
         public async Task<TimeSpan> ObterJornadaDiariaUsuario(int idUsuario)
         {
             string sql = @"
-                        SELECT j.QTD_HORAS_MENSAIS
-                        FROM USUARIO u
-                        INNER JOIN JORNADA_TRABALHO j ON u.ID_JORNADA = j.ID_JORNADA
-                        WHERE u.ID_USUARIO = @IdUsuario";
+                SELECT j.QTD_HORAS_DIARIAS
+                FROM USUARIO u
+                INNER JOIN JORNADA_TRABALHO j ON u.ID_JORNADA = j.ID_JORNADA
+                WHERE u.ID_USUARIO = @IdUsuario";
 
-            var horasMensais = await _dbSession.Connection.QueryFirstOrDefaultAsync<decimal?>(sql, new { IdUsuario = idUsuario });
+            var horasDiarias = await _dbSession.Connection.QueryFirstOrDefaultAsync<decimal?>(
+                sql,
+                new { IdUsuario = idUsuario },
+                transaction: _dbSession.Transaction
+            );
 
-            if (horasMensais == null || horasMensais == 0)
-                throw new Exception("Jornada de trabalho mensal não definida para o usuário.");
+            if (horasDiarias == null || horasDiarias == 0)
+                throw new Exception("Jornada de trabalho diária não definida para o usuário.");
 
-            // Considerando uma média de 22 dias úteis por mês
-            var horasDiarias = (double)horasMensais / 22;
-
-            return TimeSpan.FromHours(horasDiarias);
+            return TimeSpan.FromHours((double)horasDiarias);
         }
 
         public async Task<IEnumerable<JornadaTrabalhoModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_MENSAIS, IND_ATIVO
+            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO
                    FROM JORNADA_TRABALHO;";
             return await _dbSession.Connection.QueryAsync<JornadaTrabalhoModel>(sql);
         }
@@ -68,7 +69,7 @@ namespace Data.Repositories
         {
             string sql = @"UPDATE JORNADA_TRABALHO 
                    SET NOME_JORNADA = @NomeJornada,
-                       QTD_HORAS_MENSAIS = @QtdHorasMensais
+                       QTD_HORAS_DIARIAS = @QtdHorasMensais
                    WHERE ID_JORNADA = @IdJornada;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, jornada, _dbSession.Transaction);
             return linhasAfetadas > 0;

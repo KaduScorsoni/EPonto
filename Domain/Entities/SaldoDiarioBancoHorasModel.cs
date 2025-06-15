@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public int IdSaldoDiarioBancoHoras { get; set; }
         public int IdUsuario { get; set; }
-        public int SaldoDiario { get; set; }
+        public TimeSpan SaldoDiario { get; set; }
         public DateTime DataReferencia { get; set; }
     }
 }
