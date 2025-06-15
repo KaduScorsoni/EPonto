@@ -69,7 +69,7 @@ namespace Data.Repositories
         {
             string sql = @"UPDATE JORNADA_TRABALHO 
                    SET NOME_JORNADA = @NomeJornada,
-                       QTD_HORAS_DIARIAS = @QtdHorasMensais
+                       QTD_HORAS_DIARIAS = @QtdHorasDiarias
                    WHERE ID_JORNADA = @IdJornada;";
             int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, jornada, _dbSession.Transaction);
             return linhasAfetadas > 0;
