@@ -58,7 +58,7 @@ namespace Data.Repositories
             }, transaction: _dbSession.Transaction);
         }
 
-        public async Task<(string saldoFormatado, bool apontamentoInconsistente)> CalcularSaldoDiarioAsync(int idUsuario, DateTime dataReferencia)
+        public async Task<(TimeSpan? saldo, bool apontamentoInconsistente)> CalcularSaldoDiarioAsync(int idUsuario, DateTime dataReferencia)
         {
             string sql = @"SELECT HORA_REGISTRO 
                    FROM REGISTRO_PONTO 
@@ -72,13 +72,11 @@ namespace Data.Repositories
                 transaction: _dbSession.Transaction
             )).ToList();
 
-            // Se número ímpar de registros, marca como inconsistente
             if (registros.Count % 2 != 0)
             {
-                return (null, true);
+                return (TimeSpan.Zero, true);
             }
 
-            // registros de ponto em pares (entrada e saída)
             TimeSpan totalTrabalhado = TimeSpan.Zero;
             for (int i = 0; i < registros.Count - 1; i += 2)
             {
@@ -88,12 +86,7 @@ namespace Data.Repositories
             TimeSpan jornadaEsperada = await _jornadaTrabalhoRepository.ObterJornadaDiariaUsuario(idUsuario);
             TimeSpan saldo = totalTrabalhado - jornadaEsperada;
 
-            // Formatar saldo como HH:mm (positivo ou negativo)
-            string saldoFormatado = saldo < TimeSpan.Zero
-                ? "-" + $"{Math.Abs(saldo.Hours):D2}:{Math.Abs(saldo.Minutes):D2}"
-                : $"{saldo.Hours:D2}:{saldo.Minutes:D2}";
-
-            return (saldoFormatado, false);
+            return (saldo, false);
         }
 
         public async Task InserirSaldoDiarioAsync(int idUsuario, DateTime data, TimeSpan? saldo, bool apontamentoInconsistente)
@@ -104,12 +97,12 @@ namespace Data.Repositories
             await _dbSession.Connection.ExecuteAsync(sql, new
             {
                 IdUsuario = idUsuario,
-                Saldo = saldo.HasValue ? (int)saldo.Value.TotalMinutes : (int?)null,
+                Saldo = saldo,
                 DataReferencia = data,
                 ApontamentoInconsistente = apontamentoInconsistente
             }, transaction: _dbSession.Transaction);
-
         }
+
         public async Task<IEnumerable<SaldoDiarioBancoHorasModel>> ObterSaldosUsuarioAsync(int idUsuario)
         {
             string sql = @"
@@ -124,18 +117,19 @@ namespace Data.Repositories
 
             return resultado;
         }
-
         public async Task<(TimeSpan horasTrabalhadas, TimeSpan saldoTotal)> CalcularBancoHorasAsync(int idUsuario)
         {
+            // Pega a jornada esperada diária do usuário
+            TimeSpan jornadaEsperada = await _jornadaTrabalhoRepository.ObterJornadaDiariaUsuario(idUsuario);
+
             // Consulta todos os saldos diários que não estão inconsistentes
             string sql = @"
-            SELECT SALDO_DIARIO
-            FROM SALDO_DIARIO_BANCO_HORAS
-            WHERE ID_USUARIO = @IdUsuario
-                AND APONTAMENTO_INCONSISTENTE = FALSE";
+                SELECT SALDO_DIARIO
+                FROM SALDO_DIARIO_BANCO_HORAS
+                WHERE ID_USUARIO = @IdUsuario
+                    AND APONTAMENTO_INCONSISTENTE = FALSE";
 
-            // Busca os saldos do banco de dados (em minutos)
-            var saldos = await _dbSession.Connection.QueryAsync<int?>(
+            var saldos = await _dbSession.Connection.QueryAsync<TimeSpan?>(
                 sql,
                 new { IdUsuario = idUsuario },
                 transaction: _dbSession.Transaction
@@ -144,31 +138,21 @@ namespace Data.Repositories
             TimeSpan horasTrabalhadas = TimeSpan.Zero;
             TimeSpan saldoTotal = TimeSpan.Zero;
 
-            foreach (var saldoMinutos in saldos)
+            foreach (var saldo in saldos)
             {
-                // Ignora se o saldo for nulo
-                if (!saldoMinutos.HasValue) continue;
+                if (!saldo.HasValue) continue;
 
-                // Converte o saldo de minutos para TimeSpan
-                TimeSpan saldo = TimeSpan.FromMinutes(saldoMinutos.Value);
+                saldoTotal += saldo.Value;
 
-                // Soma ao saldo total
-                saldoTotal += saldo;
+                // Horas trabalhadas naquele dia = jornada esperada + saldo daquele dia
+                var horasNoDia = jornadaEsperada + saldo.Value;
 
-                // Se saldo > -jornada e > 0, significa que houve trabalho efetivo
-                if (saldo > TimeSpan.Zero || saldo < TimeSpan.Zero)
-                {
-                    // Considera que o usuário trabalhou: jornada + saldo (se positivo ou negativo)
-                    horasTrabalhadas += saldo;
-                }
-                // Se o saldo for exatamente zero, considera que o usuário não trabalhou
-                // e não soma nada em horasTrabalhadas
+                // Somar todas as horas trabalhadas
+                horasTrabalhadas += horasNoDia;
             }
 
             return (horasTrabalhadas, saldoTotal);
         }
-
-
         public async Task InserirBancoHorasAsync(int idUsuario, TimeSpan horasTrabalhadas, TimeSpan saldo)
         {
             string sql = @"

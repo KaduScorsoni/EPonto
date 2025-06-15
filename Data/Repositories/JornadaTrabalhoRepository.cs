@@ -26,7 +26,7 @@ namespace Data.Repositories
         {
             string sql = @"INSERT INTO JORNADA_TRABALHO 
                (NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO) 
-               VALUES (@NomeJornada, @QtdHorasMensais, 1);";
+               VALUES (@NomeJornada, @QtdHorasDiarias, 1);";
             return await _dbSession.Connection.ExecuteAsync(sql, jornada, _dbSession.Transaction);
         }
 
