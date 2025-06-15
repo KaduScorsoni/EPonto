@@ -17,9 +17,7 @@ namespace Domain.Entities.Ponto
         [JsonIgnore]
         public DateTime DataSolicitacao { get; set; }
         public DateTime DataRegistroAlteracao { get; set; }
-        [JsonIgnore]
         public DateTime? DataResposta { get; set; }
-        [JsonIgnore]
         public DateTime? HoraRegistro { get; set; }
         public List<ItemAjustePontoModel> Itens { get; set; }
     }
