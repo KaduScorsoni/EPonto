@@ -14,16 +14,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// CONFIGURAÇÃO CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirTudo", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:8080"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // Se estiver usando cookies/autenticação
     });
 });
+
 
 //Propiedade para fazer mapemaneto de entidades com nome no banco diferente
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
