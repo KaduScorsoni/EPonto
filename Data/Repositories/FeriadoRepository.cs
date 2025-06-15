@@ -69,12 +69,14 @@ namespace Data.Repositories
             {
                 while (reader.Read())
                 {
+                    int tipoFeriado = reader["TIPO_FERIADO"].ToInt();
+
                     lista.Add(new ResultadoFeriadoModel
                     {
                         DscFeriado = reader["DSC_FERIADO"].ToString(),
                         IdFeriado = reader["ID_FERIADO"].ToLong(),
                         DatFeriado = reader["DAT_FERIADO"].ToDateTime(),
-                        IndTipoFeriado = (SituacaoFeriado)reader["TIPO_FERIADO"].ToInt()
+                        DscTipoFeriado = tipoFeriado == 1 ? "Integral" : "Meio Periodo"
                     });
                 }
                 return lista;
