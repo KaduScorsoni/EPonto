@@ -103,25 +103,21 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
 
-app.UseHttpsRedirection();
-
-// USA O CORS
 app.UseCors("PermitirTudo");
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHangfireDashboard(); // Opcional: expõe a dashboard no /hangfire
+app.UseHangfireDashboard(); // Se quiser dashboard do Hangfire
 
+// Agendamento de job com Hangfire
 RecurringJob.AddOrUpdate<BancoHorasJob>(
     "processar-banco-horas-diario",
     job => job.ExecutarProcessamentoDiario(),
-    "30 20 * * *" // Cron: todo dia às 
+    "30 20 * * *" // Cron: todo dia às 20:30
 );
 
 app.Run();
+
