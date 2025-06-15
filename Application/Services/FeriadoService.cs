@@ -111,6 +111,9 @@ namespace Application.Services
                 if (param.DatIncioFerias > param.DatFimFerias)
                     return new ResultadoDTO { Sucesso = false, Mensagem = "A data de Inicio não pode ser maior que a data Final!" };
 
+                if (param.IdUsuario == 0)
+                    param.IdUsuario = null;
+
                 _dbSession.BeginTransaction();
                 
 
