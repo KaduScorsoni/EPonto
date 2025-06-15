@@ -10,7 +10,6 @@ namespace Domain.Entities.Ponto
 {
     public class SolicitacaoAjustePontoModel
     {
-        [JsonIgnore]
         public int IdSolicitacao { get; set; }
         public int IdSolicitante { get; set; }
         public string Justificativa { get; set; }
