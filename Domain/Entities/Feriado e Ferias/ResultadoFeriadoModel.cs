@@ -11,7 +11,7 @@ namespace Domain.Entities.Feriado_e_Ferias
     {
         public string DscFeriado { get; set; }
         public DateTime DatFeriado { get; set; }
-        public SituacaoFeriado IndTipoFeriado { get; set; }
+        public string DscTipoFeriado { get; set; }
         public long IdFeriado { get; set; }
     }
 }
