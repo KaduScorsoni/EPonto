@@ -91,18 +91,12 @@ builder.Services.AddScoped<BancoHorasJob>();
 
 var app = builder.Build();
 
-// 3) Sempre exibe página de erro detalhada
-app.UseDeveloperExceptionPage();
-
-// 4) Sempre habilita Swagger / SwaggerUI
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    // aponta para o swagger.json v1
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TDE Evolucionario API V1");
-    // opcional: expõe o Swagger UI na raiz (/)
-    c.RoutePrefix = string.Empty;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
