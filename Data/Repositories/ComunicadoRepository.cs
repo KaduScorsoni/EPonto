@@ -59,7 +59,7 @@ namespace Data.Repositories
             return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
         }
 
-        public async Task<List<ComunicadoModel>> ListarComunicado()
+        public async Task<List<ResultadoComunicadoModel>> ListarComunicado()
         {
             string sql = @"
                     	SELECT C.ID_COMUNICADO,
@@ -70,13 +70,13 @@ namespace Data.Repositories
 	                      FROM COMUNICADO C
                       ORDER BY F.DAT_INICIO_EXIBICAO ASC ";
 
-            List<ComunicadoModel> lista = new List<ComunicadoModel>();
+            List<ResultadoComunicadoModel> lista = new List<ResultadoComunicadoModel>();
 
             using (var reader = _dbSession.Connection.ExecuteReader(sql))
             {
                 while (reader.Read())
                 {
-                    lista.Add(new ComunicadoModel
+                    lista.Add(new ResultadoComunicadoModel
                     {
                         IdComunicado = reader["ID_COMUNICADO"].ToInt(),
                         TituloComunicado = reader["TITULO_COMUNICADO"].ToString(),

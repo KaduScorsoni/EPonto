@@ -11,7 +11,7 @@ namespace Application.DTOs
     {
         public string Mensagem { get; set; }
         public bool Sucesso { get; set; }
-        public List<ComunicadoModel> ListaComunicados { get; set; }
+        public List<ResultadoComunicadoModel> ListaComunicados { get; set; }
 
     }
 }
