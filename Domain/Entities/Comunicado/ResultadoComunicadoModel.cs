@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Comunicado
 {
-    public class ComunicadoModel
+    public class ResultadoComunicadoModel
     {
+        public int IdComunicado { get; set; }
         public string DscComunicado { get; set; }
         public string TituloComunicado { get; set; }
         public DateTime DatInicioExibicao { get; set; }

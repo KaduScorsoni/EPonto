@@ -11,7 +11,7 @@ namespace Data.Interfaces
     public interface IComunicadoRepository
     {
         Task<int> CadastrarComunicado(ComunicadoModel param);
-        Task<List<ComunicadoModel>> ListarComunicado();
+        Task<List<ResultadoComunicadoModel>> ListarComunicado();
         Task<int> DeletarComunicado(int idComunicado);
     }
 }

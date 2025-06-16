@@ -34,6 +34,5 @@ namespace EPonto.Controllers
                 return BadRequest(new CalendarioDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        
     }
 }
