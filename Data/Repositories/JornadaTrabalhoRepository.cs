@@ -25,8 +25,8 @@ namespace Data.Repositories
         public async Task<int> InserirAsync(JornadaTrabalhoModel jornada)
         {
             string sql = @"INSERT INTO JORNADA_TRABALHO 
-               (NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO,TESTE) 
-               VALUES (@NomeJornada, @QtdHorasDiarias, 1,@teste);";
+               (NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO) 
+               VALUES (@NomeJornada, @QtdHorasDiarias, 1);";
             return await _dbSession.Connection.ExecuteAsync(sql, jornada, _dbSession.Transaction);
         }
 
@@ -59,7 +59,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<JornadaTrabalhoModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO,TESTE
+            string sql = @"SELECT ID_JORNADA, NOME_JORNADA, QTD_HORAS_DIARIAS, IND_ATIVO
                    FROM JORNADA_TRABALHO;";
             return await _dbSession.Connection.QueryAsync<JornadaTrabalhoModel>(sql);
         }

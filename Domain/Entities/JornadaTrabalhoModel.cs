@@ -13,6 +13,5 @@ namespace Domain.Entities
         public string NomeJornada { get; set; }
         public int QtdHorasDiarias { get; set; }
         public int IndAtivo { get; set; }
-        public string teste { get; set; }
     }
 }
