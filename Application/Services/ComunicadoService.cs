@@ -80,7 +80,7 @@ namespace Application.Services
         {
             try
             {
-                List<ComunicadoModel> ListaComunicados = await _comunicadoRepository.ListarComunicado();
+                List<ResultadoComunicadoModel> ListaComunicados = await _comunicadoRepository.ListarComunicado();
 
                 if (ListaComunicados.Count > 0)
                     return new ComunicadoDTO

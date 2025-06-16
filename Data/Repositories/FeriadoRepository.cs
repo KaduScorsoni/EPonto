@@ -131,7 +131,8 @@ namespace Data.Repositories
 		                           F.DAT_INICIO_FERIAS,
 		                           F.DAT_FIM_FERIAS
 	                          FROM FERIAS F
-                          
+                             WHERE F.ID_USUARIO = NULL
+
                             UNION
 
                             SELECT F.DSC_FERIAS,
