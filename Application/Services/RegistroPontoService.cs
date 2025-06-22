@@ -289,14 +289,13 @@ namespace Application.Services
                 };
             }
         }
-
         public async Task<SolicitacaoAjusteDTO> AprovarReprovarSolicitacaoAsync(int idSolicitacao, bool aprovado)
         {
             try
             {
                 _dbSession.BeginTransaction();
 
-                // Obter a solicitação de ajuste por ID
+                // Obter a solicitação
                 var solicitacao = await _registroPontoRepository.ObterSolicitacaoAltercaoPorIdAsync(idSolicitacao);
                 if (solicitacao == null)
                 {
@@ -307,15 +306,17 @@ namespace Application.Services
                     };
                 }
 
-                // Se for aprovado, atualiza os registros de ponto
+                // Se for aprovado, atualiza os registros
                 if (aprovado)
                 {
-                    // Preparar a lista de itens a serem atualizados
                     var itensAlterados = solicitacao.Itens.Select(item => new ItemAjustePontoModel
                     {
                         HoraRegistro = item.HoraRegistro,
-                        IdTipoRegistroPonto = item.IdTipoRegistroPonto
+                        IdTipoRegistroPonto = item.IdTipoRegistroPonto,
+                        Localizacao = item.Localizacao
                     }).ToList();
+
+                    string localizacao = itensAlterados.FirstOrDefault()?.Localizacao ?? string.Empty;
 
                     bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(
                         idSolicitacao,
@@ -323,6 +324,7 @@ namespace Application.Services
                         itensAlterados,
                         solicitacao.DataRegistroAlteracao,
                         solicitacao.IdSolicitante,
+                        localizacao,
                         _dbSession.Transaction
                     );
 
@@ -341,14 +343,16 @@ namespace Application.Services
                 }
                 else
                 {
-                    solicitacao.StatusSolicitacao = StatusAlteracaoPonto.Reprovada;
-                    solicitacao.DataResposta = DateTime.Now;
+                    // Rejeitou, mas ainda precisa chamar o AtualizarRegistroAsync
+                    string localizacao = string.Empty; // Como não está alterando, pode mandar vazio.
+
                     bool sucessoAtualizacao = await _registroPontoRepository.AtualizarRegistroAsync(
                         idSolicitacao,
                         aprovado,
                         new List<ItemAjustePontoModel>(),
                         solicitacao.DataRegistroAlteracao,
                         solicitacao.IdSolicitante,
+                        localizacao,
                         _dbSession.Transaction
                     );
 
@@ -361,6 +365,9 @@ namespace Application.Services
                             Mensagem = "Erro ao reprovar a solicitação."
                         };
                     }
+
+                    solicitacao.StatusSolicitacao = StatusAlteracaoPonto.Reprovada;
+                    solicitacao.DataResposta = DateTime.Now;
                 }
 
                 _dbSession.Commit();
@@ -381,6 +388,5 @@ namespace Application.Services
                 };
             }
         }
-
     }
 }

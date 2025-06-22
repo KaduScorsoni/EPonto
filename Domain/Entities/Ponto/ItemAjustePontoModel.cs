@@ -15,5 +15,6 @@ namespace Domain.Entities.Ponto
         public int IdSolicitacao { get; set; }
         public DateTime? HoraRegistro { get; set; }
         public int IdTipoRegistroPonto { get; set; }
+        public string Localizacao { get; set; }
     }
 }

@@ -25,8 +25,8 @@ namespace Data.Repositories
         public async Task<int> InserirAsync(CargoModel cargo)
         {
             string sql = @"INSERT INTO CARGO 
-               (NOME_CARGO, SALARIO, IND_ATIVO) 
-               VALUES (@NomeCargo, @Salario, 1);";
+               (NOME_CARGO, SALARIO, IND_ATIVO,FORMACAO_MINIMA) 
+               VALUES (@NomeCargo, @Salario, 1,@FormacaoMinima);";
             return await _dbSession.Connection.ExecuteAsync(sql, cargo, _dbSession.Transaction);
         }
         public async Task<CargoModel> ObterPorIdAsync(int id)
@@ -39,7 +39,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<CargoModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_CARGO, NOME_CARGO, SALARIO, IND_ATIVO
+            string sql = @"SELECT ID_CARGO, NOME_CARGO, SALARIO, IND_ATIVO,FORMACAO_MINIMA
                    FROM CARGO;";
             return await _dbSession.Connection.QueryAsync<CargoModel>(sql);
         }

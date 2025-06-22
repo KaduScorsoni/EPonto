@@ -27,14 +27,14 @@ namespace Data.Repositories
         public async Task<int> InserirAsync(RegistroPontoModel ponto)
         {
             string sql = @"INSERT INTO REGISTRO_PONTO 
-               (ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO,ID_TIPO_REGISTRO_PONTO) 
-               VALUES (@IdUsuario, @HoraRegistro, @DataRegistro, @IdTipoRegistroPonto);";
+               (ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO,ID_TIPO_REGISTRO_PONTO,LOCALIZACAO) 
+               VALUES (@IdUsuario, @HoraRegistro, @DataRegistro, @IdTipoRegistroPonto,@Localizacao);";
             return await _dbSession.Connection.ExecuteAsync(sql, ponto, _dbSession.Transaction);
         }
 
         public async Task<RegistroPontoModel> ObterPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO
+            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO,LOCALIZACAO
                    FROM REGISTRO_PONTO
                    WHERE ID_REGISTRO = @IdRegistro;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<RegistroPontoModel>(sql, new { IdRegistro = id });
@@ -43,7 +43,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<RegistroPontoModel>> ListarTodosAsync()
         {
-            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO
+            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO,LOCALIZACAO
                    FROM REGISTRO_PONTO";
             return await _dbSession.Connection.QueryAsync<RegistroPontoModel>(sql);
         }
@@ -56,7 +56,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<RegistroPontoModel>> ObterRegistrosUsuarioAsync(int idUsuario)
         {
-            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO
+            string sql = @"SELECT ID_REGISTRO, ID_USUARIO, HORA_REGISTRO, DATA_REGISTRO, ID_TIPO_REGISTRO_PONTO,LOCALIZACAO
                    FROM REGISTRO_PONTO WHERE ID_USUARIO =  @IdUsuario;";
             return await _dbSession.Connection.QueryAsync<RegistroPontoModel>(sql, new { IdUsuario = idUsuario });
         }
@@ -113,20 +113,22 @@ namespace Data.Repositories
             }
             return idSolicitacao;
         }
-        public async Task<bool> AtualizarRegistroAsync(int idSolicitacao, bool aprovar, List<ItemAjustePontoModel> itensAlterados, DateTime dataRegistro, int idUsuario, IDbTransaction transaction)
+
+        public async Task<bool> AtualizarRegistroAsync(int idSolicitacao, bool aprovar, List<ItemAjustePontoModel> itensAlterados, DateTime dataRegistro, int idUsuario, string localizacao, IDbTransaction transaction)
         {
             try
             {
+                // Atualiza o status da solicitação de ajuste
                 string sqlSolicitacao = @"
-                UPDATE SOLICITACAO_AJUSTE_PONTO
-                SET 
-                    STATUS_SOLICITACAO = @StatusSolicitacao,
-                    DATA_RESPOSTA = @DataResposta
-                WHERE ID_SOLICITACAO = @IdSolicitacao;";
-
+                    UPDATE SOLICITACAO_AJUSTE_PONTO
+                    SET 
+                        STATUS_SOLICITACAO = @StatusSolicitacao,
+                        DATA_RESPOSTA = @DataResposta
+                    WHERE ID_SOLICITACAO = @IdSolicitacao;";
 
                 var statusSolicitacao = aprovar ? 1 : 2;
                 var dataResposta = DateTime.Now;
+
                 await _dbSession.Connection.ExecuteAsync(sqlSolicitacao, new
                 {
                     StatusSolicitacao = statusSolicitacao,
@@ -134,18 +136,19 @@ namespace Data.Repositories
                     IdSolicitacao = idSolicitacao
                 }, transaction);
 
-
                 if (aprovar)
                 {
                     foreach (var item in itensAlterados)
                     {
+                        // Verifica se já existe um registro com os mesmos dados
                         string sqlSelectRegistroExistente = @"
-                            SELECT ID_REGISTRO
-                            FROM REGISTRO_PONTO
-                            WHERE ID_USUARIO = @IdUsuario
-                              AND DATA_REGISTRO = @DataRegistro
-                              AND ID_TIPO_REGISTRO_PONTO = @IdTipoRegistroPonto
-                            LIMIT 1;";
+                    SELECT ID_REGISTRO
+                    FROM REGISTRO_PONTO
+                    WHERE ID_USUARIO = @IdUsuario
+                      AND DATA_REGISTRO = @DataRegistro
+                      AND LOCALIZACAO = @Localizacao
+                      AND ID_TIPO_REGISTRO_PONTO = @IdTipoRegistroPonto
+                    LIMIT 1;";
 
                         var idRegistroExistente = await _dbSession.Connection.QueryFirstOrDefaultAsync<int?>(
                             sqlSelectRegistroExistente,
@@ -153,45 +156,53 @@ namespace Data.Repositories
                             {
                                 IdUsuario = idUsuario,
                                 DataRegistro = dataRegistro,
-                                item.IdTipoRegistroPonto
+                                Localizacao = localizacao,
+                                IdTipoRegistroPonto = item.IdTipoRegistroPonto
                             },
                             transaction
                         );
 
                         if (idRegistroExistente.HasValue)
                         {
+                            // Atualiza o registro existente
                             string sqlUpdate = @"
-                                UPDATE REGISTRO_PONTO
-                                SET HORA_REGISTRO = @HoraRegistro
-                                WHERE ID_REGISTRO = @IdRegistro;";
+                        UPDATE REGISTRO_PONTO
+                        SET 
+                            HORA_REGISTRO = @HoraRegistro,
+                            LOCALIZACAO = @Localizacao
+                        WHERE ID_REGISTRO = @IdRegistro;";
 
                             await _dbSession.Connection.ExecuteAsync(sqlUpdate, new
                             {
                                 HoraRegistro = item.HoraRegistro,
+                                Localizacao = localizacao,
                                 IdRegistro = idRegistroExistente.Value
                             }, transaction);
                         }
                         else
                         {
+                            // Insere um novo registro caso não exista
                             string sqlInsert = @"
-                                INSERT INTO REGISTRO_PONTO (ID_USUARIO, DATA_REGISTRO, HORA_REGISTRO, ID_TIPO_REGISTRO_PONTO)
-                                VALUES (@IdUsuario, @DataRegistro, @HoraRegistro, @IdTipoRegistroPonto);";
+                        INSERT INTO REGISTRO_PONTO (ID_USUARIO, DATA_REGISTRO, HORA_REGISTRO, ID_TIPO_REGISTRO_PONTO, LOCALIZACAO)
+                        VALUES (@IdUsuario, @DataRegistro, @HoraRegistro, @IdTipoRegistroPonto, @Localizacao);";
 
                             await _dbSession.Connection.ExecuteAsync(sqlInsert, new
                             {
                                 IdUsuario = idUsuario,
                                 DataRegistro = dataRegistro,
                                 HoraRegistro = item.HoraRegistro,
-                                IdTipoRegistroPonto = item.IdTipoRegistroPonto
+                                IdTipoRegistroPonto = item.IdTipoRegistroPonto,
+                                Localizacao = localizacao
                             }, transaction);
                         }
                     }
                 }
                 else
                 {
+                    // Rejeitou a solicitação, então deleta os itens de ajuste
                     string sqlDeleteItems = @"
-                        DELETE FROM ITEM_AJUSTE_PONTO
-                        WHERE ID_SOLICITACAO = @IdSolicitacao;";
+                DELETE FROM ITEM_AJUSTE_PONTO
+                WHERE ID_SOLICITACAO = @IdSolicitacao;";
 
                     await _dbSession.Connection.ExecuteAsync(sqlDeleteItems, new { IdSolicitacao = idSolicitacao }, transaction);
                 }
@@ -203,7 +214,6 @@ namespace Data.Repositories
                 return false;
             }
         }
-
 
         public async Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync(int? status = null)
         {
@@ -217,6 +227,7 @@ namespace Data.Repositories
                             s.ID_SOLICITANTE,
                             s.DATA_REGISTRO_ALTERACAO,
                             s.STATUS_SOLICITACAO,
+                            s.LOCALIZACAO,
 
                             i.ID_ITEM,
                             i.HORA_REGISTRO,

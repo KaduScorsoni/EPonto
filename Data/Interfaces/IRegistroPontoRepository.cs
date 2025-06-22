@@ -21,7 +21,6 @@ namespace Data.Interfaces
         Task<int> CriarSolicitacaoAsync(SolicitacaoAjustePontoModel solicitacao);
         Task<IEnumerable<SolicitacaoAjustePontoModel>> ListarSolicitacoesAsync(int? status = null);
         Task<SolicitacaoAjustePontoModel> ObterSolicitacaoAltercaoPorIdAsync(int idSolicitacao);
-        Task<bool> AtualizarRegistroAsync(int idSolicitacao, bool aprovar, List<ItemAjustePontoModel> itensAlterados, DateTime dataRegistro, int idUsuario, IDbTransaction transaction);
-
+        Task<bool> AtualizarRegistroAsync(int idSolicitacao, bool aprovar, List<ItemAjustePontoModel> itensAlterados, DateTime dataRegistro, int idUsuario, string localizacao, IDbTransaction transaction);
     }
 }

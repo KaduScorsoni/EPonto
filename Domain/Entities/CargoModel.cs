@@ -13,5 +13,6 @@ namespace Domain.Entities
         public string NomeCargo { get; set; }
         public string Salario { get; set; }
         public int IndAtivo { get; set; }
+        public string FormacaoMinima { get; set; }
     }
 }
