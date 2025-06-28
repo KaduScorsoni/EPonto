@@ -49,5 +49,29 @@ namespace EPonto.Controllers
 
             return BadRequest(resultado);
         }
+
+        [HttpGet]
+        [Route("HorasTrabalhadasMes/{idUsuario}")]
+        public async Task<IActionResult> ObterHorasTrabalhadasPorMes(int idUsuario)
+        {
+            var resultado = await _bancoHorasService.ObterHorasTrabalhadasPorMesAsync(idUsuario);
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
+        [HttpGet]
+        [Route("HorasExtrasMes/{idUsuario}")]
+        public async Task<IActionResult> ObterHorasExtrasPorMes(int idUsuario)
+        {
+            var resultado = await _bancoHorasService.ObterHorasExtrasPorMesAsync(idUsuario);
+
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
     }
 }

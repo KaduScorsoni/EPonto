@@ -17,5 +17,7 @@ namespace Data.Interfaces
         Task<(TimeSpan horasTrabalhadas, TimeSpan saldo)> ObterBancoHorasAtualAsync(int idUsuario);
         Task<List<DateTime>> ObterDiasInconsistentesAsync(int idUsuario);
         Task AtualizarSaldoDiarioInconsistenteAsync(int idUsuario, DateTime data, TimeSpan saldo, bool inconsistente);
+        Task<IEnumerable<BancoHorasModel>> ObterHorasTrabalhadasPorMesAsync(int idUsuario);
+        Task<IEnumerable<BancoHorasModel>> ObterHorasExtrasPorMesAsync(int idUsuario);
     }
 }

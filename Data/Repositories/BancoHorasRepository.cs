@@ -185,6 +185,58 @@ namespace Data.Repositories
             return resultado;
         }
 
+        public async Task<IEnumerable<BancoHorasModel>> ObterHorasTrabalhadasPorMesAsync(int idUsuario)
+        {
+            string sql = @"
+                    SELECT 
+                        NULL AS IdBancoHoras,
+                        ID_USUARIO AS IdUsuario,
+                        SEC_TO_TIME(SUM(TIME_TO_SEC(SALDO_DIARIO))) AS HorasTrabalhadas,
+                        NULL AS Saldo
+                    FROM 
+                        SALDO_DIARIO_BANCO_HORAS
+                    WHERE 
+                        ID_USUARIO = @IdUsuario
+                        AND APONTAMENTO_INCONSISTENTE = 0
+                    GROUP BY 
+                        ID_USUARIO, 
+                        DATE_FORMAT(DATA_REFERENCIA, '%Y-%m');";
+
+            var resultado = await _dbSession.Connection.QueryAsync<BancoHorasModel>(sql, new
+            {
+                IdUsuario = idUsuario
+            });
+
+            return resultado;
+        }
+
+        public async Task<IEnumerable<BancoHorasModel>> ObterHorasExtrasPorMesAsync(int idUsuario)
+        {
+            string sql = @"
+                    SELECT 
+                        NULL AS IdBancoHoras,
+                        ID_USUARIO AS IdUsuario,
+                        NULL AS HorasTrabalhadas,
+                        SEC_TO_TIME(SUM(TIME_TO_SEC(SALDO_DIARIO))) AS Saldo
+                    FROM 
+                        SALDO_DIARIO_BANCO_HORAS
+                    WHERE 
+                        ID_USUARIO = @IdUsuario
+                        AND APONTAMENTO_INCONSISTENTE = 0
+                        AND TIME_TO_SEC(SALDO_DIARIO) > 0
+                    GROUP BY 
+                        ID_USUARIO, 
+                        DATE_FORMAT(DATA_REFERENCIA, '%Y-%m');";
+
+            var resultado = await _dbSession.Connection.QueryAsync<BancoHorasModel>(sql, new
+            {
+                IdUsuario = idUsuario
+            });
+
+            return resultado;
+        }
+
+
         #endregion
     }
 }

@@ -49,7 +49,6 @@ namespace Data.Repositories
             string sql = @"UPDATE USUARIO 
                    SET NOME = @Nome,
                        DATA_NASCIMENTO = @DataNascimento,
-                       SENHA = @Senha,
                        EMAIL = @Email,
                        ID_CARGO = @IdCargo,
                        ID_JORNADA = @IdJornada,

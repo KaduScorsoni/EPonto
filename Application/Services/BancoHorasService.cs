@@ -119,5 +119,49 @@ public class BancoHorasService : IBancoHorasService
             };
         }
     }
+    public async Task<BancoHorasDTO> ObterHorasTrabalhadasPorMesAsync(int idUsuario)
+    {
+        try
+        {
+            var horasTrabalhadas = await _bancoHorasRepository.ObterHorasTrabalhadasPorMesAsync(idUsuario);
+
+            return new BancoHorasDTO
+            {
+                Sucesso = true,
+                BancoHoras = horasTrabalhadas.ToList()
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BancoHorasDTO
+            {
+                Sucesso = false,
+                Mensagem = $"Erro ao obter horas trabalhadas por mês: {ex.Message}"
+            };
+        }
+    }
+
+    public async Task<BancoHorasDTO> ObterHorasExtrasPorMesAsync(int idUsuario)
+    {
+        try
+        {
+            var horasExtras = await _bancoHorasRepository.ObterHorasExtrasPorMesAsync(idUsuario);
+
+            return new BancoHorasDTO
+            {
+                Sucesso = true,
+                BancoHoras = horasExtras.ToList()
+            };
+        }
+        catch (Exception ex)
+        {
+            return new BancoHorasDTO
+            {
+                Sucesso = false,
+                Mensagem = $"Erro ao obter horas extras por mês: {ex.Message}"
+            };
+        }
+    }
+
 
 }
