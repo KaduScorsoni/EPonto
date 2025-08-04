@@ -123,12 +123,30 @@ public class BancoHorasService : IBancoHorasService
     {
         try
         {
-            var horasTrabalhadas = await _bancoHorasRepository.ObterHorasTrabalhadasPorMesAsync(idUsuario);
+            var saldos = await _bancoHorasRepository.ObterSaldosDiariosDoMesAsync(idUsuario);
+
+            TimeSpan jornadaEsperada = await _jornadaTrabalhoRepository.ObterJornadaDiariaUsuario(idUsuario);
+
+            TimeSpan horasTotaisTrabalhadas = TimeSpan.Zero;
+
+            foreach (var item in saldos)
+            {
+                var horasTrabalhadasNoDia = jornadaEsperada + item.Saldo;
+
+                if (horasTrabalhadasNoDia > TimeSpan.Zero)
+                    horasTotaisTrabalhadas += horasTrabalhadasNoDia;
+            }
+
+            var resultado = new BancoHorasModel
+            {
+                IdUsuario = idUsuario,
+                HorasTrabalhadas = horasTotaisTrabalhadas
+            };
 
             return new BancoHorasDTO
             {
                 Sucesso = true,
-                BancoHoras = horasTrabalhadas.ToList()
+                BancoHoras = new List<BancoHorasModel> { resultado }
             };
         }
         catch (Exception ex)
