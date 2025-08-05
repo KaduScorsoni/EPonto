@@ -16,9 +16,11 @@ namespace Application.Services
     public class CalendarioService : ICalendarioService
     {
         private readonly IFeriadoRepository _feriadoRepository;
-        public CalendarioService(IFeriadoRepository feriadoRepository)
+        private readonly IFeriasRepository _feriasRepository;
+        public CalendarioService(IFeriadoRepository feriadoRepository, IFeriasRepository feriasRepository)
         {
             _feriadoRepository = feriadoRepository;
+            _feriasRepository = feriasRepository;
         }
         public async Task<CalendarioDTO> MontaCalendario(int ano, int? idUsuario)
         {
@@ -26,7 +28,7 @@ namespace Application.Services
             {
                 List<CalendarioModel> calendario = new List<CalendarioModel>();
 
-                List<ResultadoFeriasModel> ListaFerias = await _feriadoRepository.ListarFerias(idUsuario);
+                List<ResultadoFeriasModel> ListaFerias = await _feriasRepository.ListarFerias(idUsuario);
                 List<ResultadoFeriadoModel> ListaFeriados = await _feriadoRepository.ListarFeriados();
                 
                 //Inserindo os feriados

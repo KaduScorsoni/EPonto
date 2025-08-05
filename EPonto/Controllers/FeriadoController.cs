@@ -67,56 +67,6 @@ namespace EPonto.Controllers
                 return BadRequest(new FeriadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        [HttpPost]
-        [Route("CadastrarFerias")]
-        public async Task<ActionResult<ResultadoDTO>> CadastrarFerias(FeriasModel paramFerias)
-        {
-            try
-            {
-                ResultadoDTO auxResult = await _feriadoService.CadastrarFerias(paramFerias);
-                if (auxResult.Sucesso)
-                    return Ok(auxResult);
-
-                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
-            }
-        }
-        [HttpDelete]
-        [Route("DeletarFerias/{idFerias}")]
-        public async Task<ActionResult<ResultadoDTO>> DeletarFerias(int idFerias)
-        {
-            try
-            {
-                ResultadoDTO auxResult = await _feriadoService.DeletarFerias(idFerias);
-                if (auxResult.Sucesso)
-                    return Ok(auxResult);
-
-                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
-            }
-        }
-        [HttpGet]
-        [Route("ListarFerias")]
-        public async Task<ActionResult<FeriasDTO>> ListarFerias(int? idUsuario = null)
-        {
-            try
-            {
-                FeriasDTO auxResult = await _feriadoService.ListarFerias(idUsuario);
-                if (auxResult.Sucesso)
-                    return Ok(auxResult);
-
-                return BadRequest(new FeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new FeriasDTO { Sucesso = false, Mensagem = ex.Message });
-            }
-        }
+        
     }
 }

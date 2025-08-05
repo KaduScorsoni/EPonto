@@ -13,10 +13,5 @@ namespace Data.Interfaces
         Task<int> CadastrarFeriado(FeriadoModel param);
         Task<List<ResultadoFeriadoModel>> ListarFeriados();
         Task<int> DeletarFeriado(int idFeriado);
-
-        //Ferias
-        Task<int> CadastrarFerias(FeriasModel param);
-        Task<List<ResultadoFeriasModel>> ListarFerias(int? idUsuario);
-        Task<int> DeletarFerias(int idFerias);
     }
 }

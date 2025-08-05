@@ -14,8 +14,5 @@ namespace Application.Interfaces
         Task<ResultadoDTO> CadastrarFeriado(FeriadoModel param);
         Task<FeriadoDTO> ListarFeriados();
         Task<ResultadoDTO> DeletarFeriado(int idFeriado);
-        Task<ResultadoDTO> CadastrarFerias(FeriasModel param);
-        Task<FeriasDTO> ListarFerias(int? idUsuario = null);
-        Task<ResultadoDTO> DeletarFerias(int idFerias);
     }
 }
