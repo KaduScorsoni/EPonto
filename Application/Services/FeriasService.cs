@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Interfaces;
 using Data.Connections;
 using Data.Interfaces;
 using Domain.Entities;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class FeriasService
+    public class FeriasService : IFeriasService
     {
         private readonly IFeriasRepository _FeriasRepository;
         private readonly DbSession _dbSession;

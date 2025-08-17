@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities.Feriado_e_Ferias;
 using Data.Util;
+using Data.Interfaces;
 
 namespace Data.Repositories
 {
-    public class FeriasRepository
+    public class FeriasRepository : IFeriasRepository
     {
         #region conexão
         private readonly DbSession _dbSession;

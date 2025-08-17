@@ -40,14 +40,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
-//Feriado e ferias
+//Feriado 
 builder.Services.AddScoped<IFeriadoService, FeriadoService>();
 builder.Services.AddScoped<IFeriadoRepository, FeriadoRepository>();
+
+//Ferias
+builder.Services.AddScoped<IFeriasService, FeriasService>();
+builder.Services.AddScoped<IFeriasRepository, FeriasRepository>();
 
 //Calendario 
 builder.Services.AddScoped<ICalendarioService, CalendarioService>();
 
-//Feriado e ferias
+//Comunicado
 builder.Services.AddScoped<IComunicadoService, ComunicadoService>();
 builder.Services.AddScoped<IComunicadoRepository,ComunicadoRepository>();
 
