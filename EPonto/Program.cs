@@ -75,6 +75,10 @@ builder.Services.AddScoped<IJornadaTrabalhoRepository, JornadaTrabalhoRepository
 builder.Services.AddScoped<IBancoHorasService, BancoHorasService>();
 builder.Services.AddScoped<IBancoHorasRepository, BancoHorasRepository>();
 
+//Feedback
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
 builder.Services.AddScoped<DbSession>();
 
 // Hangfire - Configuração com MySQL
