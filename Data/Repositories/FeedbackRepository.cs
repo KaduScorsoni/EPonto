@@ -127,13 +127,13 @@ namespace Data.Repositories
         {
             string sqlFeedbackComSolicitacao = @"
                                                 INSERT INTO FEEDBACK 
-                                                (ID_SOLICITACAO_FEEDBACK, ID_USUARIO_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
-                                                VALUES (@IdSolicitacaoFeedback, @IdUsuarioFeedback, @MensagemFeedback, @Avaliacao);";
+                                                (ID_SOLICITACAO_FEEDBACK, ID_USUARIO_FEEDBACK,ID_AUTOR_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
+                                                VALUES (@IdSolicitacaoFeedback, @IdUsuarioFeedback,@IdAutorFeedback, @MensagemFeedback, @Avaliacao);";
 
             string sqlFeedbackSemSolicitacao = @"
                                                 INSERT INTO FEEDBACK 
-                                                (ID_USUARIO_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
-                                                VALUES (@IdUsuarioFeedback, @MensagemFeedback, @Avaliacao);";
+                                                (ID_USUARIO_FEEDBACK,ID_AUTOR_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
+                                                VALUES (@IdUsuarioFeedback,@IdAutorFeedback, @MensagemFeedback, @Avaliacao);";
 
             if (feedback.IdSolicitacaoFeedback > 0)
             {
