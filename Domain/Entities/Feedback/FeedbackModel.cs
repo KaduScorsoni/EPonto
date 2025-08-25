@@ -10,7 +10,8 @@ namespace Domain.Entities.Feedback
     public class FeedbackModel
     {
         public int IdFeedback { get; set; }
-        public int IdSolicitacaoFeedback { get; set; }
+        public int IdUsuarioFeedback { get; set; }
+        public int? IdSolicitacaoFeedback { get; set; }
         public DateTime DataRealizacao { get; set; }
         public string MensagemFeedback { get; set; }
         public FeedbackAvaliacao Avaliacao { get; set; }

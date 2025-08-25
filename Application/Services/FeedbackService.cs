@@ -130,6 +130,38 @@ namespace Application.Services
             }
         }
 
+        public async Task<FeedBackDTO> ObterSolicitacoesResponsavelAsync(int idResponsavel)
+        {
+            try
+            {
+                var solicitacoes = await _feedbackRepository.ObterSolicitacoesResponsavelAsync(idResponsavel);
+
+                if (solicitacoes == null || !solicitacoes.Any())
+                {
+                    return new FeedBackDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Nenhuma solicitação de feedback encontrada para este responsável."
+                    };
+                }
+
+                return new FeedBackDTO
+                {
+                    Sucesso = true,
+                    SolicitacoesFeedback = solicitacoes.ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new FeedBackDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar solicitações de feedback do responsável: {ex.Message}"
+                };
+            }
+        }
+
+
         public async Task<FeedBackDTO> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao)
         {
             try

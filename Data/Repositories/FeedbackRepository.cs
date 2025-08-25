@@ -82,6 +82,25 @@ namespace Data.Repositories
                 transaction
             );
         }
+        public async Task<IEnumerable<SolicitacaoFeedbackModel>> ObterSolicitacoesResponsavelAsync(int idResponsavel,IDbTransaction? transaction = null)
+        {
+            string sql = @"
+                            SELECT ID_SOLICITACAO_FEEDBACK, 
+                                   ID_USUARIO_SOLICITACAO, 
+                                   ID_RESPONSAVEL_FEEDBACK, 
+                                   STATUS, 
+                                   DATA_SOLICITACAO, 
+                                   MENSAGEM_SOLICITACAO
+                            FROM SOLICITACAO_FEEDBACK
+                            WHERE ID_RESPONSAVEL_FEEDBACK = @IdResponsavel
+                            ORDER BY DATA_SOLICITACAO DESC;";
+
+            return await _dbSession.Connection.QueryAsync<SolicitacaoFeedbackModel>(
+                sql,
+                new { IdResponsavel = idResponsavel },
+                transaction
+            );
+        }
 
         public async Task<bool> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao, IDbTransaction? transaction = null)
         {
@@ -106,29 +125,49 @@ namespace Data.Repositories
         #region metodos Feedback
         public async Task<int> InserirFeedbackAsync(FeedbackModel feedback)
         {
-            string sqlFeedback = @"INSERT INTO FEEDBACK 
-            (ID_SOLICITACAO_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
-            VALUES (@IdSolicitacaoFeedback, @MensagemFeedback, @Avaliacao);";
+            string sqlFeedbackComSolicitacao = @"
+                                                INSERT INTO FEEDBACK 
+                                                (ID_SOLICITACAO_FEEDBACK, ID_USUARIO_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
+                                                VALUES (@IdSolicitacaoFeedback, @IdUsuarioFeedback, @MensagemFeedback, @Avaliacao);";
 
-            string sqlUpdateSolicitacao = @"UPDATE SOLICITACAO_FEEDBACK 
-            SET STATUS = 1 
-            WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
-            await _dbSession.Connection.ExecuteAsync(sqlFeedback, feedback, _dbSession.Transaction);
-            return await _dbSession.Connection.ExecuteAsync(sqlUpdateSolicitacao, feedback, _dbSession.Transaction);
+            string sqlFeedbackSemSolicitacao = @"
+                                                INSERT INTO FEEDBACK 
+                                                (ID_USUARIO_FEEDBACK, MENSAGEM_FEEDBACK, AVALIACAO) 
+                                                VALUES (@IdUsuarioFeedback, @MensagemFeedback, @Avaliacao);";
+
+            if (feedback.IdSolicitacaoFeedback > 0)
+            {
+                // Cria feedback vinculado à solicitação
+                await _dbSession.Connection.ExecuteAsync(sqlFeedbackComSolicitacao, feedback, _dbSession.Transaction);
+
+                // Atualiza solicitação para "respondida"
+                string sqlUpdateSolicitacao = @"
+                                                UPDATE SOLICITACAO_FEEDBACK 
+                                                SET STATUS = 1 
+                                                WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
+
+                return await _dbSession.Connection.ExecuteAsync(sqlUpdateSolicitacao, feedback, _dbSession.Transaction);
+            }
+            else
+            {
+                // Cria feedback independente
+                return await _dbSession.Connection.ExecuteAsync(sqlFeedbackSemSolicitacao, feedback, _dbSession.Transaction);
+            }
         }
 
         public async Task<IEnumerable<FeedbackModel>> ListarTodosFeedbacksAsync()
         {
-            string sql = @"SELECT ID_FEEDBACK,ID_SOLICITACAO_FEEDBACK,DATA_REALIZACAO,MENSAGEM_FEEDBACK,AVALIACAO FROM FEEDBACK;";
+            string sql = @"SELECT ID_FEEDBACK,ID_SOLICITACAO_FEEDBACK,DATA_REALIZACAO,MENSAGEM_FEEDBACK,AVALIACAO,ID_USUARIO_FEEDBACK FROM FEEDBACK;";
             return await _dbSession.Connection.QueryAsync<FeedbackModel>(sql);
         }
         public async Task<FeedbackModel> ObterFeedbackPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_FEEDBACK, ID_SOLICITACAO_FEEDBACK, DATA_REALIZACAO, MENSAGEM_FEEDBACK, AVALIACAO
+            string sql = @"SELECT ID_FEEDBACK, ID_SOLICITACAO_FEEDBACK, DATA_REALIZACAO, MENSAGEM_FEEDBACK, AVALIACAO,ID_USUARIO_FEEDBACK
                    FROM FEEDBACK
                    WHERE ID_FEEDBACK = @IdFeedback;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<FeedbackModel>(sql, new { IdFeedback = id });
         }
+
         #endregion
     }
 }
