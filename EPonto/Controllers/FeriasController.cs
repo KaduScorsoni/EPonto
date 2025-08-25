@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Entities.Feriado_e_Ferias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,21 +68,72 @@ namespace EPonto.Controllers
                 return BadRequest(new FeriasDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+        [HttpPost]
+        [Route("CadastrarSolicitacaoFerias")]
+        public async Task<ActionResult<ResultadoDTO>> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel paramSolicFerias)
+        {
+            try
+            {
+                ResultadoDTO auxResult = await _FeriasService.CadastrarSolicitacaoFerias(paramSolicFerias);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
+
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
+        [HttpGet]
+        [Route("ListarSolicitacoesFerias")]
+        public async Task<ActionResult<SolicitacaoFeriasDTO>> ListarSolicitacoesFerias(int? idUsuario = null)
+        {
+            try
+            {
+                SolicitacaoFeriasDTO auxResult = await _FeriasService.ListarSolicitacoesFerias(idUsuario);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
+
+                return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
+        [HttpGet]
+        [Route("RetornaSaldoFerias")]
+        public async Task<ActionResult<SaldoFeriasDTO>> RetornaSaldoFerias(int? idUsuario = null)
+        {
+            try
+            {
+                SaldoFeriasDTO auxResult = await _FeriasService.RetornaSaldoFerias(idUsuario);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
+
+                return BadRequest(new SaldoFeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new SaldoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
         //[HttpPost]
-        //[Route("CadastrarSolicitacaoFerias")]
-        //public async Task<ActionResult<ResultadoDTO>> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel paramSolicFerias)
+        //[Route("AtualizaSolicitacaoFerias")]
+        //public async Task<ActionResult<SolicitacaoFeriasDTO>> AtualizaSolicitacaoFerias(int? idUsuario = null)
         //{
         //    try
         //    {
-        //        ResultadoDTO auxResult = await _FeriasService.CadastrarSolicitacaoFerias(paramFerias);
+        //        SolicitacaoFeriasDTO auxResult = await _FeriasService.ListarSolicitacoesFerias(idUsuario);
         //        if (auxResult.Sucesso)
         //            return Ok(auxResult);
 
-        //        return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+        //        return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
         //    }
         //    catch (Exception ex)
         //    {
-        //        return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
+        //        return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
         //    }
         //}
     }
