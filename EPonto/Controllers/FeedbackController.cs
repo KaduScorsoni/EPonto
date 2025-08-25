@@ -72,6 +72,18 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [HttpGet("ListarSolicitacoesUsuario/{idUsuario}")]
+        public async Task<IActionResult> ObterSolicitacoesPorUsuario(int idUsuario)
+        {
+            var resultado = await _feedbackService.ObterSolicitacoesPorUsuarioAsync(idUsuario);
+
+            if (resultado.Sucesso && resultado.SolicitacoesFeedback != null && resultado.SolicitacoesFeedback.Any())
+                return Ok(resultado);
+
+            return NotFound(resultado);
+        }
+
+
         [HttpGet("ListarFeedback/{id}")]
         public async Task<IActionResult> ObterFeedbackPorId(int id)
         {
