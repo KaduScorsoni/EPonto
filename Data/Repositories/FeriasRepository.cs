@@ -103,5 +103,103 @@ namespace Data.Repositories
                 return lista;
             }
         }
+        public async Task<int> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel param)
+        {
+            string sql = @"
+                INSERT INTO SOLICITACAO_FERIAS (
+                    ID_USUARIO,
+                    DSC_OBSERVACAO,
+                    IND_SITUACAO,
+                    DAT_INICIO_FERIAS,
+                    DAT_FIM_FERIAS,
+                    DAT_SOLICITACAO
+                )
+                VALUES (
+                    @ID_USUARIO,
+                    @DSC_OBSERVACAO,
+                    @IND_SITUACAO,
+                    @DAT_INICIO_FERIAS,
+                    @DAT_FIM_FERIAS,
+                    NOW()
+                )";
+
+            object auxParametros = new
+            {
+                ID_USUARIO = param.IdUsuario,
+                DSC_OBSERVACAO = param.DscObservacao,
+                DAT_INICIO_FERIAS = param.DatInicioFerias,
+                DAT_FIM_FERIAS = param.DatFimFerias,
+                IND_SITUACAO = 1 // Solicitação criada, aguardando aprovação
+            };
+
+            return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
+        }
+        public async Task<List<ResultadoSolicitacaoFeriasModel>> ListarSolicitacoesFerias(int? idUsuario)
+        {
+            string sql = @"
+                        SELECT SF.ID_SOLICITACAO_FERIAS,
+	                           SF.ID_USUARIO,
+                               SF.DSC_OBSERVACAO,
+                               SF.IND_SITUACAO,
+                               SF.DAT_INICIO_FERIAS,
+                               SF.DAT_FIM_FERIAS,
+                               SF.DAT_SOLICITACAO,
+                               U.NOME AS NOME_USUARIO
+                          FROM SOLICITACAO_FERIAS SF
+                          JOIN USUARIO U ON U.ID_USUARIO = SF.ID_USUARIO
+                         WHERE SF.ID_USUARIO = IFNULL(@ID_USUARIO, SF.ID_USUARIO)";
+
+            object auxParametros = new { ID_USUARIO = idUsuario };
+
+            List<ResultadoSolicitacaoFeriasModel> lista = new List<ResultadoSolicitacaoFeriasModel>();
+
+            using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
+            {
+                while (reader.Read())
+                {
+                    lista.Add(new ResultadoSolicitacaoFeriasModel
+                    {
+                        IdSolicFerias = reader["ID_SOLICITACAO_FERIAS"].ToInt(),
+                        IdUsuario = reader["ID_USUARIO"].ToInt(),
+                        DscObservacao = reader["DSC_OBSERVACAO"].ToString(),
+                        DatInicioFerias = reader["DAT_INICIO_FERIAS"].ToDateTime(),
+                        DatFimFerias = reader["DAT_FIM_FERIAS"].ToDateTime(),
+                        DatSolicitacaoFerias = reader["DAT_SOLICITACAO"].ToDateTime(),
+                        NomeUsuario = reader["NOME_USUARIO"].ToString(),
+                        IndSituacao = reader["IND_SITUACAO"].ToInt()
+                    });
+                }
+                return lista;
+            }
+        }
+
+        public async Task<List<SaldoFeriasModel>> RetornaSaldoFerias(int? idUsuario)
+        {
+            string sql = @"
+                        SELECT U.NOME AS NOME_USUARIO,
+	                           SF.QTD_SALDO,
+                               SF.ID_USUARIO
+                          FROM SALDO_FERIAS SF
+                          JOIN USUARIO U ON U.ID_USUARIO = SF.ID_USUARIO
+                         WHERE SF.ID_USUARIO = IFNULL(@ID_USUARIO, SF.ID_USUARIO)";
+
+            object auxParametros = new { ID_USUARIO = idUsuario };
+
+            List<SaldoFeriasModel> lista = new List<SaldoFeriasModel>();
+
+            using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
+            {
+                while (reader.Read())
+                {
+                    lista.Add(new SaldoFeriasModel
+                    {
+                        IdUsuario = reader["ID_USUARIO"].ToInt(),
+                        QtdSaldo = reader["QTD_SALDO"].ToInt(),
+                        NomeUsuario = reader["NOME_USUARIO"].ToString(),
+                    });
+                }
+                return lista;
+            }
+        }
     }
 }

@@ -111,5 +111,93 @@ namespace Application.Services
                 };
             }
         }
+        public async Task<ResultadoDTO> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel param)
+        {
+            try
+            {
+                if (param.DatInicioFerias > param.DatFimFerias)
+                    return new ResultadoDTO { Sucesso = false, Mensagem = "A data de Inicio não pode ser maior que a data Final!" };
+
+                _dbSession.BeginTransaction();
+
+
+                await _FeriasRepository.CadastrarSolicitacaoFerias(param);
+
+                _dbSession.Commit();
+                return new ResultadoDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Ferias solicitada com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new ResultadoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao inserir nova solicitação: {ex.Message}"
+                };
+            }
+        }
+        public async Task<SolicitacaoFeriasDTO> ListarSolicitacoesFerias(int? idUsuario)
+        {
+            try
+            {
+                List<ResultadoSolicitacaoFeriasModel> ListaSolicitacaoFerias = await _FeriasRepository.ListarSolicitacoesFerias(idUsuario);
+
+                if (ListaSolicitacaoFerias.Count > 0)
+                    return new SolicitacaoFeriasDTO
+                    {
+                        Sucesso = true,
+                        Mensagem = "Solicitações listadas com sucesso.",
+                        ListarSolicitacoesFerias = ListaSolicitacaoFerias
+                    };
+                else
+                    return new SolicitacaoFeriasDTO
+                    {
+                        Sucesso = true,
+                        Mensagem = "Não há solicitações cadastradas."
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new SolicitacaoFeriasDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar solicitações: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<SaldoFeriasDTO> RetornaSaldoFerias(int? idUsuario)
+        {
+            try
+            {
+                List<SaldoFeriasModel> ListaSolicitacaoFerias = await _FeriasRepository.RetornaSaldoFerias(idUsuario);
+
+                if (ListaSolicitacaoFerias.Count > 0)
+                    return new SaldoFeriasDTO
+                    {
+                        Sucesso = true,
+                        Mensagem = "Ferias listados com sucesso.",
+                        ListaSaldoFerias = ListaSolicitacaoFerias
+                    };
+                else
+                    return new SaldoFeriasDTO
+                    {
+                        Sucesso = true,
+                        Mensagem = "Não há ferias cadastradas."
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new SaldoFeriasDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar ferias(s): {ex.Message}"
+                };
+            }
+        }
     }
 }
