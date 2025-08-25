@@ -72,6 +72,18 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [HttpGet("ListarSolicitacoesUsuario/{idUsuario}")]
+        public async Task<IActionResult> ObterSolicitacoesPorUsuario(int idUsuario)
+        {
+            var resultado = await _feedbackService.ObterSolicitacoesPorUsuarioAsync(idUsuario);
+
+            if (resultado.Sucesso && resultado.SolicitacoesFeedback != null && resultado.SolicitacoesFeedback.Any())
+                return Ok(resultado);
+
+            return NotFound(resultado);
+        }
+
+
         [HttpGet("ListarFeedback/{id}")]
         public async Task<IActionResult> ObterFeedbackPorId(int id)
         {
@@ -81,6 +93,24 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+
+        [HttpPut("AtualizarSolicitacao/{id}")]
+        public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoFeedbackModel solicitacao)
+        {
+            if (solicitacao == null)
+            {
+                return BadRequest("Dados da solicitação são obrigatórios.");
+            }
+
+            solicitacao.IdSolicitacaoFeedback = id;
+
+            var resultado = await _feedbackService.AtualizarSolicitacaoAsync(solicitacao);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)
         {

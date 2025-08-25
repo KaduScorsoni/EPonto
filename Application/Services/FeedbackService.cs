@@ -98,13 +98,102 @@ namespace Application.Services
                 };
             }
         }
+
+        public async Task<FeedBackDTO> ObterSolicitacoesPorUsuarioAsync(int idUsuario)
+        {
+            try
+            {
+                var solicitacoes = await _feedbackRepository.ObterSolicitacoesPorUsuarioAsync(idUsuario);
+
+                if (solicitacoes == null || !solicitacoes.Any())
+                {
+                    return new FeedBackDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Nenhuma solicitação de feedback encontrada para este usuário."
+                    };
+                }
+
+                return new FeedBackDTO
+                {
+                    Sucesso = true,
+                    SolicitacoesFeedback = solicitacoes.ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new FeedBackDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar solicitações de feedback: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<FeedBackDTO> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao)
+        {
+            try
+            {
+                _dbSession.BeginTransaction();
+
+                // Busca a solicitação existente
+                var solicitacaoExistente = await _feedbackRepository.ObterSolicitacaoPorIdAsync(solicitacao.IdSolicitacaoFeedback, _dbSession.Transaction);
+
+                if (solicitacaoExistente == null)
+                {
+                    _dbSession.Rollback();
+                    return new FeedBackDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Solicitação de feedback não encontrada."
+                    };
+                }
+
+                // Se já foi respondida, não pode atualizar
+                if (solicitacaoExistente.Status != 0)
+                {
+                    _dbSession.Rollback();
+                    return new FeedBackDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Não é possível atualizar uma solicitação já respondida."
+                    };
+                }
+
+                // Atualiza a data para o momento da edição
+                solicitacao.DataSolicitacao = DateTime.Now;
+
+                // Chama o repositório para atualizar
+                var sucesso = await _feedbackRepository.AtualizarSolicitacaoAsync(solicitacao, _dbSession.Transaction);
+
+                if (sucesso)
+                    _dbSession.Commit();
+                else
+                    _dbSession.Rollback();
+
+                return new FeedBackDTO
+                {
+                    Sucesso = sucesso,
+                    Mensagem = sucesso ? "Solicitação atualizada com sucesso." : "Falha ao atualizar solicitação."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new FeedBackDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao atualizar solicitação: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<FeedBackDTO> ExcluirSolicitacaoAsync(int id)
         {
             try
             {
                 _dbSession.BeginTransaction();
 
-                // Busca solicitação pelo ID usando a mesma transação
                 var solicitacao = await _feedbackRepository.ObterSolicitacaoPorIdAsync(id, _dbSession.Transaction);
 
                 if (solicitacao == null)
@@ -117,7 +206,6 @@ namespace Application.Services
                     };
                 }
 
-                // Verifica se já foi respondida
                 if (solicitacao.Status != 0)
                 {
                     _dbSession.Rollback();

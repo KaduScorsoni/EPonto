@@ -64,6 +64,36 @@ namespace Data.Repositories
             );
         }
 
+        public async Task<IEnumerable<SolicitacaoFeedbackModel>> ObterSolicitacoesPorUsuarioAsync(int idUsuario,IDbTransaction? transaction = null)
+        {
+            string sql = @"
+                            SELECT ID_SOLICITACAO_FEEDBACK, 
+                                   ID_USUARIO_SOLICITACAO, 
+                                   ID_RESPONSAVEL_FEEDBACK, 
+                                   STATUS, 
+                                   DATA_SOLICITACAO, 
+                                   MENSAGEM_SOLICITACAO
+                            FROM SOLICITACAO_FEEDBACK
+                            WHERE ID_USUARIO_SOLICITACAO = @IdUsuarioSolicitacao;";
+
+            return await _dbSession.Connection.QueryAsync<SolicitacaoFeedbackModel>(
+                sql,
+                new { IdUsuarioSolicitacao = idUsuario },
+                transaction
+            );
+        }
+
+        public async Task<bool> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao, IDbTransaction? transaction = null)
+        {
+            string sql = @"UPDATE SOLICITACAO_FEEDBACK 
+                   SET ID_RESPONSAVEL_FEEDBACK = @IdResponsavelFeedback,
+                       MENSAGEM_SOLICITACAO = @MensagemSolicitacao
+                   WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
+            int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, solicitacao, _dbSession.Transaction);
+            return linhasAfetadas > 0;
+        }
+
+
         public async Task<bool> ExcluirSolicitacaoAsync(int id, IDbTransaction? transaction = null)
         {
             string sql = @"DELETE FROM SOLICITACAO_FEEDBACK WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
