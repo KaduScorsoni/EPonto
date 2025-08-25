@@ -81,6 +81,24 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+
+        [HttpPut("AtualizarSolicitacao/{id}")]
+        public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoFeedbackModel solicitacao)
+        {
+            if (solicitacao == null)
+            {
+                return BadRequest("Dados da solicitação são obrigatórios.");
+            }
+
+            solicitacao.IdSolicitacaoFeedback = id;
+
+            var resultado = await _feedbackService.AtualizarSolicitacaoAsync(solicitacao);
+            if (resultado.Sucesso)
+                return Ok(resultado);
+
+            return BadRequest(resultado);
+        }
+
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)
         {

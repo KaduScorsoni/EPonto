@@ -64,6 +64,17 @@ namespace Data.Repositories
             );
         }
 
+        public async Task<bool> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao, IDbTransaction? transaction = null)
+        {
+            string sql = @"UPDATE SOLICITACAO_FEEDBACK 
+                   SET ID_RESPONSAVEL_FEEDBACK = @IdResponsavelFeedback,
+                       MENSAGEM_SOLICITACAO = @MensagemSolicitacao
+                   WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
+            int linhasAfetadas = await _dbSession.Connection.ExecuteAsync(sql, solicitacao, _dbSession.Transaction);
+            return linhasAfetadas > 0;
+        }
+
+
         public async Task<bool> ExcluirSolicitacaoAsync(int id, IDbTransaction? transaction = null)
         {
             string sql = @"DELETE FROM SOLICITACAO_FEEDBACK WHERE ID_SOLICITACAO_FEEDBACK = @IdSolicitacaoFeedback;";
