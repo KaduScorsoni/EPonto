@@ -18,6 +18,7 @@ namespace Application.Interfaces
         Task<FeedBackDTO> ObterSolicitacoesPorUsuarioAsync(int idUsuario);
         Task<FeedBackDTO> ObterSolicitacoesResponsavelAsync(int idResponsavel);
         Task<FeedBackDTO> ObterFeedbackPorIdAsync(int id);
+        Task<FeedBackDTO> ObterFeedbacksPorUsuarioAsync(int idUsuario);
         Task<FeedBackDTO> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao);
         Task<FeedBackDTO> ExcluirSolicitacaoAsync(int id);
     }

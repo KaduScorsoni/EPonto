@@ -121,6 +121,17 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [HttpGet("ListarFeedbacksUsuario/{idUsuario}")]
+        public async Task<IActionResult> ObterFeedbacksPorUsuario(int idUsuario)
+        {
+            var resultado = await _feedbackService.ObterFeedbacksPorUsuarioAsync(idUsuario);
+            if (resultado.Sucesso && resultado.Feedbacks != null)
+                return Ok(resultado);
+
+            return NotFound(resultado);
+        }
+
+
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)
         {

@@ -13,6 +13,8 @@ namespace Domain.Entities.Feedback
         public int IdUsuarioFeedback { get; set; }
         public int IdAutorFeedback { get; set; }
         public int? IdSolicitacaoFeedback { get; set; }
+        public string NomeUsuarioFeedback { get; set; }  // aqui
+        public string NomeAutorFeedback { get; set; }     // aqui
         public DateTime DataRealizacao { get; set; }
         public string MensagemFeedback { get; set; }
         public FeedbackAvaliacao Avaliacao { get; set; }

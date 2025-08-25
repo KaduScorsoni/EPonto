@@ -19,6 +19,7 @@ namespace Data.Interfaces
         Task<IEnumerable<SolicitacaoFeedbackModel>> ObterSolicitacoesPorUsuarioAsync(int idUsuario, IDbTransaction? transaction = null);
         Task<IEnumerable<SolicitacaoFeedbackModel>> ObterSolicitacoesResponsavelAsync(int idResponsavel, IDbTransaction? transaction = null);
         Task<FeedbackModel> ObterFeedbackPorIdAsync(int id);
+        Task<IEnumerable<FeedbackModel>> ObterFeedbacksPorUsuarioAsync(int idUsuario);
         Task<bool> AtualizarSolicitacaoAsync(SolicitacaoFeedbackModel solicitacao,IDbTransaction? transaction = null);
         Task<bool> ExcluirSolicitacaoAsync(int id, IDbTransaction? transaction = null);
     }

@@ -157,15 +157,57 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<FeedbackModel>> ListarTodosFeedbacksAsync()
         {
-            string sql = @"SELECT ID_FEEDBACK,ID_SOLICITACAO_FEEDBACK,DATA_REALIZACAO,MENSAGEM_FEEDBACK,AVALIACAO,ID_USUARIO_FEEDBACK FROM FEEDBACK;";
+            string sql = @"
+                            SELECT 
+                                f.ID_FEEDBACK,
+                                f.ID_SOLICITACAO_FEEDBACK,
+                                f.DATA_REALIZACAO,
+                                f.MENSAGEM_FEEDBACK,
+                                f.AVALIACAO,
+                                u1.NOME AS NOME_USUARIO_FEEDBACK,
+                                u2.NOME AS NOME_AUTOR_FEEDBACK
+                            FROM FEEDBACK f
+                            LEFT JOIN USUARIO u1 ON f.ID_USUARIO_FEEDBACK = u1.ID_USUARIO
+                            LEFT JOIN USUARIO u2 ON f.ID_AUTOR_FEEDBACK = u2.ID_USUARIO;
+                        ";
             return await _dbSession.Connection.QueryAsync<FeedbackModel>(sql);
         }
+
         public async Task<FeedbackModel> ObterFeedbackPorIdAsync(int id)
         {
-            string sql = @"SELECT ID_FEEDBACK, ID_SOLICITACAO_FEEDBACK, DATA_REALIZACAO, MENSAGEM_FEEDBACK, AVALIACAO,ID_USUARIO_FEEDBACK
-                   FROM FEEDBACK
-                   WHERE ID_FEEDBACK = @IdFeedback;";
+            string sql = @"
+                            SELECT 
+                                f.ID_FEEDBACK,
+                                f.ID_SOLICITACAO_FEEDBACK,
+                                f.DATA_REALIZACAO,
+                                f.MENSAGEM_FEEDBACK,
+                                f.AVALIACAO,
+                                u1.NOME AS NOME_USUARIO_FEEDBACK,
+                                u2.NOME AS NOME_AUTOR_FEEDBACK
+                            FROM FEEDBACK f
+                            LEFT JOIN USUARIO u1 ON f.ID_USUARIO_FEEDBACK = u1.ID_USUARIO
+                            LEFT JOIN USUARIO u2 ON f.ID_AUTOR_FEEDBACK = u2.ID_USUARIO
+                            WHERE f.ID_FEEDBACK = @IdFeedback;
+                        ";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<FeedbackModel>(sql, new { IdFeedback = id });
+        }
+        public async Task<IEnumerable<FeedbackModel>> ObterFeedbacksPorUsuarioAsync(int idUsuario)
+        {
+            string sql = @"
+                            SELECT 
+                                f.ID_FEEDBACK,
+                                f.ID_SOLICITACAO_FEEDBACK,
+                                f.DATA_REALIZACAO,
+                                f.MENSAGEM_FEEDBACK,
+                                f.AVALIACAO,
+                                u1.NOME AS NOME_USUARIO_FEEDBACK,
+                                u2.NOME AS NOME_AUTOR_FEEDBACK
+                            FROM FEEDBACK f
+                            LEFT JOIN USUARIO u1 ON f.ID_USUARIO_FEEDBACK = u1.ID_USUARIO
+                            LEFT JOIN USUARIO u2 ON f.ID_AUTOR_FEEDBACK = u2.ID_USUARIO
+                            WHERE f.ID_AUTOR_FEEDBACK = @IdUsuario;
+                        ";
+            return await _dbSession.Connection.QueryAsync<FeedbackModel>(sql, new { IdUsuario = idUsuario });
         }
 
         #endregion

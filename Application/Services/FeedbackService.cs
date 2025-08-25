@@ -350,6 +350,36 @@ namespace Application.Services
                 };
             }
         }
+        public async Task<FeedBackDTO> ObterFeedbacksPorUsuarioAsync(int idUsuario)
+        {
+            try
+            {
+                var feedbacks = await _feedbackRepository.ObterFeedbacksPorUsuarioAsync(idUsuario);
+                if (feedbacks == null || !feedbacks.Any())
+                {
+                    return new FeedBackDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Nenhum feedback encontrado para este usuário."
+                    };
+                }
+
+                return new FeedBackDTO
+                {
+                    Sucesso = true,
+                    Feedbacks = feedbacks.ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new FeedBackDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar feedbacks: {ex.Message}"
+                };
+            }
+        }
+
         #endregion
     }
 }
