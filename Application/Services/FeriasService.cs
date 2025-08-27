@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Data.Connections;
 using Data.Interfaces;
+using Data.Util;
 using Domain.Entities;
 using Domain.Entities.Feriado_e_Ferias;
 using System;
@@ -196,6 +197,34 @@ namespace Application.Services
                 {
                     Sucesso = false,
                     Mensagem = $"Erro ao listar ferias(s): {ex.Message}"
+                };
+            }
+        }
+        public async Task<ResultadoDTO> AtualizaSolicitacaoFerias(int? idSolicitacao, int? indSituacao)
+        {
+            try
+            {
+                if (idSolicitacao == null || idSolicitacao == 0 || indSituacao == null)
+                    return new ResultadoDTO { Sucesso = false, Mensagem = "Deve ser selecionada uma solicitação e um situação para salvar." };
+
+                _dbSession.BeginTransaction();
+
+                await _FeriasRepository.AtualizaSolicitacaoFerias(idSolicitacao.ToInt(), indSituacao.ToInt());
+
+                _dbSession.Commit();
+                return new ResultadoDTO
+                {
+                    Sucesso = true,
+                    Mensagem = "Solicitação atualizada com sucesso."
+                };
+            }
+            catch (Exception ex)
+            {
+                _dbSession.Rollback();
+                return new ResultadoDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao atualizar a solicitação: {ex.Message}"
                 };
             }
         }

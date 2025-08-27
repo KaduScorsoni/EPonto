@@ -119,22 +119,22 @@ namespace EPonto.Controllers
                 return BadRequest(new SaldoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
-        //[HttpPost]
-        //[Route("AtualizaSolicitacaoFerias")]
-        //public async Task<ActionResult<SolicitacaoFeriasDTO>> AtualizaSolicitacaoFerias(int? idUsuario = null)
-        //{
-        //    try
-        //    {
-        //        SolicitacaoFeriasDTO auxResult = await _FeriasService.ListarSolicitacoesFerias(idUsuario);
-        //        if (auxResult.Sucesso)
-        //            return Ok(auxResult);
+        [HttpPost]
+        [Route("AtualizaSolicitacaoFerias")]
+        public async Task<ActionResult<ResultadoDTO>> AtualizaSolicitacaoFerias(int? idSolicitacao = null, int? indSituacao = null)
+        {
+            try
+            {
+                ResultadoDTO auxResult = await _FeriasService.AtualizaSolicitacaoFerias(idSolicitacao, indSituacao);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
 
-        //        return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
-        //    }
-        //}
+                return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new SolicitacaoFeriasDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
     }
 }
