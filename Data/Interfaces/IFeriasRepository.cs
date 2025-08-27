@@ -16,6 +16,6 @@ namespace Data.Interfaces
         Task<int> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel param);
         Task<List<ResultadoSolicitacaoFeriasModel>> ListarSolicitacoesFerias(int? idUsuario = null);
         Task<List<SaldoFeriasModel>> RetornaSaldoFerias(int? idUsuario);
-
+        Task<int> AtualizaSolicitacaoFerias(int idSolicitacao, int indSituacao);
     }
 }

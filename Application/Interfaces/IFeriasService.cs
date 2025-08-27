@@ -17,5 +17,6 @@ namespace Application.Interfaces
         Task<ResultadoDTO> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel param);
         Task<SolicitacaoFeriasDTO> ListarSolicitacoesFerias(int? idUsuario = null);
         Task<SaldoFeriasDTO> RetornaSaldoFerias(int? idUsuario);
+        Task<ResultadoDTO> AtualizaSolicitacaoFerias(int? idSolicitacao, int? indSituacao);
     }
 }

@@ -15,6 +15,5 @@ namespace Domain.Entities.Feriado_e_Ferias
         public string DscObservacao { get; set; }
         public DateTime DatInicioFerias { get; set; }
         public DateTime DatFimFerias { get; set; }
-        public DateTime DatInicio { get; set; }
     }
 }

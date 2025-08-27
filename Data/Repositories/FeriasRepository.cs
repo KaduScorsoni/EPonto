@@ -201,5 +201,20 @@ namespace Data.Repositories
                 return lista;
             }
         }
+        public async Task<int> AtualizaSolicitacaoFerias(int idSolicitacao, int indSituacao)
+        {
+            string sql = @"
+                UPDATE SOLICITACAO_FERIAS SF
+                   SET SF.IND_SITUACAO = @IND_SITUACAO
+                 WHERE SF.ID_SOLICITACAO_FERIAS = @ID_SOLICITACAO_FERIAS";
+
+            object auxParametros = new
+            {
+                IND_SITUACAO = indSituacao,
+                ID_SOLICITACAO_FERIAS = idSolicitacao
+            };
+
+            return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
+        }
     }
 }
