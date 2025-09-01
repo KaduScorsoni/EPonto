@@ -109,7 +109,6 @@ namespace Data.Repositories
                 INSERT INTO SOLICITACAO_FERIAS (
                     ID_USUARIO,
                     DSC_OBSERVACAO,
-                    IND_SITUACAO,
                     DAT_INICIO_FERIAS,
                     DAT_FIM_FERIAS,
                     DAT_SOLICITACAO
@@ -117,7 +116,6 @@ namespace Data.Repositories
                 VALUES (
                     @ID_USUARIO,
                     @DSC_OBSERVACAO,
-                    @IND_SITUACAO,
                     @DAT_INICIO_FERIAS,
                     @DAT_FIM_FERIAS,
                     NOW()
@@ -128,8 +126,7 @@ namespace Data.Repositories
                 ID_USUARIO = param.IdUsuario,
                 DSC_OBSERVACAO = param.DscObservacao,
                 DAT_INICIO_FERIAS = param.DatInicioFerias,
-                DAT_FIM_FERIAS = param.DatFimFerias,
-                IND_SITUACAO = 1 // Solicitação criada, aguardando aprovação
+                DAT_FIM_FERIAS = param.DatFimFerias
             };
 
             return await _dbSession.Connection.ExecuteAsync(sql, auxParametros, _dbSession.Transaction);
