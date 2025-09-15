@@ -7,6 +7,9 @@ using Data.Repositories;
 using Hangfire;
 using Hangfire.MySql;
 using Hangfire.Storage;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
+using Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,7 +97,6 @@ builder.Services.AddHangfire(configuration =>
                      builder.Configuration.GetConnectionString("HangfireConnection"),
                      new MySqlStorageOptions
                      {
-                         // Prefixo das tabelas se quiser separar visualmente
                          TablesPrefix = "Hangfire"
                      }));
 });
@@ -104,6 +106,17 @@ builder.Services.AddHangfireServer();
 // Adicione o serviço do job
 builder.Services.AddScoped<BancoHorasJob>();
 
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+
+builder.Services.AddSingleton(sp => {
+var cfg = sp.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+var account = new Account(cfg.CloudName, cfg.ApiKey, cfg.ApiSecret);
+var cloudinary = new Cloudinary(account) { Api = { Secure = true } };
+return cloudinary;
+});
+
+// Sua abstração de storage
+builder.Services.AddScoped<ICloudStorage, CloudinaryStorage>();
 
 var app = builder.Build();
 
