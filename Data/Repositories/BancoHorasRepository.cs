@@ -4,6 +4,7 @@ using Data.Interfaces;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -123,11 +124,11 @@ namespace Data.Repositories
             TimeSpan jornadaEsperada = await _jornadaTrabalhoRepository.ObterJornadaDiariaUsuario(idUsuario);
 
             // Consulta todos os saldos diários que não estão inconsistentes
-            string sql = @"
-                SELECT SALDO_DIARIO
-                FROM SALDO_DIARIO_BANCO_HORAS
-                WHERE ID_USUARIO = @IdUsuario
-                    AND APONTAMENTO_INCONSISTENTE = FALSE";
+            string sql = @" SELECT SALDO_DIARIO 
+                FROM SALDO_DIARIO_BANCO_HORAS 
+                WHERE ID_USUARIO = @IdUsuario 
+                  AND APONTAMENTO_INCONSISTENTE = FALSE
+                  AND IND_ATIVO = 0";
 
             var saldos = await _dbSession.Connection.QueryAsync<TimeSpan?>(
                 sql,
@@ -232,6 +233,22 @@ namespace Data.Repositories
             });
 
             return resultado;
+        }
+        //metodo usado na solicitação de ausencia para desconsiderar os dias
+        public async Task InativarSaldosPorPeriodoAsync(int idUsuario, DateTime dataInicio, DateTime dataFim, IDbTransaction? transaction = null)
+        {
+            string sql = @"
+                        UPDATE SALDO_DIARIO_BANCO_HORAS
+                        SET IND_ATIVO = 1
+                        WHERE ID_USUARIO = @IdUsuario
+                          AND DATE(DATA_REFERENCIA) BETWEEN @DataInicio AND @DataFim;";
+
+            await _dbSession.Connection.ExecuteAsync(sql, new
+            {
+                IdUsuario = idUsuario,
+                DataInicio = dataInicio.Date,
+                DataFim = dataFim.Date
+            }, transaction: transaction);
         }
 
         #endregion
