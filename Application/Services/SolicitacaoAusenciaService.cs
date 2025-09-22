@@ -160,7 +160,7 @@ namespace Application.Services
                     };
                 }
 
-                var status = solicitacaoExistente.Status ?? 0;
+                var status = solicitacaoExistente.StatusSolicitacao ?? 0;
                 if (status != 0)
                 {
                     _dbSession.Rollback();
@@ -214,7 +214,7 @@ namespace Application.Services
                     };
                 }
 
-                if (solicitacao.Status != 0)
+                if (solicitacao.StatusSolicitacao != 0)
                 {
                     _dbSession.Rollback();
                     return new SolicitacaoAusenciaDTO
@@ -262,7 +262,7 @@ namespace Application.Services
                     return new SolicitacaoAusenciaDTO { Sucesso = false, Mensagem = "Solicitação não encontrada." };
                 }
 
-                if (solicitacao.Status != 0)
+                if (solicitacao.StatusSolicitacao != 0)
                 {
                     _dbSession.Rollback();
                     return new SolicitacaoAusenciaDTO { Sucesso = false, Mensagem = "Solicitação já foi respondida." };

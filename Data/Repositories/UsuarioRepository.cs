@@ -36,6 +36,18 @@ namespace Data.Repositories
                    WHERE ID_USUARIO = @IdUsuario;";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<UsuarioModel>(sql, new { IdUsuario = id });
         }
+        public async Task<ContratoUsuarioModel> ObterContratoUsuarioAsync(int id)
+        {
+            string sql = @"SELECT 
+                        U.ID_USUARIO,U.NOME,U.IND_ATIVO,U.DATA_CADASTRO,U.DATA_NASCIMENTO,U.EMAIL,U.TELEFONE,U.FOTO_PERFIL,C.NOME_CARGO,C.SALARIO,J.QTD_HORAS_DIARIAS
+                        FROM USUARIO U
+                        INNER JOIN CARGO C 
+                        ON U.ID_CARGO = C.ID_CARGO
+                        INNER JOIN JORNADA_TRABALHO J 
+                        ON U.ID_JORNADA = J.ID_JORNADA
+                        WHERE U.ID_USUARIO = @IdUsuario;";
+            return await _dbSession.Connection.QueryFirstOrDefaultAsync<ContratoUsuarioModel>(sql, new { IdUsuario = id });
+        }
 
         public async Task<IEnumerable<UsuarioModel>> ListarTodosAsync()
         {

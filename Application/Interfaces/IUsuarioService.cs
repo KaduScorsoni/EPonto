@@ -11,6 +11,7 @@ namespace Application.Interfaces
     public interface IUsuarioService
     {
         Task<UsuarioDTO> CriarUsuarioAsync(UsuarioModel usuario);
+        Task<ContratoUsuarioDTO> ObterContratoUsuarioAsync(int id);
         Task<UsuarioDTO> ObterUsuarioPorIdAsync(int id);
         Task<UsuarioDTO> ListarTodosUsuariosAsync();
         Task<UsuarioDTO> AtualizarUsuarioAsync(UsuarioModel usuario);

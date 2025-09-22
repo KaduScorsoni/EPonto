@@ -38,6 +38,16 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [HttpGet("Contrato/{id}")]
+        public async Task<IActionResult> ObterContratoUsuario(int id)
+        {
+            var resultado = await _usuarioService.ObterContratoUsuarioAsync(id);
+            if (resultado.Sucesso && resultado.Contrato != null)
+                return Ok(resultado);
+
+            return NotFound(resultado);
+        }
+
         [HttpGet]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosUsuarios()

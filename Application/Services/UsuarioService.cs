@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,6 +92,37 @@ namespace Application.Services
                 };
             }
         }
+
+        public async Task<ContratoUsuarioDTO> ObterContratoUsuarioAsync(int id)
+        {
+            try
+            {
+                var contrato = await _usuarioRepository.ObterContratoUsuarioAsync(id);
+                if (contrato == null)
+                {
+                    return new ContratoUsuarioDTO
+                    {
+                        Sucesso = false,
+                        Mensagem = "Usuário não encontrado."
+                    };
+                }
+
+                return new ContratoUsuarioDTO
+                {
+                    Sucesso = true,
+                    Contrato = contrato
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ContratoUsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao buscar usuário: {ex.Message}"
+                };
+            }
+        }
+
 
         public async Task<UsuarioDTO> ListarTodosUsuariosAsync()
         {

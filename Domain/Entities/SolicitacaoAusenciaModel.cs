@@ -17,7 +17,7 @@ namespace Domain.Entities
         public DateTime DataInicioAusencia { get; set; }
         public DateTime DataFimAusencia { get; set; }
         public DateTime? DataSolicitacao { get; set; }
-        public StatusAlteracaoPonto? Status { get; set; }
+        public StatusAlteracaoPonto? StatusSolicitacao { get; set; }
         public IFormFile Arquivo { get; set; }
     }
 }

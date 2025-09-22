@@ -11,6 +11,7 @@ namespace Data.Interfaces
     {
         Task<int> InserirAsync(UsuarioModel usuario);
         Task<UsuarioModel> ObterPorIdAsync(int id);
+        Task<ContratoUsuarioModel> ObterContratoUsuarioAsync(int id);
         Task<IEnumerable<UsuarioModel>> ListarTodosAsync();
         Task<bool> AtualizarAsync(UsuarioModel usuario);
         Task<bool> ExcluirAsync(int id);
