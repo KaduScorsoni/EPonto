@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Perfil;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace Domain.Entities
         public int IdJornada { get; set; }
         public int IndAtivo { get; set; }
         public string? FotoPerfil { get; set; }
+        //public List<PerfilModel> PerfisUsuario { get; set; }
     }
 }
