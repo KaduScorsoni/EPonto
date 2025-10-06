@@ -197,5 +197,25 @@ namespace Application.Services
                 };
             }
         }
+        public async Task<UsuarioDTO> ObterHierarquia()
+        {
+            try
+            {
+                var usuarios = await _usuarioRepository.ObterHierarquia();
+                return new UsuarioDTO
+                {
+                    Sucesso = true,
+                    Usuarios = usuarios
+                };
+            }
+            catch (Exception ex)
+            {
+                return new UsuarioDTO
+                {
+                    Sucesso = false,
+                    Mensagem = $"Erro ao listar hierarquia: {ex.Message}"
+                };
+            }
+        }
     }
 }

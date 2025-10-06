@@ -85,5 +85,13 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+
+        [HttpGet("Hierarquia")]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioModel>), 200)]
+        public async Task<IActionResult> ObterHierarquia()
+        {
+            var arvore = await _usuarioService.ObterHierarquia();
+            return Ok(arvore);
+        }
     }
 }

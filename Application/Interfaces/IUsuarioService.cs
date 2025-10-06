@@ -16,5 +16,6 @@ namespace Application.Interfaces
         Task<UsuarioDTO> ListarTodosUsuariosAsync();
         Task<UsuarioDTO> AtualizarUsuarioAsync(UsuarioModel usuario);
         Task<UsuarioDTO> ExcluirUsuarioAsync(int id);
+        Task<UsuarioDTO> ObterHierarquia();
     }
 }

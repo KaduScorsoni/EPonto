@@ -23,9 +23,12 @@ namespace Data.Repositories
         #region metodos
         public async Task<int> InserirAsync(UsuarioModel usuario)
         {
-            string sql = @"INSERT INTO USUARIO 
-               (NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE,FOTO_PERFIL) 
-               VALUES (@Nome, @DataNascimento, @Senha, @Email, @IdCargo, @IdJornada, @Telefone,@FotoPerfil);";
+            string sql = @"
+            INSERT INTO USUARIO 
+                (NOME, DATA_NASCIMENTO, SENHA, EMAIL, ID_CARGO, ID_JORNADA, TELEFONE, FOTO_PERFIL, ID_CHEFE) 
+            VALUES 
+                (@Nome, @DataNascimento, @Senha, @Email, @IdCargo, @IdJornada, @Telefone, @FotoPerfil, @IdChefe);";
+
             return await _dbSession.Connection.ExecuteAsync(sql, usuario, _dbSession.Transaction);
         }
 
@@ -87,6 +90,42 @@ namespace Data.Repositories
                 _dbSession.Transaction 
             );
         }
+
+        public async Task<IEnumerable<UsuarioModel>> ObterHierarquia()
+        {
+            const string sql = @"
+                                WITH RECURSIVE arvore AS (
+                                    SELECT 
+                                        u.ID_USUARIO AS IdUsuario,
+                                        u.NOME       AS Nome,
+                                        u.ID_CHEFE   AS IdChefe,
+                                        0            AS Nivel,
+                                        u.ID_USUARIO AS Raiz
+                                    FROM USUARIO u
+                                    WHERE u.ID_CHEFE IS NULL
+
+                                    UNION ALL
+
+                                    SELECT 
+                                        u.ID_USUARIO,
+                                        u.NOME,
+                                        u.ID_CHEFE,
+                                        a.Nivel + 1,
+                                        a.Raiz
+                                    FROM USUARIO u
+                                    JOIN arvore a ON u.ID_CHEFE = a.IdUsuario
+                                )
+                                SELECT IdUsuario, Nome, IdChefe, Nivel, Raiz
+                                FROM arvore
+                                ORDER BY Raiz, Nivel, Nome;
+                                ";
+            return await _dbSession.Connection.QueryAsync<UsuarioModel>(
+                sql,
+                transaction: _dbSession.Transaction
+            );
+        }
+
+
 
         #endregion
     }
