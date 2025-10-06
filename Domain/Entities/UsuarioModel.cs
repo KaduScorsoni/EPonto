@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Perfil;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -24,5 +25,6 @@ namespace Domain.Entities
         public UsuarioModel? Chefe { get; set; } // navegação p/ chefe
         public ICollection<UsuarioModel> Subordinados { get; set; } =  new List<UsuarioModel>(); // navegação p/ subordinados
         public int Nivel { get; set; }
+        //public List<PerfilModel> PerfisUsuario { get; set; }
     }
 }

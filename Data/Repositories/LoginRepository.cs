@@ -4,6 +4,7 @@ using Data.Interfaces;
 using Data.Util;
 using Domain.Entities;
 using Domain.Entities.Login;
+using Domain.Entities.Perfil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -150,6 +151,22 @@ namespace Data.Repositories
             };
 
             return _dbSession.Connection.ExecuteScalar(sql, auxParametros).ToBool();
+        }
+        public async Task<List<IdDescricaoPerfilModel>> RetornaPerfilUsuario(long idUsuario)
+        {
+            string sql = @"SELECT P.ID_PERFIL,
+	                              P.DSC_PERFIL
+                             FROM PERFIL_USUARIO PU
+                             JOIN PERFIL P ON P.ID_PERFIL = PU.ID_PERFIL
+                            WHERE PU.ID_USUARIO = @ID_USUARIO";
+
+            var parametros = new
+            {
+                ID_USUARIO = idUsuario
+            };
+
+            var perfis = await _dbSession.Connection.QueryAsync<IdDescricaoPerfilModel>(sql, parametros);
+            return perfis.AsList();
         }
     }
 }

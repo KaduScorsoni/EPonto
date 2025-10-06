@@ -86,6 +86,10 @@ builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<ISolicitacaoAusenciaService, SolicitacaoAusenciaService>();
 builder.Services.AddScoped<ISolicitacaoAusenciaRepository, SolicitacaoAusenciaRepository>();
 
+//PERFIL DE USUÁRIO
+builder.Services.AddScoped<IPerfilService, PerfilService>();
+builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
+
 builder.Services.AddScoped<DbSession>();
 
 // Hangfire - Configuração com MySQL

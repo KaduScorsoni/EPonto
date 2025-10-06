@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Net;
 using System.Net.Mail;
+using Data.Repositories;
+using Data.Util;
 
 namespace Application.Services
 {
@@ -44,13 +46,15 @@ namespace Application.Services
                         string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
 
                         await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
-                        //chaamar aqui o VerificarValidacaoMesAsync
+                        List<IdDescricaoPerfilModel> Perfis = await RetornaPerfilUsuario(usuario.IdUsuario);
+
                         return new LoginDTO
                         {
                             Sucesso = true,
                             Mensagem = "Login realizado com sucesso.",
                             IdUsuario = usuario.IdUsuario,
-                            Token = token
+                            Token = token,
+                            PerfisUsuario = Perfis
                         };
                     }
                     else
@@ -184,6 +188,18 @@ namespace Application.Services
             mailMessage.To.Add(destinatario);
 
             await smtpClient.SendMailAsync(mailMessage);
+        }
+        public async Task<List<IdDescricaoPerfilModel>> RetornaPerfilUsuario(long idUsuario)
+        {
+            try
+            {
+                var lista = await _loginRepository.RetornaPerfilUsuario(idUsuario);
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao listar perfis do usuário: {ex.Message}");
+            }
         }
     }
 

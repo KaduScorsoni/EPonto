@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Login;
+using Domain.Entities.Perfil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Data.Interfaces
         Task<bool> SalvaCodigoRecuperacao(int codigo, string email);
         Task<int> BuscaCodigoEmail(string email);
         Task<bool> SalvaAlteracaoSenha(string senha, string email);
+        Task<List<IdDescricaoPerfilModel>> RetornaPerfilUsuario(long idUsuario);
     }
 }
