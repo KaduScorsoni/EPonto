@@ -198,6 +198,11 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("Jwt"));
 
+//WhatsApp e ChatBot
+builder.Services.AddScoped<IWhatsAppService, WhatsAppService>();
+builder.Services.AddScoped<IWhatsAppRepository, WhatsAppRepository>();
+builder.Services.AddScoped<IChatBotService, ChatBotService>();
+builder.Services.AddHttpClient<WhatsAppService>();
 
 var app = builder.Build();
 
