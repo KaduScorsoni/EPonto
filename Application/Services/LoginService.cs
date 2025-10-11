@@ -16,16 +16,19 @@ using System.Net;
 using System.Net.Mail;
 using Data.Repositories;
 using Data.Util;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Services
 {
     public class LoginService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
+        private readonly IConfiguration _configuration;
 
-        public LoginService(ILoginRepository loginRepository)
+        public LoginService(ILoginRepository loginRepository, IConfiguration configuration)
         {
             _loginRepository = loginRepository;
+            _configuration = configuration;
         }
 
         public async Task<LoginDTO> RealizarLogin(LoginModel dadosInformados)
@@ -145,7 +148,8 @@ namespace Application.Services
         }
         public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(senhaHash));
+            var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key não configurado");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -156,8 +160,8 @@ namespace Application.Services
             };
 
             var token = new JwtSecurityToken(
-                issuer: "suaApi",
-                audience: "seusClientes",
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(expireMinutes),
                 signingCredentials: creds

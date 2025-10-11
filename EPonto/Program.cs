@@ -10,6 +10,12 @@ using Hangfire.Storage;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Options;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Web.Http.Controllers;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Domain.Entities.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +43,34 @@ Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        In = ParameterLocation.Header,
+    });
+
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+            },
+            new string[] {}
+        }
+    });
+});
 
 //Login
 builder.Services.AddScoped<ILoginService, LoginService>();
@@ -56,7 +89,7 @@ builder.Services.AddScoped<ICalendarioService, CalendarioService>();
 
 //Comunicado
 builder.Services.AddScoped<IComunicadoService, ComunicadoService>();
-builder.Services.AddScoped<IComunicadoRepository,ComunicadoRepository>();
+builder.Services.AddScoped<IComunicadoRepository, ComunicadoRepository>();
 
 //Usuario
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -96,13 +129,13 @@ builder.Services.AddScoped<DbSession>();
 builder.Services.AddHangfire(configuration =>
 {
     configuration.UseSimpleAssemblyNameTypeSerializer()
-                 .UseRecommendedSerializerSettings()
-                 .UseStorage(new MySqlStorage(
-                     builder.Configuration.GetConnectionString("HangfireConnection"),
-                     new MySqlStorageOptions
-                     {
-                         TablesPrefix = "Hangfire"
-                     }));
+                    .UseRecommendedSerializerSettings()
+                    .UseStorage(new MySqlStorage(
+                        builder.Configuration.GetConnectionString("HangfireConnection"),
+                        new MySqlStorageOptions
+                        {
+                            TablesPrefix = "Hangfire"
+                        }));
 });
 
 builder.Services.AddHangfireServer();
@@ -112,15 +145,59 @@ builder.Services.AddScoped<BancoHorasJob>();
 
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
-builder.Services.AddSingleton(sp => {
-var cfg = sp.GetRequiredService<IOptions<CloudinarySettings>>().Value;
-var account = new Account(cfg.CloudName, cfg.ApiKey, cfg.ApiSecret);
-var cloudinary = new Cloudinary(account) { Api = { Secure = true } };
-return cloudinary;
+builder.Services.AddSingleton(sp =>
+{
+    var cfg = sp.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(cfg.CloudName, cfg.ApiKey, cfg.ApiSecret);
+    var cloudinary = new Cloudinary(account) { Api = { Secure = true } };
+    return cloudinary;
 });
 
 // Sua abstração de storage
 builder.Services.AddScoped<ICloudStorage, CloudinaryStorage>();
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+
+    // Evento personalizado para tratar falhas de autenticação
+    x.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            // Previne o comportamento padrão
+            context.HandleResponse();
+
+            // Define o status code
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
+            // Resposta personalizada
+            var response = new
+            {
+                Sucesso = false,
+                Mensagem = "Você precisa estar autenticado para acessar este método. Por favor, realize o login no sistema."
+            };
+
+            return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+        }
+    };
+});
+
+builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("Jwt"));
+
 
 var app = builder.Build();
 
@@ -149,4 +226,3 @@ RecurringJob.AddOrUpdate<BancoHorasJob>(
 );
 
 app.Run();
-
