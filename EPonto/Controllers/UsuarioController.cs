@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Application.Interfaces;
 using Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EPonto.Controllers
 {
@@ -18,6 +19,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Inserir")]
         public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
         {
@@ -28,6 +30,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterUsuarioPorId(int id)
         {
@@ -38,6 +41,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpGet("Contrato/{id}")]
         public async Task<IActionResult> ObterContratoUsuario(int id)
         {
@@ -49,6 +53,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosUsuarios()
         {
@@ -59,6 +64,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpPut("Atualizar/{id}")]
         public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] UsuarioModel usuario)
         {
@@ -76,6 +82,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
@@ -86,6 +93,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpGet("Hierarquia")]
         [ProducesResponseType(typeof(IEnumerable<UsuarioModel>), 200)]
         public async Task<IActionResult> ObterHierarquia()

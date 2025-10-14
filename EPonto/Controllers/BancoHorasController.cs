@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPonto.Controllers
@@ -14,6 +15,7 @@ namespace EPonto.Controllers
             _bancoHorasService = bancoHorasService;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("Processar/{idUsuario}")]
         public async Task<IActionResult> ProcessarBancoHoras(int idUsuario, [FromQuery] DateTime data)
@@ -27,6 +29,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("SaldosDiarios/{idUsuario}")]
         public async Task<IActionResult> ObterSaldosDiarios(int idUsuario)
         {
@@ -39,6 +42,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Atual/{idUsuario}")]
         public async Task<IActionResult> ObterBancoHorasAtual(int idUsuario)
         {
@@ -51,6 +55,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("HorasTrabalhadasMes/{idUsuario}")]
         public async Task<IActionResult> ObterHorasTrabalhadasPorMes(int idUsuario)
         {
@@ -63,6 +68,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("HorasExtrasMes/{idUsuario}")]
         public async Task<IActionResult> ObterHorasExtrasPorMes(int idUsuario)
         {

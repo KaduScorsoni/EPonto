@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities.Perfil;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPonto.Controllers
@@ -16,6 +17,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("CadastrarPerfil")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarPerfil(PerfilModel paramPerfil)
         {
@@ -34,6 +36,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ListarPerfis")]
         public async Task<ActionResult<PerfilDTO>> ListarPerfis()
         {
@@ -51,6 +54,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("ListarPerfil")]
         public async Task<ActionResult<PerfilDTO>> ListarPerfil(int idPerfil)
         {
@@ -68,6 +72,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpPut]
+        [Authorize]
         [Route("EditarPerfil")]
         public async Task<ActionResult<ResultadoDTO>> EditarPerfil(PerfilModel paramPerfil)
         {
@@ -85,6 +90,7 @@ namespace EPonto.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("RemoverPerfil/{idPerfil}")]
         public async Task<ActionResult<ResultadoDTO>> RemoverPerfil(int idPerfil)
@@ -102,7 +108,9 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+
         [HttpPost]
+        [Authorize]
         [Route("CadastrarVinculoPerfilUsuario")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarVinculoPerfilUsuario(VinculoPerfilUsuario param)
         {

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Inserir")]
         public async Task<IActionResult> CriarCargo([FromBody] CargoModel cargo)
         {
@@ -27,6 +29,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterCargoPorId(int id)
         {
@@ -38,6 +41,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosCargos()
         {
@@ -48,6 +52,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpPut("Atualizar/{id}")]
         public async Task<IActionResult> AtualizarCargo(int id, [FromBody] CargoModel cargo)
         {
@@ -65,7 +70,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-
+        [Authorize]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirCargo(int id)
         {

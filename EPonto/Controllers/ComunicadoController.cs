@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Services;
 using Domain.Entities.Comunicado;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("CadastrarComunicado")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarComunicado(ComunicadoModel param)
         {
@@ -36,6 +38,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpDelete]
+        [Authorize]
         [Route("DeletarComunicado")]
         public async Task<ActionResult<ResultadoDTO>> DeletarComunicado(int idComunicado)
         {
@@ -53,6 +56,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("ListarComunicados")]
         public async Task<ActionResult<ComunicadoDTO>> ListarComunicados()
         {

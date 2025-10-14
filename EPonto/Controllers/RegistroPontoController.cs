@@ -2,6 +2,7 @@
 using Application.Services;
 using Domain.Entities;
 using Domain.Entities.Ponto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Inserir")]
         public async Task<IActionResult> CriarRegistroPonto([FromBody] RegistroPontoModel ponto)
         {
@@ -29,6 +31,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterRegistroPontoId(int id)
         {
@@ -40,6 +43,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ObterRegistrosUsuario")]
         public async Task<IActionResult> ObterRegistrosUsuario(int idUsuario)
         {
@@ -51,6 +55,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosRegistrosPonto()
         {
@@ -61,6 +66,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirRegistroPonto(int id)
         {
@@ -82,6 +88,7 @@ namespace EPonto.Controllers
         //}
 
         [HttpPost]
+        [Authorize]
         [Route("CriarSolicitacaoAlteracao")]
         public async Task<IActionResult> CriarSolicitacaoAlteracao([FromBody] SolicitacaoAjustePontoModel solicitacao)
         {
@@ -93,6 +100,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ListarSolicitacoesAlteracao")]
         public async Task<IActionResult> ListarSolicitacoes([FromQuery] int? status = null)
         {
@@ -104,6 +112,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ObterSolicitacaoAlteracao/{id}")]
         public async Task<IActionResult> ObterSolicitacaoAlteracao(int id)
         {
@@ -117,6 +126,7 @@ namespace EPonto.Controllers
 
 
         [HttpPost]
+        [Authorize]
         [Route("ValidarSolicitacao/{idSolicitacao}")]
         public async Task<IActionResult> ValidarSolicitacao(int idSolicitacao, [FromBody] ValidarSolicitacao request)
         {

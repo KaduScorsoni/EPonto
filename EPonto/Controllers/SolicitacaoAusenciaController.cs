@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Services;
 using Domain.Entities;
 using Domain.Entities.Feedback;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ListarSolicitacaoAusencia")]
         public async Task<IActionResult> ListarTodosFeedbacks()
         {
@@ -31,6 +33,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("ListarSolicitacaoAusencia/{id}")]
         public async Task<IActionResult> ObterSolicitacaoPorId(int id)
         {
@@ -41,6 +44,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpGet("ListarSolicitacoesAusenciaUsuario/{idUsuario}")]
         public async Task<IActionResult> ObterSolicitacoesPorUsuario(int idUsuario)
         {
@@ -52,6 +56,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpPost("InserirSolicitacaoAusencia")]
         [Consumes("multipart/form-data")]
         [RequestFormLimits(MultipartBodyLengthLimit = 50_000_000)]
@@ -117,7 +122,7 @@ namespace EPonto.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPut("AtualizarSolicitacao/{id}")]
         public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoAusenciaModel solicitacao)
         {
@@ -135,6 +140,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)
         {
@@ -145,6 +151,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpPut("ResponderSolicitacao/{id}")]
         public async Task<IActionResult> ResponderSolicitacao(int id, [FromQuery] bool aprovar)
         {

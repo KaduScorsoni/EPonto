@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Inserir")]
         public async Task<IActionResult> CriarJornadaTrabalho([FromBody] JornadaTrabalhoModel jornada)
         {
@@ -26,6 +28,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterJornadaTrabalhoPorId(int id)
         {
@@ -37,6 +40,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Listar")]
         public async Task<IActionResult> ListarJornadasTrabalho()
         {
@@ -47,6 +51,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpPut("Atualizar/{id}")]
         public async Task<IActionResult> AtualizarJornadaTrabalho(int id, [FromBody] JornadaTrabalhoModel jornada)
         {
@@ -64,7 +69,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-
+        [Authorize]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirJornadaTrabalho(int id)
         {

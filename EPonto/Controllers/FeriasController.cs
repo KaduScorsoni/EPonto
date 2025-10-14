@@ -37,6 +37,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpDelete]
+        [Authorize]
         [Route("DeletarFerias/{idFerias}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFerias(int idFerias)
         {
@@ -54,6 +55,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("ListarFerias")]
         public async Task<ActionResult<FeriasDTO>> ListarFerias(int? idUsuario = null)
         {
@@ -71,6 +73,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpPost]
+        [Authorize]
         [Route("CadastrarSolicitacaoFerias")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarSolicitacaoFerias(SolicitacaoFeriasModel paramSolicFerias)
         {
@@ -88,6 +91,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("ListarSolicitacoesFerias")]
         public async Task<ActionResult<SolicitacaoFeriasDTO>> ListarSolicitacoesFerias(int? idUsuario = null)
         {
@@ -105,6 +109,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("RetornaSaldoFerias")]
         public async Task<ActionResult<SaldoFeriasDTO>> RetornaSaldoFerias(int? idUsuario = null)
         {
@@ -122,6 +127,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpPost]
+        [Authorize]
         [Route("AtualizaSolicitacaoFerias")]
         public async Task<ActionResult<ResultadoDTO>> AtualizaSolicitacaoFerias(int? idSolicitacao = null, int? indSituacao = null)
         {

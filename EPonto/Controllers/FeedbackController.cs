@@ -2,6 +2,7 @@
 using Application.Services;
 using Domain.Entities;
 using Domain.Entities.Feedback;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("InserirSolicitacao")]
         public async Task<IActionResult> CriarSolicitacao([FromBody] SolicitacaoFeedbackModel solicitacao)
         {
@@ -30,6 +32,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("InserirFeedback")]
         public async Task<IActionResult> CriarFeedback([FromBody] FeedbackModel feedback)
         {
@@ -41,6 +44,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ListarSolicitacao")]
         public async Task<IActionResult> ListarTodasSolicitacoes()
         {
@@ -52,6 +56,7 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("ListarFeedback")]
         public async Task<IActionResult> ListarTodosFeedbacks()
         {
@@ -62,6 +67,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("ListarSolicitacao/{id}")]
         public async Task<IActionResult> ObterSolicitacaoPorId(int id)
         {
@@ -72,6 +78,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpGet("ListarSolicitacoesUsuario/{idUsuario}")]
         public async Task<IActionResult> ObterSolicitacoesPorUsuario(int idUsuario)
         {
@@ -82,6 +89,7 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+        [Authorize]
         [HttpGet("ListarSolicitacoesResponsavel/{idResponsavel}")]
         public async Task<IActionResult> ObterSolicitacoesResponsavel(int idResponsavel)
         {
@@ -93,7 +101,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
-
+        [Authorize]
         [HttpGet("ListarFeedback/{id}")]
         public async Task<IActionResult> ObterFeedbackPorId(int id)
         {
@@ -104,6 +112,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        [Authorize]
         [HttpPut("AtualizarSolicitacao/{id}")]
         public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoFeedbackModel solicitacao)
         {
@@ -121,6 +130,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        [Authorize]
         [HttpGet("ListarFeedbacksUsuario/{idUsuario}")]
         public async Task<IActionResult> ObterFeedbacksPorUsuario(int idUsuario)
         {
@@ -131,7 +141,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
-
+        [Authorize]
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)
         {

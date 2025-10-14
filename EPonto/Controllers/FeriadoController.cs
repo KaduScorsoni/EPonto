@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Entities.Login;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EPonto.Controllers
@@ -17,6 +18,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("CadastrarFeriado")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarFeriado(FeriadoModel paramFeriado)
         {
@@ -33,6 +35,8 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+
+        [Authorize]
         [HttpDelete]
         [Route("DeletarFeriado/{idFeriado}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFeriado(int idFeriado)
@@ -51,6 +55,7 @@ namespace EPonto.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         [Route("ListarFeriados")]
         public async Task<ActionResult<FeriadoDTO>> ListarFeriados()
         {
