@@ -17,6 +17,14 @@ namespace EPonto.Controllers
             _calendarioService = calendarioService;
         }
 
+        /// <summary>
+        /// Lista todos os eventos do calendário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todos os eventos cadastrados no calendário. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Eventos retornados com sucesso</response>
+        /// <response code="400">Erro ao listar eventos</response>
         [HttpGet]
         [Authorize]
         [Route("BuscaCalendario")]

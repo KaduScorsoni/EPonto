@@ -46,17 +46,17 @@ namespace Application.Services
                 {
                     if (VerifyPassword(dadosInformados.Senha, usuario.Senha))
                     {
-                        string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
+                        //string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
+                        //await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
 
-                        await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
                         List<IdDescricaoPerfilModel> Perfis = await RetornaPerfilUsuario(usuario.IdUsuario);
 
                         return new LoginDTO
                         {
                             Sucesso = true,
-                            Mensagem = "Login realizado com sucesso.",
-                            IdUsuario = usuario.IdUsuario,
-                            Token = token,
+                            Mensagem = "Login realizado com sucess.",
+                            //IdUsuario = usuario.IdUsuario,
+                            //Token = token,
                             PerfisUsuario = Perfis
                         };
                     }
@@ -80,7 +80,55 @@ namespace Application.Services
                 };
             }
         }
-        
+
+        public async Task<AutenticarDTO> AutenticarPerfil(LoginPerfilModel dadosInformados)
+        {
+            string Error = string.Empty;
+
+            if (string.IsNullOrEmpty(dadosInformados.Senha) || string.IsNullOrEmpty(dadosInformados.Email))
+                return new AutenticarDTO { Sucesso = false, Mensagem = "Para efetuar o login, deve ser informado um email e senha." };
+
+            try
+            {
+                LoginAuxiliarModel usuario = await _loginRepository.BuscaUsuarioNoSistema(dadosInformados.Email);
+
+                if (usuario.IdUsuario > 0)
+                {
+                    if (VerifyPassword(dadosInformados.Senha, usuario.Senha))
+                    {
+                        string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
+
+                        await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
+
+                        return new AutenticarDTO
+                        {
+                            Sucesso = true,
+                            Mensagem = "Login realizado com sucesso.",
+                            IdUsuario = usuario.IdUsuario,
+                            Token = token
+                        };
+                    }
+                    else
+                        Error = "Senha incorreta.";
+                }
+                else
+                    Error = "Email não localizado no sistema.";
+
+                if (!string.IsNullOrEmpty(Error))
+                    return new AutenticarDTO { Sucesso = false, Mensagem = Error };
+                else
+                    return new AutenticarDTO();
+            }
+            catch (Exception ex)
+            {
+                return new AutenticarDTO
+                {
+                    Sucesso = false,
+                    Mensagem = ex.Message
+                };
+            }
+        }
+
         public async Task<bool>RecuperarSenha(string email)
         {
             try

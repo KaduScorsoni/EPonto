@@ -16,6 +16,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Domain.Entities.Login;
+using System.Reflection;
+using Swashbuckle.AspNetCore.Filters;
+using Domain.Entities.Feriado_e_Ferias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +48,12 @@ Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    x.IncludeXmlComments(xmlPath);
+
+    x.ExampleFilters(); // habilita leitura dos exemplos
+
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -71,6 +80,8 @@ builder.Services.AddSwaggerGen(x =>
         }
     });
 });
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<FeriasRequestExampleModel>();// registra exemplos deste assembly
 
 //Login
 builder.Services.AddScoped<ILoginService, LoginService>();

@@ -18,6 +18,14 @@ namespace EPonto.Controllers
             _comunicadoService = comunicadoService;
         }
 
+        /// <summary>
+        /// Método para cadastrar comunicados para os usuários do sistema.
+        /// </summary>
+        /// <remarks>
+        /// Este método cadastra comunicados, para os administradores exibirem avisos aos usuários.
+        /// </remarks>
+        /// <response code="200">Comunicados retornados com sucesso</response>
+        /// <response code="400">Erro ao cadastrar comunicados</response>
         [HttpPost]
         [Authorize]
         [Route("CadastrarComunicado")]
@@ -37,6 +45,14 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+        /// <summary>
+        /// Método para deletar comunicados do sistema.
+        /// </summary>
+        /// <remarks>
+        /// Este método permite aos administradores deletarem comunicados do sistema.
+        /// </remarks>
+        /// <response code="200">Comunicado deletado com sucesso</response>
+        /// <response code="400">Erro ao deletar comunicados</response>
         [HttpDelete]
         [Authorize]
         [Route("DeletarComunicado")]
@@ -55,6 +71,14 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+        /// <summary>
+        /// Método para listar comunicados para os usuários do sistema.
+        /// </summary>
+        /// <remarks>
+        /// Este método retorna os comunicados cadastrados para os usuários.
+        /// </remarks>
+        /// <response code="200">Comunicados listados com sucesso</response>
+        /// <response code="400">Erro ao listar comunicados</response>
         [HttpGet]
         [Authorize]
         [Route("ListarComunicados")]

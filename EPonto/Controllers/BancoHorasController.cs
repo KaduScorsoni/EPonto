@@ -15,6 +15,14 @@ namespace EPonto.Controllers
             _bancoHorasService = bancoHorasService;
         }
 
+        /// <summary>
+        /// Processa o banco de horas diário para o usuário informado.
+        /// </summary>
+        /// <remarks>
+        /// Realiza o processamento do banco de horas do usuário na data especificada. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Processamento realizado com sucesso</response>
+        /// <response code="400">Erro ao processar banco de horas</response>
         [Authorize]
         [HttpPost]
         [Route("Processar/{idUsuario}")]
@@ -28,6 +36,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém os saldos diários do banco de horas do usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna uma lista dos saldos diários do banco de horas para o usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Saldos diários retornados com sucesso</response>
+        /// <response code="400">Erro ao obter saldos diários</response>
         [HttpGet]
         [Authorize]
         [Route("SaldosDiarios/{idUsuario}")]
@@ -41,6 +57,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém o saldo atual do banco de horas do usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna o saldo atual do banco de horas para o usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Saldo atual retornado com sucesso</response>
+        /// <response code="400">Erro ao obter saldo atual</response>
         [HttpGet]
         [Authorize]
         [Route("Atual/{idUsuario}")]
@@ -54,6 +78,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém as horas trabalhadas por mês do usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna a quantidade de horas trabalhadas por mês para o usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Horas trabalhadas retornadas com sucesso</response>
+        /// <response code="400">Erro ao obter horas trabalhadas</response>
         [HttpGet]
         [Authorize]
         [Route("HorasTrabalhadasMes/{idUsuario}")]
@@ -67,6 +99,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém as horas extras por mês do usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna a quantidade de horas extras por mês para o usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Horas extras retornadas com sucesso</response>
+        /// <response code="400">Erro ao obter horas extras</response>
         [HttpGet]
         [Authorize]
         [Route("HorasExtrasMes/{idUsuario}")]

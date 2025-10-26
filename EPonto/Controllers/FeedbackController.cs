@@ -19,6 +19,14 @@ namespace EPonto.Controllers
             _feedbackService = feedbackService;
         }
 
+        /// <summary>
+        /// Cria uma nova solicitação de feedback.
+        /// </summary>
+        /// <remarks>
+        /// Recebe os dados da solicitação via corpo da requisição. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitação criada com sucesso</response>
+        /// <response code="400">Erro ao criar solicitação</response>
         [HttpPost]
         [Authorize]
         [Route("InserirSolicitacao")]
@@ -31,6 +39,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Cria um novo feedback.
+        /// </summary>
+        /// <remarks>
+        /// Recebe os dados do feedback via corpo da requisição. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Feedback criado com sucesso</response>
+        /// <response code="400">Erro ao criar feedback</response>
         [HttpPost]
         [Authorize]
         [Route("InserirFeedback")]
@@ -43,6 +59,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Lista todas as solicitações de feedback.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todas as solicitações cadastradas. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitações retornadas com sucesso</response>
+        /// <response code="400">Erro ao listar solicitações</response>
         [HttpGet]
         [Authorize]
         [Route("ListarSolicitacao")]
@@ -55,6 +79,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Lista todos os feedbacks.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todos os feedbacks cadastrados. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Feedbacks retornados com sucesso</response>
+        /// <response code="400">Erro ao listar feedbacks</response>
         [HttpGet]
         [Authorize]
         [Route("ListarFeedback")]
@@ -67,6 +99,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém uma solicitação de feedback pelo identificador.
+        /// </summary>
+        /// <remarks>
+        /// Retorna a solicitação de feedback correspondente ao id informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitação encontrada</response>
+        /// <response code="404">Solicitação não encontrada</response>
         [Authorize]
         [HttpGet("ListarSolicitacao/{id}")]
         public async Task<IActionResult> ObterSolicitacaoPorId(int id)
@@ -78,6 +118,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Obtém todas as solicitações de feedback de um usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todas as solicitações de feedback do usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitações encontradas</response>
+        /// <response code="404">Nenhuma solicitação encontrada</response>
         [Authorize]
         [HttpGet("ListarSolicitacoesUsuario/{idUsuario}")]
         public async Task<IActionResult> ObterSolicitacoesPorUsuario(int idUsuario)
@@ -89,6 +137,15 @@ namespace EPonto.Controllers
 
             return NotFound(resultado);
         }
+
+        /// <summary>
+        /// Obtém todas as solicitações de feedback de um responsável.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todas as solicitações de feedback do responsável informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitações encontradas</response>
+        /// <response code="404">Nenhuma solicitação encontrada</response>
         [Authorize]
         [HttpGet("ListarSolicitacoesResponsavel/{idResponsavel}")]
         public async Task<IActionResult> ObterSolicitacoesResponsavel(int idResponsavel)
@@ -101,6 +158,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Obtém um feedback pelo identificador.
+        /// </summary>
+        /// <remarks>
+        /// Retorna o feedback correspondente ao id informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Feedback encontrado</response>
+        /// <response code="404">Feedback não encontrado</response>
         [Authorize]
         [HttpGet("ListarFeedback/{id}")]
         public async Task<IActionResult> ObterFeedbackPorId(int id)
@@ -112,6 +177,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Atualiza uma solicitação de feedback.
+        /// </summary>
+        /// <remarks>
+        /// Atualiza os dados da solicitação de feedback informada. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitação atualizada com sucesso</response>
+        /// <response code="400">Erro ao atualizar solicitação</response>
         [Authorize]
         [HttpPut("AtualizarSolicitacao/{id}")]
         public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoFeedbackModel solicitacao)
@@ -130,6 +203,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém todos os feedbacks de um usuário.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todos os feedbacks do usuário informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Feedbacks encontrados</response>
+        /// <response code="404">Nenhum feedback encontrado</response>
         [Authorize]
         [HttpGet("ListarFeedbacksUsuario/{idUsuario}")]
         public async Task<IActionResult> ObterFeedbacksPorUsuario(int idUsuario)
@@ -141,6 +222,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Exclui uma solicitação de feedback.
+        /// </summary>
+        /// <remarks>
+        /// Remove a solicitação de feedback correspondente ao id informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Solicitação excluída com sucesso</response>
+        /// <response code="404">Solicitação não encontrada</response>
         [Authorize]
         [HttpDelete("Deletar/{id}")]
         public async Task<IActionResult> ExcluirSolicitacao(int id)

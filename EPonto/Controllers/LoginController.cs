@@ -32,6 +32,23 @@ namespace EPonto.Controllers
                 return Unauthorized(new LoginDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+        [HttpPost]
+        [Route("AutenticarPerfil")]
+        public async Task<ActionResult<AutenticarDTO>> AutenticarPerfil(LoginPerfilModel paramLogin)
+        {
+            try
+            {
+                AutenticarDTO auxResult = await _loginService.AutenticarPerfil(paramLogin);
+                if (auxResult.Sucesso)
+                    return Ok(auxResult);
+
+                return Unauthorized(new AutenticarDTO { Sucesso = false, Mensagem = auxResult.Mensagem });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new AutenticarDTO { Sucesso = false, Mensagem = ex.Message });
+            }
+        }
         [HttpPost ]
         [Route("RecuperarSenha")]
         public async Task<ActionResult<bool>> RecuperarSenha(RecuperacaoSenhaModel param)

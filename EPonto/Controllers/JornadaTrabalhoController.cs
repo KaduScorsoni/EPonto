@@ -16,6 +16,14 @@ namespace EPonto.Controllers
             _jornadaTrabalhoService = jornadaTrabalhoService;
         }
 
+        /// <summary>
+        /// Cria uma nova jornada de trabalho.
+        /// </summary>
+        /// <remarks>
+        /// Recebe os dados da jornada via corpo da requisição. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Jornada criada com sucesso</response>
+        /// <response code="400">Erro ao criar jornada</response>
         [HttpPost]
         [Authorize]
         [Route("Inserir")]
@@ -28,6 +36,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Obtém uma jornada de trabalho pelo identificador.
+        /// </summary>
+        /// <remarks>
+        /// Retorna a jornada de trabalho correspondente ao id informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Jornada encontrada</response>
+        /// <response code="404">Jornada não encontrada</response>
         [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterJornadaTrabalhoPorId(int id)
@@ -39,6 +55,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Lista todas as jornadas de trabalho.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todas as jornadas cadastradas. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Jornadas retornadas com sucesso</response>
+        /// <response code="400">Erro ao listar jornadas</response>
         [HttpGet]
         [Authorize]
         [Route("Listar")]
@@ -51,6 +75,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Atualiza uma jornada de trabalho.
+        /// </summary>
+        /// <remarks>
+        /// Atualiza os dados da jornada de trabalho informada. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Jornada atualizada com sucesso</response>
+        /// <response code="400">Erro ao atualizar jornada</response>
         [Authorize]
         [HttpPut("Atualizar/{id}")]
         public async Task<IActionResult> AtualizarJornadaTrabalho(int id, [FromBody] JornadaTrabalhoModel jornada)
@@ -69,6 +101,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Exclui uma jornada de trabalho.
+        /// </summary>
+        /// <remarks>
+        /// Remove a jornada de trabalho correspondente ao id informado. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Jornada excluída com sucesso</response>
+        /// <response code="404">Jornada não encontrada</response>
         [Authorize]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirJornadaTrabalho(int id)

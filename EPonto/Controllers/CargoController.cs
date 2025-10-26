@@ -17,6 +17,14 @@ namespace EPonto.Controllers
             _cargoService = cargoService;
         }
 
+        /// <summary>
+        /// Método para criar cargos dos usuários do sistema.
+        /// </summary>
+        /// <remarks>
+        /// Este método cria cargos para os usuários do sistema, podendo ser alterados depois.
+        /// </remarks>
+        /// <response code="200">Cargos retornados com sucesso</response>
+        /// <response code="400">Erro ao listar cargos</response>
         [HttpPost]
         [Authorize]
         [Route("Inserir")]
@@ -29,6 +37,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Método retornar o cargo pelo ID do cargo
+        /// </summary>
+        /// <remarks>
+        /// Este método é utilizado para retornar o cargo selecionado na edição de cargos
+        /// </remarks>
+        /// <response code="200">Cargo ertornado com sucesso</response>
+        /// <response code="400">Erro ao retornar cargo</response>
         [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterCargoPorId(int id)
@@ -40,6 +56,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Lista todos os cargos.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todos os cargos cadastrados no sistema. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Cargos retornados com sucesso</response>
+        /// <response code="400">Erro ao listar cargos</response>
         [HttpGet]
         [Authorize]
         [Route("Listar")]
@@ -52,6 +76,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Método para atualizar as informações de cargo.
+        /// </summary>
+        /// <remarks>
+        /// Este método atualiza todas as informações de cargos
+        /// </remarks>
+        /// <response code="200">Cargo atualizado com sucesso</response>
+        /// <response code="400">Erro ao atualizar cargos</response>
         [Authorize]
         [HttpPut("Atualizar/{id}")]
         public async Task<IActionResult> AtualizarCargo(int id, [FromBody] CargoModel cargo)
@@ -70,6 +102,14 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
+        /// <summary>
+        /// Método para deletar cargos dos usuários do sistema.
+        /// </summary>
+        /// <remarks>
+        /// Este método deleta logicamente cargos do sistema.
+        /// </remarks>
+        /// <response code="200">Cargos retornados com sucesso</response>
+        /// <response code="400">Erro ao listar cargos</response>
         [Authorize]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirCargo(int id)

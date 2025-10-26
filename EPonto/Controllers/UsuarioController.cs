@@ -52,6 +52,14 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
+        /// <summary>
+        /// Lista todos os usuários.
+        /// </summary>
+        /// <remarks>
+        /// Retorna todos os usuários cadastrados no sistema. Requer autenticação.
+        /// </remarks>
+        /// <response code="200">Usuários retornados com sucesso</response>
+        /// <response code="400">Erro ao listar usuários</response>
         [HttpGet]
         [Authorize]
         [Route("Listar")]

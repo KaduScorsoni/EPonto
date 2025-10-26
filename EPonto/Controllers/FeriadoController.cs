@@ -17,6 +17,14 @@ namespace EPonto.Controllers
             _feriadoService = feriadoService;
         }
 
+        /// <summary>
+        /// Método para cadastrar Feriados no sistema
+        /// </summary>
+        /// <remarks>
+        /// Os feriados são para todos os funcionários do sistema. Essa rota precisa de alguns parametros para cadastrar o feriado e retorna se foi sucesso ou não.
+        /// </remarks>
+        /// <response code="200">Feriado cadastrado com sucesso</response>
+        /// <response code="400">Erro ao cadastrar feriado</response>
         [HttpPost]
         [Authorize]
         [Route("CadastrarFeriado")]
@@ -36,6 +44,14 @@ namespace EPonto.Controllers
             }
         }
 
+        /// <summary>
+        /// Método para deletar feriados.
+        /// </summary>
+        /// <remarks>
+        /// Realiza a deleção de feriados de maneira individual pelo identificador do feriado.
+        /// </remarks>
+        /// <response code="200">Feriado deletado com sucesso</response>
+        /// <response code="400">Erro ao deletar o feriado</response>
         [Authorize]
         [HttpDelete]
         [Route("DeletarFeriado/{idFeriado}")]
@@ -54,6 +70,15 @@ namespace EPonto.Controllers
                 return BadRequest(new ResultadoDTO { Sucesso = false, Mensagem = ex.Message });
             }
         }
+
+        /// <summary>
+        /// Método para listar os feriados cadastrados no sistema.
+        /// </summary>
+        /// <remarks>
+        /// Lista todos os feriados cadastrados no sistema.
+        /// </remarks>
+        /// <response code="200">Listado com sucesso</response>
+        /// <response code="400">Erro ao listar feriados</response>
         [HttpGet]
         [Authorize]
         [Route("ListarFeriados")]
