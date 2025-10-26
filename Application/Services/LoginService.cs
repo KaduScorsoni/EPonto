@@ -96,7 +96,8 @@ namespace Application.Services
                 {
                     if (VerifyPassword(dadosInformados.Senha, usuario.Senha))
                     {
-                        string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha);
+                        bool IsAdmin = await _loginRepository.VerificaPerfilAdministrador(dadosInformados.IdPerfil, usuario.IdUsuario);
+                        string token = GenerateToken(usuario.IdUsuario.ToString(), dadosInformados.Email, usuario.Senha, IsAdmin);
 
                         await _loginRepository.InsereRegistroLogin(usuario.IdUsuario, token);
 
@@ -194,16 +195,19 @@ namespace Application.Services
         {
             return BCrypt.Net.BCrypt.Verify(senha, senhaHash);
         }
-        public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60)
+        public string GenerateToken(string idUsuario, string email, string senhaHash, bool isAdmin, int expireMinutes = 60)
         {
             var jwtKey = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key não configurado");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            string profile = isAdmin ? "Admin" : "User";
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, idUsuario),
                 new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(ClaimTypes.Role, profile),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

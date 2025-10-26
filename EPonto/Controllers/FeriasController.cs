@@ -28,7 +28,7 @@ namespace EPonto.Controllers
         /// <response code="200">Lista de produtos retornada com sucesso</response>
         /// <response code="404">Nenhum produto encontrado</response>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("CadastrarFerias")]
         [SwaggerRequestExample(typeof(FeriasModel), typeof(FeriasRequestExampleModel))]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(FeriasResponse))]
@@ -58,7 +58,7 @@ namespace EPonto.Controllers
         /// <response code="200">Férias removidas com sucesso</response>
         /// <response code="400">Erro ao remover férias</response>
         [HttpDelete]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("RemoverFerias/{id}")]
         public async Task<ActionResult<ResultadoDTO>> RemoverFerias(int id)
         {
@@ -85,7 +85,7 @@ namespace EPonto.Controllers
         /// <response code="200">Férias removidas com sucesso</response>
         /// <response code="400">Erro ao remover férias</response>
         [HttpDelete]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("DeletarFerias/{idFerias}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFerias(int idFerias)
         {
@@ -220,7 +220,7 @@ namespace EPonto.Controllers
         /// <response code="200">Solicitação atualizada com sucesso</response>
         /// <response code="400">Erro ao atualizar solicitação</response>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("AtualizaSolicitacaoFerias")]
         public async Task<ActionResult<ResultadoDTO>> AtualizaSolicitacaoFerias(int? idSolicitacao = null, int? indSituacao = null)
         {

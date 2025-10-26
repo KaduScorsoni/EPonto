@@ -19,6 +19,7 @@ using Domain.Entities.Login;
 using System.Reflection;
 using Swashbuckle.AspNetCore.Filters;
 using Domain.Entities.Feriado_e_Ferias;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -180,6 +181,7 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         ValidateIssuer = false,
         ValidateAudience = false,
+        RoleClaimType = ClaimTypes.Role,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 
@@ -203,7 +205,19 @@ builder.Services.AddAuthentication(x =>
             };
 
             return context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
-        }
+        },
+
+        OnForbidden = async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new
+            {
+                Sucesso = false,
+                message = "Acesso negado. Você não possui permissão de Administrador."
+            }));
+        },
     };
 });
 

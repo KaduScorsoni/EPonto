@@ -18,6 +18,6 @@ namespace Application.Interfaces
         Task<bool> AlteraSenhaLogin(string senha, string email);
         public string HashPassword(string senha);
         public bool VerifyPassword(string senha, string senhaHash);
-        public string GenerateToken(string idUsuario, string email, string senhaHash, int expireMinutes = 60);
+        public string GenerateToken(string idUsuario, string email, string senhaHash, bool isAdmin,  int expireMinutes = 60);
     }
 }

@@ -58,6 +58,28 @@ namespace Data.Repositories
                 IdUsuario = 0
             };
         }
+        public async Task<bool> VerificaPerfilAdministrador(int IdPerfil, long IdUsuario)
+        {
+            string sql = @"
+                    SELECT P.IND_ACESSO_ADMIN AS IND_ADMIN
+                      FROM PERFIL P
+                      JOIN PERFIL_USUARIO PU ON PU.ID_PERFIL = P.ID_PERFIL
+                     WHERE P.ID_PERFIL = @ID_PERFIL
+                       AND PU.ID_USUARIO = @ID_USUARIO    
+                ";
+
+            object auxParametros = new
+            {
+                ID_PERFIL = IdPerfil,
+                ID_USUARIO = IdUsuario
+            };
+
+            using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
+                if (reader.Read())
+                    return reader["IND_ADMIN"].ToInt() == 1;
+
+            return false;
+        }
         public async Task<bool> InsereRegistroLogin(long IdUsuario, string token)
         {
             string sql = @"
