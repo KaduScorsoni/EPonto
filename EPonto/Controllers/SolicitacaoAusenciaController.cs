@@ -123,6 +123,7 @@ namespace EPonto.Controllers
 
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("AtualizarSolicitacao/{id}")]
         public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoAusenciaModel solicitacao)
         {
@@ -151,7 +152,7 @@ namespace EPonto.Controllers
             return NotFound(resultado);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("ResponderSolicitacao/{id}")]
         public async Task<IActionResult> ResponderSolicitacao(int id, [FromQuery] bool aprovar)
         {

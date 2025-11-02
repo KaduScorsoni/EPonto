@@ -26,7 +26,7 @@ namespace EPonto.Controllers
         /// <response code="200">Cargos retornados com sucesso</response>
         /// <response code="400">Erro ao listar cargos</response>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("Inserir")]
         public async Task<IActionResult> CriarCargo([FromBody] CargoModel cargo)
         {
@@ -45,8 +45,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Cargo ertornado com sucesso</response>
         /// <response code="400">Erro ao retornar cargo</response>
-        [Authorize]
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObterCargoPorId(int id)
         {
             var resultado = await _cargoService.ObterCargoPorIdAsync(id);
@@ -65,8 +65,8 @@ namespace EPonto.Controllers
         /// <response code="200">Cargos retornados com sucesso</response>
         /// <response code="400">Erro ao listar cargos</response>
         [HttpGet]
-        [Authorize]
         [Route("Listar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ListarTodosCargos()
         {
             var resultado = await _cargoService.ListarTodosCargosAsync();
@@ -84,8 +84,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Cargo atualizado com sucesso</response>
         /// <response code="400">Erro ao atualizar cargos</response>
-        [Authorize]
         [HttpPut("Atualizar/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AtualizarCargo(int id, [FromBody] CargoModel cargo)
         {
             if (cargo == null)
@@ -110,8 +110,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Cargos retornados com sucesso</response>
         /// <response code="400">Erro ao listar cargos</response>
-        [Authorize]
         [HttpPut("Deletar/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExcluirCargo(int id)
         {
             var resultado = await _cargoService.ExcluirCargoAsync(id);

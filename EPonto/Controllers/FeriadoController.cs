@@ -26,7 +26,7 @@ namespace EPonto.Controllers
         /// <response code="200">Feriado cadastrado com sucesso</response>
         /// <response code="400">Erro ao cadastrar feriado</response>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("CadastrarFeriado")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarFeriado(FeriadoModel paramFeriado)
         {
@@ -52,8 +52,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Feriado deletado com sucesso</response>
         /// <response code="400">Erro ao deletar o feriado</response>
-        [Authorize]
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         [Route("DeletarFeriado/{idFeriado}")]
         public async Task<ActionResult<ResultadoDTO>> DeletarFeriado(int idFeriado)
         {

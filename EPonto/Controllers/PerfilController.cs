@@ -17,8 +17,8 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("CadastrarPerfil")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarPerfil(PerfilModel paramPerfil)
         {
             try
@@ -36,8 +36,8 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("ListarPerfis")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PerfilDTO>> ListarPerfis()
         {
             try
@@ -72,8 +72,8 @@ namespace EPonto.Controllers
             }
         }
         [HttpPut]
-        [Authorize]
         [Route("EditarPerfil")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ResultadoDTO>> EditarPerfil(PerfilModel paramPerfil)
         {
             try
@@ -90,7 +90,7 @@ namespace EPonto.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("RemoverPerfil/{idPerfil}")]
         public async Task<ActionResult<ResultadoDTO>> RemoverPerfil(int idPerfil)
@@ -110,7 +110,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("CadastrarVinculoPerfilUsuario")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarVinculoPerfilUsuario(VinculoPerfilUsuario param)
         {
