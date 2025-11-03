@@ -9,6 +9,6 @@ namespace Data.Interfaces
 {
     public interface IRelatorioRepository
     {
-        Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario);
+        Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int? IdCargo, long? IdUsuario);
     }
 }

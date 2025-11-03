@@ -23,7 +23,7 @@ namespace Data.Repositories
         }
         #endregion
 
-        public async Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario)
+        public async Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int? IdCargo, long? IdUsuario)
         {
             string sql = @"call PROC_RELATORIO_HORAS_EXTRAS(@DAT_INICIO, @DAT_FIM, @ID_CARGO, @ID_USUARIO)";
 
@@ -31,8 +31,8 @@ namespace Data.Repositories
             {
                 DAT_INICIO = datInicio,
                 DAT_FIM = datFim,
-                ID_USUARIO = IdUsuario,
-                ID_CARGO = IdCargo
+                ID_USUARIO = IdUsuario == 0 ? null : IdUsuario,
+                ID_CARGO = IdCargo == 0 ? null : IdCargo
             };
 
             List<RelHorasExtrasModel> lista = new List<RelHorasExtrasModel>();
