@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Relatorios;
 using Domain.Entities.Login;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,6 @@ namespace Application.Interfaces
 {
     public interface IRelatorioService
     {
-        Task<RelatorioDTO> RelatorioHorasExtras(DateOnly datInicio, DateOnly datFim, int IdCargo, long IdUsuario);
+        Task<RelHorasExtrasDTO> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario);
     }
 }

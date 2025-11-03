@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Relatorios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Data.Interfaces
 {
     public interface IRelatorioRepository
     {
-        Task<bool> RelatorioHorasExtras(DateOnly datInicio, DateOnly datFim, int IdCargo, long IdUsuario);
+        Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario);
     }
 }

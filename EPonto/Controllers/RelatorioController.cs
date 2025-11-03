@@ -1,9 +1,14 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Relatorios;
 using Application.Interfaces;
 using Application.Services;
 using Domain.Entities.Login;
+using Domain.Entities.Relatorios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Data.Util;
+
 
 namespace EPonto.Controllers
 {
@@ -18,8 +23,9 @@ namespace EPonto.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("RelatorioHorasExtras")]
-        public async Task<ActionResult<LoginDTO>> RelatorioHorasExtras(DateOnly datInicio, DateOnly datFim, int IdCargo, long IdUsuario)
+        public async Task<ActionResult<RelHorasExtrasDTO>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario)
         {
             try
             {

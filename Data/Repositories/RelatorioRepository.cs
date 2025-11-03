@@ -1,4 +1,9 @@
-﻿using Data.Interfaces;
+﻿using Dapper;
+using Data.Connections;
+using Data.Interfaces;
+using Data.Util;
+using Domain.Entities.Feriado_e_Ferias;
+using Domain.Entities.Relatorios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +14,44 @@ namespace Data.Repositories
 {
     public class RelatorioRepository : IRelatorioRepository
     {
-        public Task<bool> RelatorioHorasExtras(DateOnly datInicio, DateOnly datFim, int IdCargo, long IdUsuario)
+        #region conexão
+        private readonly DbSession _dbSession;
+
+        public RelatorioRepository(DbSession dbSession)
         {
-            throw new NotImplementedException();
+            _dbSession = dbSession;
+        }
+        #endregion
+
+        public async Task<List<RelHorasExtrasModel>> RelatorioHorasExtras(DateTime datInicio, DateTime datFim, int IdCargo, long IdUsuario)
+        {
+            string sql = @"call PROC_RELATORIO_HORAS_EXTRAS(@DAT_INICIO, @DAT_FIM, @ID_CARGO, @ID_USUARIO)";
+
+            object auxParametros = new
+            {
+                DAT_INICIO = datInicio,
+                DAT_FIM = datFim,
+                ID_USUARIO = IdUsuario,
+                ID_CARGO = IdCargo
+            };
+
+            List<RelHorasExtrasModel> lista = new List<RelHorasExtrasModel>();
+
+            using (var reader = _dbSession.Connection.ExecuteReader(sql, auxParametros))
+            {
+                while (reader.Read())
+                {
+                    lista.Add(new RelHorasExtrasModel
+                    {
+                        NomeUsuario = reader["NOME_USUARIO"].ToString(),
+                        SaldoHoras = reader["SALDO"].ToString(),
+                        Cargo = reader["NOME_CARGO"].ToString(),
+                        JornadaTrabalho = reader["NOME_JORNADA"].ToString(),
+                        //HorasTrabalhadasTotal = reader[""].ToString(),
+                    });
+                }
+                return lista;
+            }
         }
     }
 }
