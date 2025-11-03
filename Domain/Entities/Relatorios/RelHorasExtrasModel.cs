@@ -12,6 +12,6 @@ namespace Domain.Entities.Relatorios
         public string SaldoHoras { get; set; }
         public string Cargo { get; set; }
         public string JornadaTrabalho { get; set; }
-        public string HorasTrabalhadasTotal { get; set; }
+        public string HorasTrabalhadasDiarias { get; set; }
     }
 }

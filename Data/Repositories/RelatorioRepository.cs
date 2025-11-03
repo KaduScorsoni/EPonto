@@ -47,7 +47,7 @@ namespace Data.Repositories
                         SaldoHoras = reader["SALDO"].ToString(),
                         Cargo = reader["NOME_CARGO"].ToString(),
                         JornadaTrabalho = reader["NOME_JORNADA"].ToString(),
-                        //HorasTrabalhadasTotal = reader[""].ToString(),
+                        HorasTrabalhadasDiarias = reader["QTD_HORAS_DIARIAS"].ToString(),
                     });
                 }
                 return lista;
