@@ -19,7 +19,7 @@ namespace EPonto.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("Inserir")]
         public async Task<IActionResult> CriarUsuario([FromBody] UsuarioModel usuario)
         {
@@ -61,7 +61,7 @@ namespace EPonto.Controllers
         /// <response code="200">Usuários retornados com sucesso</response>
         /// <response code="400">Erro ao listar usuários</response>
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("Listar")]
         public async Task<IActionResult> ListarTodosUsuarios()
         {
@@ -90,7 +90,7 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("Deletar/{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {

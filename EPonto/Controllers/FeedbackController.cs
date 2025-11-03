@@ -185,7 +185,7 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Solicitação atualizada com sucesso</response>
         /// <response code="400">Erro ao atualizar solicitação</response>
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("AtualizarSolicitacao/{id}")]
         public async Task<IActionResult> AtualizarSolicitacao(int id, [FromBody] SolicitacaoFeedbackModel solicitacao)
         {

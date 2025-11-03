@@ -25,8 +25,8 @@ namespace EPonto.Controllers
         /// <response code="200">Jornada criada com sucesso</response>
         /// <response code="400">Erro ao criar jornada</response>
         [HttpPost]
-        [Authorize]
         [Route("Inserir")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CriarJornadaTrabalho([FromBody] JornadaTrabalhoModel jornada)
         {
             var resultado = await _jornadaTrabalhoService.CriarJornadaTrabalhoAsync(jornada);
@@ -64,8 +64,8 @@ namespace EPonto.Controllers
         /// <response code="200">Jornadas retornadas com sucesso</response>
         /// <response code="400">Erro ao listar jornadas</response>
         [HttpGet]
-        [Authorize]
         [Route("Listar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ListarJornadasTrabalho()
         {
             var resultado = await _jornadaTrabalhoService.ListarJornadasTrabalhoAsync();
@@ -83,8 +83,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Jornada atualizada com sucesso</response>
         /// <response code="400">Erro ao atualizar jornada</response>
-        [Authorize]
         [HttpPut("Atualizar/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AtualizarJornadaTrabalho(int id, [FromBody] JornadaTrabalhoModel jornada)
         {
             if (jornada == null)
@@ -109,8 +109,8 @@ namespace EPonto.Controllers
         /// </remarks>
         /// <response code="200">Jornada excluída com sucesso</response>
         /// <response code="404">Jornada não encontrada</response>
-        [Authorize]
         [HttpPut("Deletar/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExcluirJornadaTrabalho(int id)
         {
             var resultado = await _jornadaTrabalhoService.ExcluirJornadaTrabalhoAsync(id);

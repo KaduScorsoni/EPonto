@@ -27,7 +27,7 @@ namespace EPonto.Controllers
         /// <response code="200">Comunicados retornados com sucesso</response>
         /// <response code="400">Erro ao cadastrar comunicados</response>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("CadastrarComunicado")]
         public async Task<ActionResult<ResultadoDTO>> CadastrarComunicado(ComunicadoModel param)
         {
@@ -54,7 +54,7 @@ namespace EPonto.Controllers
         /// <response code="200">Comunicado deletado com sucesso</response>
         /// <response code="400">Erro ao deletar comunicados</response>
         [HttpDelete]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("DeletarComunicado")]
         public async Task<ActionResult<ResultadoDTO>> DeletarComunicado(int idComunicado)
         {

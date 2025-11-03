@@ -66,8 +66,8 @@ namespace EPonto.Controllers
             return BadRequest(resultado);
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExcluirRegistroPonto(int id)
         {
             var resultado = await _registroPontoService.ExcluirRegistroPontoAsync(id);
