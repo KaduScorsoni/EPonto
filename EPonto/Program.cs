@@ -226,12 +226,13 @@ builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("J
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Sempre habilita o Swagger (tanto em DEV quanto em produção)
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Redireciona a raiz "/" para o Swagger
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 
 app.UseHttpsRedirection();
 
